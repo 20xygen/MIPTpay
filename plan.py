@@ -4,21 +4,27 @@ from dataoperator import put, get
 class Plan:
     __id: int # PK
     __commission: float
-    __increased_comission: float
+    __increased_commission: float
 
     def __init__(self, commission: float, penalty: float = 0):
         self.__commission = commission
-        self.__increased_comission = penalty
+        self.__increased_commission = penalty
         self.__id = dataoperator.put(self)
 
     # def set_id(self, id: int):
     #     self.__id = id
 
-    def get_commission(self):
+    @property
+    def commission(self):
         return self.__commission
 
-    def get_penalty(self):
-        return self.__increased_comission
+    @property
+    def penalty(self):
+        return self.__increased_commission
+
+    @property
+    def id(self):
+        return self.__id
 
 class DepositPlan(Plan):
     __period: int
