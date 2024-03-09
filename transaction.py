@@ -1,5 +1,5 @@
 import dataoperator
-from dataoperator import get, put
+
 
 class Transaction:
     __id: int

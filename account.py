@@ -1,8 +1,7 @@
 import dataoperator
-from client import Client
 import timekeeper
-from plan import Plan, DepositPlan, CreditPlan
-from dataoperator import put, get
+from plan import DepositPlan, CreditPlan
+
 
 class Account:
     __id: int # PK
@@ -15,6 +14,7 @@ class Account:
         self.__opened = True
         self.__money = 0
         self.__id = dataoperator.put(self)
+        timekeeper.add(self.__id)
 
     def put(self, cash: float) -> int:
         self.__money += cash
@@ -28,6 +28,18 @@ class Account:
     def id(self):
         return self.__id
 
+    @property
+    def money(self):
+        return self.__money
+
+    @money.setter
+    def money(self, money):
+        self.__money = money
+
+    @property
+    def owner(self):
+        return self.__owner
+
     def put_offer(self, cash: float) -> bool:
         if cash < 0:
             return False
@@ -40,45 +52,71 @@ class Account:
             return True
         return False
 
+    def update(self):
+        pass
+
+class DebitAccount(Account):
+    def __init__(self, owner: int):
+        super().__init__(owner)
+        # self.__id = dataoperator.put(self)
+
+
 class DepositAccount(Account):
-    __plan: DepositPlan
+    __plan: int
     __freeze_date: int
 
-    def __init__(self, owner: int, plan: DepositPlan):
+    @property
+    def plan(self):
+        return self.__plan
+
+    @property
+    def freeze_date(self):
+        return self.__freeze_date
+
+    def __init__(self, owner: int, plan: int):
         super().__init__(owner)
         self.__plan = plan
-        self.__freeze_date = timekeeper.get() + plan.__period
+        plan_obj = dataoperator.get(plan, "Plan")
+        self.__freeze_date = timekeeper.get()
+        # self.__id = dataoperator.put(self)
 
     def update(self):
-        modifier = 1 + self.__plan.commission()
-        if dataoperator.get(self.__owner, Client).precarious():
-            modifier += self.__plan.penalty()
-        self.__money *= modifier ** (timekeeper.get() - self.__freeze_date)
+        plan_obj = dataoperator.get(self.__plan, "Plan")
+        modifier = 1 + plan_obj.commission
+        if dataoperator.get(self.owner, "Client").precarious:
+            modifier += plan_obj.increased_commission
+        self.money *= modifier # ** (timekeeper.get() - self.__freeze_date)
 
     def get_offer(self, amount: float) -> bool:
-        if amount > 0 and self.__money >= amount and self.__freeze_date >= timekeeper.get():
+        if amount > 0 and self.money >= amount and self.__freeze_date >= timekeeper.get():
             # self.__money -= amount
             return True
         return False
 
 class CreditAccount(Account):
-    __plan: CreditPlan
+    __plan: int
 
-    def __init__(self, owner: int, plan: CreditPlan):
+    def __init__(self, owner: int, plan: int):
         super().__init__(owner)
         self.__plan = plan
-        self.__freeze_date = timekeeper.get() + plan.__period
+        # self.__id = dataoperator.put(self)
+
+    @property
+    def plan(self):
+        return self.__plan
 
     def update(self):
-        if self.__money >= 0:
+        if self.money >= 0:
             pass
-        modifier = 1 + self.__plan.commission()
-        if dataoperator.get(self.__owner, Client).precarious():
-            modifier += self.__plan.penalty()
-        self.__money *= modifier
+        plan_obj = dataoperator.get(self.__plan, "Plan")
+        modifier = 1 + plan_obj.commission
+        if dataoperator.get(self.owner, "Client").precarious:
+            modifier += plan_obj.increased_commission
+        self.money *= modifier
 
     def get_offer(self, amount: float) -> bool:
-        if self.__money - amount < self.__plan.__limit:
+        plan_obj = dataoperator.get(self.__plan, "Plan")
+        if self.money - amount < plan_obj.limit:
             return False
         # self.__money -= amount
         return True

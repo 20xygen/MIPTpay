@@ -1,6 +1,5 @@
-from typing import List
-from account import Account
-from dataoperator import get, put
+import dataoperator
+
 
 class Client:
     __id: int # PK
@@ -9,7 +8,6 @@ class Client:
     __address: str
     __passport: int
     __precarious: bool
-    __accounts: List[Account]
 
     def __init__(self, name: str, surname: str, address: str = None, passport: int = None):
         self.__name = name
@@ -20,7 +18,7 @@ class Client:
             self.__precarious = True
         else:
             self.__precarious = False
-        self.__id = put(self)
+        self.__id = dataoperator.put(self)
 
     @property
     def precarious(self):

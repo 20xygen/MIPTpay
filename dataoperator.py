@@ -2,42 +2,45 @@ from client import Client
 from account import Account
 from bank import Bank
 from plan import Plan
-from typing import List, Dict
+from typing import Dict
+from transaction import Transaction
+
 
 clients: Dict[int, Client] = {}
 clients_counter = 0
-global clients, clients_counter
 
 accounts: Dict[int, Account] = {}
 accounts_counter = 0
-global accounts, accounts_counter
 
 banks: Dict[int, Bank] = {}
 banks_counter = 0
-global banks, banks_counter
 
 plans: Dict[int, Plan] = {}
 plans_counter = 0
-global plans, plans_counter
+
+transactions: Dict[int, Transaction] = {}
+transactions_counter = 0
 
 def get(id: int, type):
-    container: Dict
-    if type == Client:
-        container = clients
-    elif type == Bank:
-        container = banks
-    elif type == Account:
-        container = accounts
-    elif type == Plan:
-        container = plans
-    else:
-        return None
-    if not id in container.keys():
+    type_to_container = {
+        "Client": clients,
+        "Bank": banks,
+        "Account": accounts,
+        "Plan": plans,
+        "Transactions" : transactions
+    }
+    container = type_to_container.get(type, {})
+    if id not in container.keys():
         return None
     else:
         return container[id]
 
 def put(obj) -> int:
+    global clients, clients_counter
+    global accounts, accounts_counter
+    global banks, banks_counter
+    global plans, plans_counter
+    global transactions, transactions_counter
     if isinstance(obj, Client):
         clients_counter += 1
         clients[clients_counter] = obj
@@ -54,3 +57,7 @@ def put(obj) -> int:
         plans_counter += 1
         plans[plans_counter] = obj
         return plans_counter
+    if isinstance(obj, Transaction):
+        transactions_counter += 1
+        transactions[transactions_counter] = obj
+        return transactions_counter
