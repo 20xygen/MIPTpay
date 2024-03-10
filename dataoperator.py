@@ -26,7 +26,7 @@ plans_counter = 0
 transactions: Dict[int, Transaction] = {}
 transactions_counter = 0
 
-def get(id: int, type):
+def get(id: int, type: str):
     type_to_container = {
         "Client": clients,
         "Bank": banks,
