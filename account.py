@@ -29,6 +29,10 @@ class Account:
         return self.__id
 
     @property
+    def opened(self):
+        return self.__opened
+
+    @property
     def money(self):
         return self.__money
 
@@ -54,6 +58,14 @@ class Account:
 
     def update(self):
         pass
+
+    def info(self) -> str:
+        st = str(self.id) + ("(open)" if self.opened else "(closed)") + '\n'
+        owner_obj = dataoperator.get(self.owner, "Client")
+        st += f"Owner: {owner_obj.name} {owner_obj.surname}\n"
+        st += ("Precarious" if owner_obj.precarious else "Not precarious") + f": {owner_obj.address} {owner_obj.passport}\n"
+        st += str(self.money) + "\n"
+        return st
 
 class DebitAccount(Account):
     def __init__(self, owner: int):

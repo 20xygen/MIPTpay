@@ -61,3 +61,9 @@ def put(obj) -> int:
         transactions_counter += 1
         transactions[transactions_counter] = obj
         return transactions_counter
+
+def account_info() -> str:
+    st = ""
+    for id, account in accounts.items():
+        st += account.info() + '\n'
+    return st

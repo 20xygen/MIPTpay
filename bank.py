@@ -99,3 +99,10 @@ class Bank:
         else:
             trans.cancel()
             return False
+
+    def update(self, owner: int, address: str, passport: int) -> bool:
+        if owner not in self.__clients:
+            return False
+        else:
+            dataoperator.get(owner, "Client").update(address, passport)
+

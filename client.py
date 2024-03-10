@@ -43,3 +43,11 @@ class Client:
     @property
     def passport(self):
         return self.__passport
+
+    def update(self, address: str, passport: int):
+        self.__address = address
+        self.__passport = passport
+        if passport is None or address is None:
+            self.__precarious = True
+        else:
+            self.__precarious = False
