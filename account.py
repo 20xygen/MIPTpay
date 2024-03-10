@@ -1,6 +1,6 @@
 import dataoperator
 import timekeeper
-from plan import DepositPlan, CreditPlan
+from plan import DebitPlan, DepositPlan, CreditPlan
 
 
 class Account:
@@ -11,12 +11,14 @@ class Account:
     __owner: int
     __opened: bool  # todo: action blocking decorator
     __money: float
+    __transfer: float
 
     def __init__(self, owner):
         self.__owner = owner
         self.__opened = True
         self.__money = 0
         self.__id = dataoperator.put(self)
+        self.__transfer = 0
         timekeeper.add(self.__id)
 
     def put(self, cash: float) -> int:
@@ -30,6 +32,10 @@ class Account:
     @property
     def id(self):
         return self.__id
+
+    @property
+    def transfer(self):
+        return self.__transfer
 
     @property
     def opened(self):
@@ -75,9 +81,29 @@ class DebitAccount(Account):
     деньги можно снимать в любой момент,
     в минус уходить нельзя. Комиссий нет.'''
 
-    def __init__(self, owner: int):
+    __plan: int
+
+    @property
+    def plan(self):
+        return self.__plan
+
+    def __init__(self, owner: int, plan: int):
         super().__init__(owner)
-        # self.__id = dataoperator.put(self)
+        self.__plan = plan
+
+    def put_offer(self, amount: float) -> bool:
+        plan_obj = dataoperator.get(self.plan, "Plan")
+        lim = plan_obj.transfer_limit if not dataoperator.get(self.owner, "Client").precarious else plan_obj.decreased_transfer_limit
+        if amount > 0 and self.transfer + amount <= lim:
+            return True
+        return False
+
+    def get_offer(self, amount: float) -> bool:
+        plan_obj = dataoperator.get(self.plan, "Plan")
+        lim = plan_obj.transfer_limit if not dataoperator.get(self.owner, "Client").precarious else plan_obj.decreased_transfer_limit
+        if 0 < amount <= self.money and self.transfer + amount <= lim:
+            return True
+        return False
 
 
 class DepositAccount(Account):
@@ -109,9 +135,18 @@ class DepositAccount(Account):
             modifier += plan_obj.increased_commission
         self.money *= modifier # ** (timekeeper.get() - self.__freeze_date)
 
+    def put_offer(self, amount: float) -> bool:
+        plan_obj = dataoperator.get(self.plan, "Plan")
+        lim = plan_obj.transfer_limit if not dataoperator.get(self.owner, "Client").precarious else plan_obj.decreased_transfer_limit
+        if amount > 0 and self.transfer + amount <= lim:
+            return True
+        return False
+
     def get_offer(self, amount: float) -> bool:
-        if amount > 0 and self.money >= amount and self.__freeze_date >= timekeeper.get():
-            # self.__money -= amount
+        plan_obj = dataoperator.get(self.plan, "Plan")
+        lim = plan_obj.transfer_limit if not dataoperator.get(self.owner, "Client").precarious else plan_obj.decreased_transfer_limit
+        per = plan_obj.period if not dataoperator.get(self.owner, "Client").precarious else plan_obj.decreased_period
+        if 0 < amount <= self.money and self.__freeze_date >= timekeeper.get() + per and self.transfer + amount <= lim:
             return True
         return False
 
@@ -142,7 +177,15 @@ class CreditAccount(Account):
 
     def get_offer(self, amount: float) -> bool:
         plan_obj = dataoperator.get(self.__plan, "Plan")
-        if self.money - amount < plan_obj.limit:
-            return False
-        # self.__money -= amount
+        tra = plan_obj.transfer_limit if not dataoperator.get(self.owner, "Client").precarious else plan_obj.decreased_transfer_limit
+        lim = plan_obj.lower_limit if not dataoperator.get(self.owner, "Client").precarious else plan_obj.decreased_lower_limit
+        if self.money - amount >= lim and amount > 0 and self.transfer + amount <= tra:
+            return True
         return True
+
+    def put_offer(self, amount: float) -> bool:
+        plan_obj = dataoperator.get(self.plan, "Plan")
+        lim = plan_obj.transfer_limit if not dataoperator.get(self.owner, "Client").precarious else plan_obj.decreased_transfer_limit
+        if amount > 0 and self.transfer + amount <= lim:
+            return True
+        return False

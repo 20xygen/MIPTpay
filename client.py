@@ -48,10 +48,22 @@ class Client:
     def passport(self):
         return self.__passport
 
+    @address.setter
+    def address(self, address: str):
+        self.__address = address
+
+    @passport.setter
+    def passport(self, passport: int):
+        self.__passport = passport
+
     def update(self, address: str, passport: int):
         self.__address = address
         self.__passport = passport
-        if passport is None or address is None:
+        self.validate()
+
+    def validate(self):
+        if self.passport is None or self.address is None:
             self.__precarious = True
         else:
             self.__precarious = False
+

@@ -4,6 +4,8 @@ import dataoperator
 from client import Client
 from account import Account, DepositAccount, CreditAccount, DebitAccount
 from transaction import Transaction
+from accountfactory import AccountFactory
+from clientbuilder import ClientBuilder
 
 
 class Bank:
@@ -15,12 +17,14 @@ class Bank:
     __clients: List[int]
     __accounts: List[int]
     __plans: List[int]
+    __registrator: ClientBuilder
 
     def __init__(self, name: str):
         self.__clients = []
         self.__accounts = []
         self.__plans = []
         self.__name = name
+        self.__registrator = ClientBuilder()
         self.__id = dataoperator.put(self)
 
     @property
@@ -32,7 +36,12 @@ class Bank:
             client = dataoperator.get(id, "Client")
             if client.name == name and client.surname == surname:
                 return None
-        client = Client(name, surname, address, passport).id
+        self.__registrator.reset(name, surname)
+        if address is not None:
+            self.__registrator.address(address)
+        if passport is not None:
+            self.__registrator.passport(passport)
+        client = self.__registrator.get().id
         self.__clients.append(client)
         return client
 
@@ -43,24 +52,12 @@ class Bank:
         self.__plans.append(plan.id)
         return plan.id
 
-    def open_account(self, owner: int, plan: Optional[int] = None) -> Optional[int]:
-        if not plan is None:
-            if not owner in self.__clients or not plan in self.__plans:
-                return None
-            plan_obj = dataoperator.get(plan, "Plan")
-            if isinstance(plan_obj, CreditPlan):
-                acc = CreditAccount(owner, plan).id
-                self.__accounts.append(acc)
-            elif isinstance(plan_obj, DepositPlan):
-                acc = DepositAccount(owner, plan).id
-                self.__accounts.append(acc)
-            else:
-                return None
-        else:
-            if not owner in self.__clients:
-                return None
-            acc = DebitAccount(owner).id
-            self.__accounts.append(acc)
+    def open_account(self, owner: int, plan: int) -> Optional[int]:
+        if not owner in self.__clients or not plan in self.__plans:
+            return None
+        plan_obj = dataoperator.get(plan, "Plan")
+        acc = AccountFactory.create(owner, plan_obj).id
+        self.__accounts.append(acc)
         return acc
 
     def transfer(self, departure: int, destination: int, amount: int) -> bool:

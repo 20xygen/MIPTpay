@@ -2,7 +2,7 @@ from client import Client
 from account import Account
 from bank import Bank
 from plan import Plan
-from typing import Dict
+from typing import Dict, Union
 from transaction import Transaction
 
 
@@ -26,7 +26,7 @@ plans_counter = 0
 transactions: Dict[int, Transaction] = {}
 transactions_counter = 0
 
-def get(id: int, type: str):
+def get(id: int, type: str) -> Union[Client, Bank, Account, Plan, Transaction, None]:
     type_to_container = {
         "Client": clients,
         "Bank": banks,
