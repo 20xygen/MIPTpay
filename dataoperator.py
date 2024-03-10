@@ -6,6 +6,11 @@ from typing import Dict
 from transaction import Transaction
 
 
+'''Модуль взаимодействия логики с базой данных.
+Хранит (бронирует) объекты,
+которые в данный момент используются системой.'''
+
+
 clients: Dict[int, Client] = {}
 clients_counter = 0
 

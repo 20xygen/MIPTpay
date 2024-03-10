@@ -2,6 +2,10 @@ import dataoperator
 
 
 class Client:
+    '''Личный кабинет клиента банка.
+    У одного человека (Human) их может быть много
+    (по одному на банк).'''
+
     __id: int # PK
     __name: str
     __surname: str

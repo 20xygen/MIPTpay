@@ -4,6 +4,9 @@ import dataoperator
 from bank import Bank
 
 
+'''Среда тестирования.'''
+
+
 sberbank = Bank("Sberbank")
 sber_credit = sberbank.add_plan(CreditPlan(-300000, -50000, 0.1, 0.2))
 sber_deposit = sberbank.add_plan(DepositPlan(3, 0.2, 0.3))

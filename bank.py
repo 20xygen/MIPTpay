@@ -7,6 +7,9 @@ from transaction import Transaction
 
 
 class Bank:
+    '''У банка есть привязанные к нему планы, счета и клиенты.
+    На среднем уровне взаимодействие происходит через него.'''
+
     __id: int # PK
     __name: str
     __clients: List[int]

@@ -1,4 +1,6 @@
 class Plan:
+    '''Тариф счета. Информация о комиссиях и ограничениях.'''
+
     __id: int # PK
     __commission: float
     __increased_commission: float
@@ -25,6 +27,8 @@ class Plan:
         return self.__id
 
 class DepositPlan(Plan):
+    '''Депозитный тариф.'''
+
     __period: int
 
     @property
@@ -36,6 +40,8 @@ class DepositPlan(Plan):
         self.__period = period
 
 class CreditPlan(Plan):
+    '''Кредитный тариф.'''
+
     __limit: int
     __decreased_limit: int
 

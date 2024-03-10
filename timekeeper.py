@@ -2,6 +2,10 @@ from typing import List
 import dataoperator
 
 
+'''Модуль, считающий дни и
+катализирующий обновление счетов по их тарифам.'''
+
+
 current_time: int = 0
 update_queue: List[int] = []
 

@@ -2,6 +2,9 @@ import dataoperator
 
 
 class Transaction:
+    '''Любая денежная операция происходит с созданием транзакции
+    (так админам их можно будет отследить и/или отменить)'''
+
     __id: int
     __departure: int
     __destination: int
