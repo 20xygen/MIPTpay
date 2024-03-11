@@ -44,10 +44,3 @@ class Person:
         self.__address = address
         self.__passport = passport
 
-
-
-
-
-
-
-
