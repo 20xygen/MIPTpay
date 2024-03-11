@@ -1,3 +1,4 @@
+from person import Person
 from client import Client
 from account import Account
 from bank import Bank
@@ -26,13 +27,16 @@ plans_counter = 0
 transactions: Dict[int, Transaction] = {}
 transactions_counter = 0
 
-def get(id: int, type: str) -> Union[Client, Bank, Account, Plan, Transaction, None]:
+persons: Dict[int, Person] = {}
+persons_counter = 0
+def get(id: int, type: str) -> Union[Client, Bank, Account, Plan, Transaction, Person, None]:
     type_to_container = {
         "Client": clients,
         "Bank": banks,
         "Account": accounts,
         "Plan": plans,
-        "Transactions" : transactions
+        "Transactions": transactions,
+        "Person": persons
     }
     container = type_to_container.get(type, {})
     if id not in container.keys():
@@ -46,6 +50,7 @@ def put(obj) -> int:
     global banks, banks_counter
     global plans, plans_counter
     global transactions, transactions_counter
+    global persons, persons_counter
     if isinstance(obj, Client):
         clients_counter += 1
         clients[clients_counter] = obj
@@ -66,6 +71,10 @@ def put(obj) -> int:
         transactions_counter += 1
         transactions[transactions_counter] = obj
         return transactions_counter
+    if isinstance(obj, Person):
+        persons_counter += 1
+        persons[persons_counter] = obj
+        return persons_counter
 
 def account_info() -> str:
     st = ""
