@@ -1,7 +1,6 @@
 from typing import List, Optional
 from plan import Plan, DepositPlan, CreditPlan
 import dataoperator
-from client import Client
 from account import Account, DepositAccount, CreditAccount, DebitAccount
 from transaction import Transaction
 from accountfactory import AccountFactory

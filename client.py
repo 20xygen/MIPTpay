@@ -1,5 +1,6 @@
 import dataoperator
-
+from accesstools import available_from
+from inspect import currentframe as cf
 
 class Client:
     '''Личный кабинет клиента банка.
@@ -57,6 +58,7 @@ class Client:
         self.__passport = passport
 
     def update(self, address: str, passport: int):
+        available_from(cf(), "Bank")
         self.__address = address
         self.__passport = passport
         self.validate()
