@@ -24,7 +24,8 @@ class Bank:
         self.__plans = []
         self.__name = name
         self.__registrator = ClientBuilder()
-        self.__id = dataoperator.put(self)
+        from dataoperator import DataOperator
+        self.__id = DataOperator().put(self)
 
     @property
     def id(self):
@@ -32,7 +33,8 @@ class Bank:
 
     def register(self, name: str, surname: str, address: Optional[str] = None, passport: Optional[int] = None) -> Optional[int]:
         for id in self.__clients:
-            client = dataoperator.get(id, "Client")
+            from dataoperator import DataOperator
+            client = DataOperator().get(id, "Client")
             if client.name == name and client.surname == surname:
                 return None
         self.__registrator.reset(name, surname)
@@ -54,7 +56,8 @@ class Bank:
     def open_account(self, owner: int, plan: int) -> Optional[int]:
         if not owner in self.__clients or not plan in self.__plans:
             return None
-        plan_obj = dataoperator.get(plan, "Plan")
+        from dataoperator import DataOperator
+        plan_obj = DataOperator().get(plan, "Plan")
         acc = AccountFactory.create(owner, plan_obj).id
         self.__accounts.append(acc)
         return acc
@@ -62,8 +65,9 @@ class Bank:
     def transfer(self, departure: int, destination: int, amount: int) -> bool:
         if not departure in self.__accounts or not destination in self.__accounts:
             return False
-        dep: Account = dataoperator.get(departure, "Account")
-        dest: Account = dataoperator.get(destination, "Account")
+        from dataoperator import DataOperator
+        dep: Account = DataOperator().get(departure, "Account")
+        dest: Account = DataOperator().get(destination, "Account")
         trans = Transaction(departure, destination, amount)
         if dep.get_offer(amount) and dest.put_offer(amount):
             dep.get(amount)
@@ -76,7 +80,8 @@ class Bank:
     def get(self, account: int, amount: float) -> bool:
         if not account in self.__accounts:
             return False
-        dep = dataoperator.get(account, "Account")
+        from dataoperator import DataOperator
+        dep = DataOperator().get(account, "Account")
         trans = Transaction(0, account, amount)
         if dep.get_offer(amount):
             dep.get(amount)
@@ -89,7 +94,8 @@ class Bank:
     def put(self, account: int, amount: float) -> bool:
         if not account in self.__accounts:
             return False
-        dest = dataoperator.get(account, "Account")
+        from dataoperator import DataOperator
+        dest = DataOperator().get(account, "Account")
         trans = Transaction(account, 0, amount)
         if dest.put_offer(amount):
             dest.put(amount)
@@ -103,5 +109,6 @@ class Bank:
         if owner not in self.__clients:
             return False
         else:
-            dataoperator.get(owner, "Client").update(address, passport)
+            from dataoperator import DataOperator
+            DataOperator().get(owner, "Client").update(address, passport)
 

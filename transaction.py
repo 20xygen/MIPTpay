@@ -16,7 +16,8 @@ class Transaction:
         self.__destination = destination
         self.__amount = amount
         self.__status = 0
-        self.__id = dataoperator.put(self)
+        from dataoperator import DataOperator
+        self.__id = DataOperator().put(self)
 
     @property
     def id(self):

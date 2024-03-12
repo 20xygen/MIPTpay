@@ -1,4 +1,3 @@
-import dataoperator
 from accesstools import available_from
 from inspect import currentframe as cf
 
@@ -23,10 +22,12 @@ class Client:
             self.__precarious = True
         else:
             self.__precarious = False
-        self.__id = dataoperator.put(self)
+        from dataoperator import DataOperator
+        self.__id = DataOperator().put(self)
 
     @property
     def precarious(self):
+        available_from(cf(), "Bank", "ClientBuilder", "Account")
         return self.__precarious
 
     @property
@@ -43,22 +44,26 @@ class Client:
 
     @property
     def address(self):
+        available_from(cf(), "Bank", "ClientBuilder", "Account")
         return self.__address
 
     @property
     def passport(self):
+        available_from(cf(), "Bank", "ClientBuilder", "Account")
         return self.__passport
 
     @address.setter
     def address(self, address: str):
+        available_from(cf(), "Bank", "ClientBuilder")
         self.__address = address
 
     @passport.setter
     def passport(self, passport: int):
+        available_from(cf(), "Bank", "ClientBuilder")
         self.__passport = passport
 
     def update(self, address: str, passport: int):
-        available_from(cf(), "Bank")
+        available_from(cf(), "Bank", "ClientBuilder")
         self.__address = address
         self.__passport = passport
         self.validate()

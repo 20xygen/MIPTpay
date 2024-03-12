@@ -1,3 +1,6 @@
+from accesstools import available_from
+from inspect import currentframe as cf
+
 class Plan:
     '''Тариф счета. Информация о комиссиях и ограничениях.'''
 
@@ -5,7 +8,8 @@ class Plan:
 
     def __init__(self):
         import dataoperator
-        self.__id = dataoperator.put(self)
+        from dataoperator import DataOperator
+        self.__id = DataOperator().put(self)
 
     @property
     def id(self):
@@ -19,10 +23,12 @@ class DebitPlan(Plan):
 
     @property
     def transfer_limit(self):
+        available_from(cf(), "Bank", "Account")
         return self.__transfer_limit
 
     @property
     def decreased_transfer_limit(self):
+        available_from(cf(), "Bank", "Account")
         return self.__decreased_transfer_limit
 
     def __init__(self, transfer_limit: float, decreased_transfer_limit: float):
@@ -43,26 +49,32 @@ class DepositPlan(Plan):
 
     @property
     def transfer_limit(self):
+        available_from(cf(), "Bank", "Account")
         return self.__transfer_limit
 
     @property
     def decreased_transfer_limit(self):
+        available_from(cf(), "Bank", "Account")
         return self.__decreased_transfer_limit
 
     @property
     def period(self):
+        available_from(cf(), "Bank", "Account")
         return self.__period
 
     @property
     def decreased_period(self):
+        available_from(cf(), "Bank", "Account")
         return self.__decreased_period
 
     @property
     def commission(self):
+        available_from(cf(), "Bank", "Account")
         return self.__commission
 
     @property
     def increased_commission(self):
+        available_from(cf(), "Bank", "Account")
         return self.__increased_commission
 
     def __init__(self, period: int, decreased_period: int,
@@ -90,26 +102,32 @@ class CreditPlan(Plan):
 
     @property
     def transfer_limit(self):
+        available_from(cf(), "Bank", "Account")
         return self.__transfer_limit
 
     @property
     def decreased_transfer_limit(self):
+        available_from(cf(), "Bank", "Account")
         return self.__decreased_transfer_limit
 
     @property
     def lower_limit(self):
+        available_from(cf(), "Bank", "Account")
         return self.__lower_limit
 
     @property
     def decreased_lower_limit(self):
+        available_from(cf(), "Bank", "Account")
         return self.__decreased_lower_limit
 
     @property
     def commission(self):
+        available_from(cf(), "Bank", "Account")
         return self.__commission
 
     @property
     def increased_commission(self):
+        available_from(cf(), "Bank", "Account")
         return self.__increased_commission
 
     def __init__(self, lower_limit: float, decreased_lower_limit: float,
