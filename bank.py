@@ -73,7 +73,7 @@ class Bank:
         trans.cancel()
         return False
 
-    def get(self, account: int, amount: int) -> bool:
+    def get(self, account: int, amount: float) -> bool:
         if not account in self.__accounts:
             return False
         dep = dataoperator.get(account, "Account")
@@ -86,7 +86,7 @@ class Bank:
             trans.cancel()
             return False
 
-    def put(self, account: int, amount: int) -> bool:
+    def put(self, account: int, amount: float) -> bool:
         if not account in self.__accounts:
             return False
         dest = dataoperator.get(account, "Account")
