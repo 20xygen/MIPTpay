@@ -4,12 +4,16 @@ from bank import Bank
 from plan import Plan
 from typing import Dict
 from transaction import Transaction
+from user import User
 
 
 '''Модуль взаимодействия логики с базой данных.
 Хранит (бронирует) объекты,
 которые в данный момент используются системой.'''
 
+
+users: Dict[int, User] = {}
+users_counter = 0
 
 clients: Dict[int, Client] = {}
 clients_counter = 0
@@ -46,6 +50,7 @@ def put(obj) -> int:
     global banks, banks_counter
     global plans, plans_counter
     global transactions, transactions_counter
+    global users, users_counter
     if isinstance(obj, Client):
         clients_counter += 1
         clients[clients_counter] = obj
@@ -66,6 +71,10 @@ def put(obj) -> int:
         transactions_counter += 1
         transactions[transactions_counter] = obj
         return transactions_counter
+    if isinstance(obj, User):
+        users_counter += 1
+        users[users_counter] = obj
+        return users_counter
 
 def account_info() -> str:
     st = ""
