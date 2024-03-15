@@ -2,6 +2,7 @@ from timekeeper import TimeKeeper
 from planfactory import *
 from dataoperator import DataOperator
 from bank import Bank
+import crosspayment
 
 
 '''Среда тестирования.'''
@@ -29,7 +30,7 @@ TimeKeeper().increase()
 print("Day 1 ------------------------\n")
 
 denis = sberbank.register("Denis", "Barilov", "Moscow", "12 34 567890")
-print(denis)
+# print(denis)
 den_basic = sberbank.open_account(denis, sber_debit)
 sberbank.put(den_basic, 100000)
 den_credit = sberbank.open_account(denis, sber_credit)
@@ -69,7 +70,6 @@ TimeKeeper().increase()
 print("Day 4 ------------------------\n")
 
 sberbank.update(misha, "Dolgoprudny", "9999999999")
-
 sberbank.transfer(den_basic, misha_deposit, 10000)
 
 print(DataOperator().account_info())
@@ -79,8 +79,15 @@ TimeKeeper().get()
 TimeKeeper().increase()
 print("Day 5 ------------------------\n")
 
+done = crosspayment.get().transfer(sberbank.id, den_basic, tinkoff.id, artem_basic, denis, 5000)
+print(done)
+
 print(DataOperator().account_info())
 
+
+more = input("More days?[Y/n]")
+if more not in ["", "Y", "Yes"]:
+    exit()
 
 TimeKeeper().get()
 TimeKeeper().increase()

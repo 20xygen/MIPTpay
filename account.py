@@ -39,6 +39,11 @@ class Account:
         return self.__id
 
     @property
+    def owner(self):
+        available_from(cf(), "Bank")
+        return self.__owner
+
+    @property
     def transfer(self):
         available_from(cf(), "Bank")
         return self.__transfer

@@ -6,6 +6,8 @@ from transaction import Transaction
 from accountfactory import AccountFactory
 from clientbuilder import ClientBuilder
 import re
+from accesstools import available_from
+from inspect import currentframe as cf
 
 
 class Bank:
@@ -83,6 +85,18 @@ class Bank:
         trans.cancel()
         return False
 
+    def do_get(self, account: int, amount: float):
+        available_from(cf(), "CrossPaymentSystem")
+        from dataoperator import DataOperator
+        dep = DataOperator().get(account, "Account")
+        dep.get(amount)
+
+    def do_put(self, account: int, amount: float):
+        available_from(cf(), "CrossPaymentSystem")
+        from dataoperator import DataOperator
+        dep = DataOperator().get(account, "Account")
+        dep.put(amount)
+
     def get(self, account: int, amount: float) -> bool:
         if not account in self.__accounts:
             return False
@@ -90,7 +104,7 @@ class Bank:
         dep = DataOperator().get(account, "Account")
         trans = Transaction(0, account, amount)
         if dep.get_offer(amount):
-            dep.get(amount)
+            self.do_get(account, amount)
             trans.prove()
             return True
         else:
@@ -103,8 +117,9 @@ class Bank:
         from dataoperator import DataOperator
         dest = DataOperator().get(account, "Account")
         trans = Transaction(account, 0, amount)
+        DataOperator().put(trans)
         if dest.put_offer(amount):
-            dest.put(amount)
+            self.do_put(account, amount)
             trans.prove()
             return True
         else:
@@ -118,3 +133,25 @@ class Bank:
             from dataoperator import DataOperator
             DataOperator().get(owner, "Client").update(address, passport)
 
+    def valid_client(self, account: int, client: int) -> bool:
+        if client not in self.__clients:
+            return False
+        from dataoperator import DataOperator
+        client_obj = DataOperator().get(account, "Account")
+        if client_obj is None:
+            return False
+        return client_obj.owner == client
+
+    def get_offer(self, account: int, amount: float) -> bool:
+        if not account in self.__accounts:
+            return False
+        from dataoperator import DataOperator
+        account_obj = DataOperator().get(account, "Account")
+        return account_obj.get_offer(amount)
+
+    def put_offer(self, account: int, amount: float) -> bool:
+        if not account in self.__accounts:
+            return False
+        from dataoperator import DataOperator
+        account_obj = DataOperator().get(account, "Account")
+        return account_obj.put_offer(amount)
