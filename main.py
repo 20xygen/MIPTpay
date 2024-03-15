@@ -1,6 +1,6 @@
-import timekeeper
-from plan import Plan, DepositPlan, CreditPlan
-import dataoperator
+from timekeeper import TimeKeeper
+from planfactory import *
+from dataoperator import DataOperator
 from bank import Bank
 from user_interface import *
 

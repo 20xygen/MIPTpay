@@ -1,5 +1,6 @@
-import dataoperator
-
+from accesstools import available_from
+from inspect import currentframe as cf
+from typing import Optional
 
 class Client:
     '''Личный кабинет клиента банка.
@@ -10,10 +11,10 @@ class Client:
     __name: str
     __surname: str
     __address: str
-    __passport: int
+    __passport: str
     __precarious: bool
 
-    def __init__(self, name: str, surname: str, address: str = None, passport: int = None):
+    def __init__(self, name: str, surname: str, address: Optional[str] = None, passport: Optional[str] = None):
         self.__name = name
         self.__surname = surname
         self.__address = address
@@ -22,10 +23,12 @@ class Client:
             self.__precarious = True
         else:
             self.__precarious = False
-        self.__id = dataoperator.put(self)
+        from dataoperator import DataOperator
+        self.__id = DataOperator().put(self)
 
     @property
     def precarious(self):
+        available_from(cf(), "Bank", "ClientBuilder", "Account")
         return self.__precarious
 
     @property
@@ -42,16 +45,33 @@ class Client:
 
     @property
     def address(self):
+        available_from(cf(), "Bank", "ClientBuilder", "Account")
         return self.__address
 
     @property
     def passport(self):
+        available_from(cf(), "Bank", "ClientBuilder", "Account")
         return self.__passport
 
-    def update(self, address: str, passport: int):
+    @address.setter
+    def address(self, address: str):
+        available_from(cf(), "Bank", "ClientBuilder")
+        self.__address = address
+
+    @passport.setter
+    def passport(self, passport: str):
+        available_from(cf(), "Bank", "ClientBuilder")
+        self.__passport = passport
+
+    def update(self, address: str, passport: str):
+        available_from(cf(), "Bank", "ClientBuilder")
         self.__address = address
         self.__passport = passport
-        if passport is None or address is None:
+        self.validate()
+
+    def validate(self):
+        if self.passport is None or self.address is None:
             self.__precarious = True
         else:
             self.__precarious = False
+

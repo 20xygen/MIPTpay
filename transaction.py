@@ -8,15 +8,16 @@ class Transaction:
     __id: int
     __departure: int
     __destination: int
-    __amount: int
+    __amount: float
     __status: int # 0 - in progress, 1 - approved, -1 - cancelled
 
-    def __init__(self, departure: int, destination: int, amount: int):
+    def __init__(self, departure: int, destination: int, amount: float):
         self.__departure = departure
         self.__destination = destination
         self.__amount = amount
         self.__status = 0
-        self.__id = dataoperator.put(self)
+        from dataoperator import DataOperator
+        self.__id = DataOperator().put(self)
 
     @property
     def id(self):

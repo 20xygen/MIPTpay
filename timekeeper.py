@@ -1,23 +1,26 @@
 from typing import List
-import dataoperator
-
-
-'''Модуль, считающий дни и
-катализирующий обновление счетов по их тарифам.'''
-
+from dataoperator import DataOperator
 
 current_time: int = 0
 update_queue: List[int] = []
 
-def add(account: int):
-    update_queue.append(account)
+class TimeKeeper:
+    '''Модуль, считающий дни и
+    катализирующий обновление счетов по их тарифам.'''
 
-def increase():
-    for account in update_queue:
-        dataoperator.get(account, "Account").update()
-    global current_time
-    current_time += 1
+    def add(self, account: int):
+        update_queue.append(account)
 
-def get() -> int:
-    global current_time
-    return current_time
+    def current_time(self):
+        ct = current_time
+        return ct
+
+    def increase(self):
+        for account in update_queue:
+            DataOperator().get(account, "Account").update()
+        global current_time
+        current_time += 1
+
+    def get(self) -> int:
+        global current_time
+        return current_time
