@@ -5,6 +5,7 @@ from account import Account, DepositAccount, CreditAccount, DebitAccount
 from transaction import Transaction
 from accountfactory import AccountFactory
 from clientbuilder import ClientBuilder
+import re
 
 
 class Bank:
@@ -31,11 +32,16 @@ class Bank:
     def id(self):
         return self.__id
 
-    def register(self, name: str, surname: str, address: Optional[str] = None, passport: Optional[int] = None) -> Optional[int]:
+    def register(self, name: str, surname: str, address: Optional[str] = None, passport: Optional[str] = None) -> Optional[int]:
         for id in self.__clients:
             from dataoperator import DataOperator
             client = DataOperator().get(id, "Client")
             if client.name == name and client.surname == surname:
+                return None
+        pattern = re.compile("\d{10}")
+        if passport is not None:
+            passport = passport.replace(" ", "")
+            if not pattern.match(passport):
                 return None
         self.__registrator.reset(name, surname)
         if address is not None:
@@ -105,7 +111,7 @@ class Bank:
             trans.cancel()
             return False
 
-    def update(self, owner: int, address: str, passport: int) -> bool:
+    def update(self, owner: int, address: str, passport: str) -> bool:
         if owner not in self.__clients:
             return False
         else:

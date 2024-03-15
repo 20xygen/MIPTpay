@@ -28,7 +28,8 @@ TimeKeeper().get()
 TimeKeeper().increase()
 print("Day 1 ------------------------\n")
 
-denis = sberbank.register("Denis", "Barilov", "Moscow", 1122333444)
+denis = sberbank.register("Denis", "Barilov", "Moscow", "12 34 567890")
+print(denis)
 den_basic = sberbank.open_account(denis, sber_debit)
 sberbank.put(den_basic, 100000)
 den_credit = sberbank.open_account(denis, sber_credit)
@@ -67,7 +68,7 @@ TimeKeeper().get()
 TimeKeeper().increase()
 print("Day 4 ------------------------\n")
 
-sberbank.update(misha, "Dolgoprudny", 9999999999)
+sberbank.update(misha, "Dolgoprudny", "9999999999")
 
 sberbank.transfer(den_basic, misha_deposit, 10000)
 

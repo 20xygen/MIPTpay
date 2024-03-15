@@ -12,7 +12,7 @@ class ClientBuilder:
     def address(self, address: str):
         self.__brick.address = address
 
-    def passport(self, passport: int):
+    def passport(self, passport: str):
         self.__brick.passport = passport
 
     def get(self) -> Client:

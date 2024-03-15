@@ -1,5 +1,6 @@
 from accesstools import available_from
 from inspect import currentframe as cf
+from typing import Optional
 
 class Client:
     '''Личный кабинет клиента банка.
@@ -10,10 +11,10 @@ class Client:
     __name: str
     __surname: str
     __address: str
-    __passport: int
+    __passport: str
     __precarious: bool
 
-    def __init__(self, name: str, surname: str, address: str = None, passport: int = None):
+    def __init__(self, name: str, surname: str, address: Optional[str] = None, passport: Optional[str] = None):
         self.__name = name
         self.__surname = surname
         self.__address = address
@@ -58,11 +59,11 @@ class Client:
         self.__address = address
 
     @passport.setter
-    def passport(self, passport: int):
+    def passport(self, passport: str):
         available_from(cf(), "Bank", "ClientBuilder")
         self.__passport = passport
 
-    def update(self, address: str, passport: int):
+    def update(self, address: str, passport: str):
         available_from(cf(), "Bank", "ClientBuilder")
         self.__address = address
         self.__passport = passport
