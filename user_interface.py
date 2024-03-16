@@ -1,5 +1,6 @@
 from person import *
 from dataoperator import *
+from plan import *
 
 """
 
@@ -44,50 +45,41 @@ class UserInterface:
         bank_name = str(input())
         bank = DataOperator().get_bank_by_name(bank_name)
         print("Выберите счёт из предлагаемых данным банком:")
-        planss: Dict[int, Plan] = {}
+        planss: Dict[int, []] = {}
         counter = 1
         for ident in bank.plans:
-            planss[counter] = DataOperator().get(ident, "Plan")
+            plan = DataOperator().get(ident, "Plan")
+            planss[counter] = plan.get_properties()
+            if isinstance(plan, DebitPlan):
+                planss[counter].append("Дебетовый тариф")
+            elif isinstance(plan, DepositPlan):
+                planss[counter].append("Депозитный тариф")
+            elif isinstance(plan, CreditPlan):
+                planss[counter].append("Кредитный тариф")
+            planss[counter].append(plan)
+            counter += 1
         for i, plan in planss:
-            print(i, ") ")
-        if answer == 1:
-            # TODO: не дописано
-            pass
-        #     print("Введите название банка в котором хотите открыть счёт:")
-        #     bank_name = str(input())
-        #     bank = DataOperator().get_bank_by_name(bank_name)
-        #     client_id = self.__user.banks[bank]
-        #
-        #     new_acc = bank.open_account()
-        #     # Проверка на регистрацию в банке
-        #
-        #     # den_basic - new account's id; sberbank - bank object; denis - client id; sber_debit - plan id
-        #     # den_basic = sberbank.open_account(denis, sber_debit)
-        #     pass
-        # elif answer == 2:
-        #     # den_deposit - new account's id; sberbank - bank object; denis - client id; sber_deposit - plan id
-        #     # den_deposit = sberbank.open_account(denis, sber_deposit)
-        #     pass
-        # elif answer == 3:
-        #     # den_credit - new account's id; sberbank - bank object; denis - client id; sber-credit - plan id
-        #     # den_credit = sberbank.open_account(denis, sber_credit)
-        #     pass
-        # elif answer == 4:
-        #     self.main_menu()
-        # else:
-        #     print("Такого варианта нет попробуйте ещё раз")
+            # TODO: преназвать параметры
+            print(i, ") Тип: ", plan[3], " Параметр 1: ", plan[0], " Параметр 2: ", plan[1], " Параметр 3: ", plan[2])
+        ans = int(input("Введите номер:"))
+        plan = planss[ans][4]
+        client_id = self.__user.banks[bank]
+        new_account = bank.open_account(client_id, plan)
+        self.__user.accounts[bank_name] = new_account
+        print("Новый счёт успешно открыт")
+        self.main_menu()
 
     def profile(self):
         print("""Это страница вашего профиля
-                 Ваши данные:""")
+                     Ваши данные:""")
         print("Ваше имя: ", self.__user.name)
         print("Ваша фамилия: ", self.__user.surname)
         print("Ваш адресс: ", self.__user.address)
         print("Ваш паспорт: ", self.__user.passport)
         print("Открытые счета: ")
+        for bank, account_id in self.__user.accounts:
+            print(bank, ": параметры...")
         # TODO: Реализовать нормальный вывод счетов
-        for i in range(self.__user.plans.size()):
-            print(i, ") ", self.__user.plans[i])
         print("1. Вернуться в главное меню")
         answer = int(input("Введите 1:"))
         if answer == 1:
@@ -96,16 +88,18 @@ class UserInterface:
             print("Такого варианта нет")
             self.profile()
 
+
     def operations(self):
         print("Это страница операций")
         print("Ваши счета:")
         # TODO: Вывод счетов
+        account_num = int(input("Введите с каким счётом вы хотите совершить операцию:"))
         print("""Возможные дествия со счетами:
-                 1. Полжить деньги
-                 2. Снять деньги
-                 3. Перевести со счёта на счёт
-                 4. Закрыть счёт
-                 5. Главное меню""")
+                     1. Полжить деньги
+                     2. Снять деньги
+                     3. Перевести со счёта на счёт
+                     4. Закрыть счёт
+                     5. Главное меню""")
         answer = int(input("Введите число от 1 до 5:"))
         if answer == 1:
             # sberbank - bank object, den_basic - account id
@@ -132,19 +126,21 @@ class UserInterface:
             print("Такого варианта нет")
             self.operations()
 
+
     def registration(self):
         print("Введите название банка в котором вы хотите зарегистрироваться:")
         bank_name = str(input())
         try:
             bank = DataOperator().get_bank_by_name(bank_name)
             new_id = bank.register(self.__user.name, self.__user.surname, self.__user.address,
-                                str(self.__user.passport))
+                                   str(self.__user.passport))
             self.__user.banks[bank.name] = new_id
             print("Вы успешно зарегистрировались")
             self.main_menu()
         except:
             print("Такого банка не существует")
             self.main_menu()
+
 
     def update_data(self):
         if self.__user.banks:
@@ -174,14 +170,15 @@ class UserInterface:
             print("Вы не зарегистрированы ни в одном банке")
             self.main_menu()
 
+
     def main_menu(self):
         print("""Это главное меню приложения вы можете сделать следующее:
-                    1. Зарегистрироваться в банке
-                    2. Открыть счёт
-                    3. Дополнить данные
-                    4. Профиль
-                    5. Операции со счётом
-                    6. Выход""")
+                        1. Зарегистрироваться в банке
+                        2. Открыть счёт
+                        3. Дополнить данные
+                        4. Профиль
+                        5. Операции со счётом
+                        6. Выход""")
         answer = int(input("Введите число от 1 до 4:"))
         if answer == 1:
             self.registration()

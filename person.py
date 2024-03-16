@@ -16,7 +16,7 @@ class Person:
     __address: str
     __passport: int
     __banks: Dict[str, int]
-    __plans: []
+    __accounts: Dict[str, int]
 
     def __init__(self, login: str, password: str, name: str, surname: str, address: str = None, passport: int = None):
         import dataoperator
@@ -54,8 +54,8 @@ class Person:
         return self.__passport
 
     @property
-    def plans(self):
-        return self.__plans
+    def accounts(self):
+        return self.__accounts
 
     @property
     def banks(self):

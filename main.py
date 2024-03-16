@@ -18,12 +18,6 @@ user_inter.login_and_register()
 
 '''! Comment previous lines to test manually !'''
 
-from timekeeper import TimeKeeper
-from planfactory import *
-from dataoperator import DataOperator
-from bank import Bank
-import crosspayment
-
 
 '''Среда тестирования.'''
 
