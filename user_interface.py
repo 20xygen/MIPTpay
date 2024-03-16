@@ -74,7 +74,7 @@ class UserInterface:
                      Ваши данные:""")
         print("Ваше имя: ", self.__user.name)
         print("Ваша фамилия: ", self.__user.surname)
-        print("Ваш адресс: ", self.__user.address)
+        print("Ваш адрес: ", self.__user.address)
         print("Ваш паспорт: ", self.__user.passport)
         print("Открытые счета: ")
         for bank, account_id in self.__user.accounts:
