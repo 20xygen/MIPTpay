@@ -1,4 +1,3 @@
-from plan import DebitPlan, DepositPlan, CreditPlan
 from typing import Optional
 
 class PlanProperty:
@@ -62,11 +61,13 @@ class TransferLimit(PlanProperty):
 class PlanFactory:
     @staticmethod
     def create_debit_plan(transfer_limit: TransferLimit):
+        from plan import DebitPlan
         return DebitPlan(transfer_limit.transfer_limit, transfer_limit.decreased_transfer_limit)
 
     @staticmethod
     def create_deposit_plan(transfer_limit: TransferLimit,
                             period: Period, commission: Commission):
+        from plan import DepositPlan
         return DepositPlan(period.period, period.decreased_period,
                          commission.commission, commission.increased_commission,
                          transfer_limit.transfer_limit, transfer_limit.decreased_transfer_limit)
@@ -74,6 +75,7 @@ class PlanFactory:
     @staticmethod
     def create_credit_plan(transfer_limit: TransferLimit,
                             lower_limit: LowerLimit, commission: Commission):
+        from plan import CreditPlan
         return CreditPlan(lower_limit.lower_limit, lower_limit.decreased_lower_limit,
                          commission.commission, commission.increased_commission,
                          transfer_limit.transfer_limit, transfer_limit.decreased_transfer_limit)

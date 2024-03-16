@@ -11,6 +11,9 @@ sber_credit = sberbank.add_plan(PlanFactory.create_credit_plan(TransferLimit(1e6
 sber_deposit = sberbank.add_plan(PlanFactory.create_deposit_plan(TransferLimit(1e6, 1e4), Period(5, 10), Commission(0.1, 0.2)))
 user_inter = UserInterface()
 user_inter.login_and_register()
+# '''Среда тестирования.'''
+# user_inter = UserInterface()
+# user_inter.login_and_register()
 
 
 '''! Comment previous lines to test manually !'''
@@ -40,6 +43,9 @@ c = DataOperator().clients()
 a = DataOperator().accounts()
 t = DataOperator().transactions()
 ct = TimeKeeper().current_time()
+
+
+print(DataOperator().get(sber_credit, "Plan").get_properties())
 
 
 TimeKeeper().get()
