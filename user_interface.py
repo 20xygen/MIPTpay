@@ -60,7 +60,10 @@ class UserInterface:
             counter += 1
         for i, plan in planss:
             # TODO: преназвать параметры
-            print(i, ") Тип: ", plan[3], " Параметр 1: ", plan[0], " Параметр 2: ", plan[1], " Параметр 3: ", plan[2])
+            properties = plan.get_properties()
+            for p in properties:
+                print(p.info())
+            # print(i, ") Тип: ", plan[3], " Параметр 1: ", plan[0], " Параметр 2: ", plan[1], " Параметр 3: ", plan[2])
         ans = int(input("Введите номер:"))
         plan = planss[ans][4]
         client_id = self.__user.banks[bank]

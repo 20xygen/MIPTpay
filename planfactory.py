@@ -14,6 +14,10 @@ class Commission(PlanProperty):
         else:
             self.increased_commission = commission
 
+    def info(self) -> str:
+        ans = f"Комиссия, начисляемая или взымаемая бынком: {self.commission}\n"
+        ans += f"(Комиссия при ненадежном аккаунте: {self.increased_commission})"
+
 class Period(PlanProperty):
     period: int
     decreased_period: int
@@ -24,6 +28,10 @@ class Period(PlanProperty):
             self.decreased_period = decreased_period
         else:
             self.decreased_period = period
+
+    def info(self) -> str:
+        ans = f"Срок вклада: {self.period}\n"
+        ans += f"(Срок при ненадежном аккаунте: {self.decreased_period})"
 
 class LowerLimit(PlanProperty):
     lower_limit: float
@@ -36,6 +44,10 @@ class LowerLimit(PlanProperty):
         else:
             self.decreased_lower_limit = lower_limit
 
+    def info(self) -> str:
+        ans = f"Минимальный остаток: {self.lower_limit}\n"
+        ans += f"(Минимальный остаток при ненадежном аккаунте: {self.decreased_lower_limit})"
+
 class UpperLimit(PlanProperty):
     upper_limit: float
     decreased_upper_limit: float
@@ -47,6 +59,10 @@ class UpperLimit(PlanProperty):
         else:
             self.decreased_upper_limit = upper_limit
 
+    def info(self) -> str:
+        ans = f"Максимальный балланс: {self.upper_limit}\n"
+        ans += f"(Максимальный балланс при ненадежном аккаунте: {self.decreased_upper_limit})"
+
 class TransferLimit(PlanProperty):
     transfer_limit: float
     decreased_transfer_limit: float
@@ -57,6 +73,10 @@ class TransferLimit(PlanProperty):
             self.decreased_transfer_limit = decreased_transfer_limit
         else:
             self.decreased_transfer_limit = transfer_limit
+
+    def info(self) -> str:
+        ans = f"Лимит на переводы: {self.upper_limit}\n"
+        ans += f"(Лимит на переводы при ненадежном аккаунте: {self.decreased_upper_limit})"
 
 class PlanFactory:
     @staticmethod
