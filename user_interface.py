@@ -1,6 +1,17 @@
 from person import *
 
 
+"""
+
+print(DataOperator().account_info())  # print info about all accounts
+TimeKeeper().get()  # to get current date
+TimeKeeper().increase()  # go to next day (and update all accounts)
+
+check out the main.py for complete understanding
+
+"""
+
+
 class UserInterface:
     __user: Person
 
@@ -28,18 +39,26 @@ class UserInterface:
             self.login_and_register()
 
     def open_plan(self):
+        # TODO: У каждого банка могут быть по нескольку планов разных категорий (реализуй выбор среди таковых)
         print("""Это меню открытия счёта пожалуйста выберете счёт который вы хотите открыть:
-                  1. Депозит
-                  2. Кредит
-                  3. Главное меню""")
+                  1. Дебитовый счет
+                  2. Депозитный счет
+                  3. Кредитный счет
+                  4. Главное меню""")
         answer = int(input("Введите 1, 2, 3:"))
         if answer == 1:
-            # TODO: Открытие депозита (добавить этот счёт в массив)
+            # den_basic - new account's id; sberbank - bank object; denis - client id; sber_debit - plan id
+            # den_basic = sberbank.open_account(denis, sber_debit)
             pass
         elif answer == 2:
-            # TODO: Открытие кредита (добавть счёт в массив)
+            # den_deposit - new account's id; sberbank - bank object; denis - client id; sber_deposit - plan id
+            # den_deposit = sberbank.open_account(denis, sber_deposit)
             pass
         elif answer == 3:
+            # den_credit - new account's id; sberbank - bank object; denis - client id; sber-credit - plan id
+            # den_credit = sberbank.open_account(denis, sber_credit)
+            pass
+        elif answer == 4:
             self.main_menu()
         else:
             print("Такого варианта нет попробуйте ещё раз")
@@ -75,16 +94,23 @@ class UserInterface:
                  5. Главное меню""")
         answer = int(input("Введите число от 1 до 5:"))
         if answer == 1:
-            # TODO: положить деньги
+            # sberbank - bank object, den_basic - account id
+            # sberbank.put(den_basic, 100000)
             pass
         elif answer == 2:
-            # TODO: снять деньги
+            # sberbank - bank object, den_basic - account id
+            # sberbank.get(den_basic, 100000)
             pass
         elif answer == 3:
-            # TODO: Перевод между счетами
+            # sberbank - bank object, den_basic and misha_deposit - account id-s
+            # sberbank.transfer(den_basic, misha_deposit, 10000)
+            # TODO: there is also the way to make cross-bank transactions
+            # denis, sberbank.id and den_basic - sender's info; tinkoff.id and artem_basic - responder's info; done - boolean indicator
+            # done = crosspayment.get().transfer(sberbank.id, den_basic, tinkoff.id, artem_basic, denis, 5000)
             pass
         elif answer == 4:
-            # TODO: Закрытие счёта
+            # not realized yet
+            # TODO: account closing
             pass
         elif answer == 5:
             self.main_menu()
@@ -102,12 +128,14 @@ class UserInterface:
                     6. Выход""")
         answer = int(input("Введите число от 1 до 4:"))
         if answer == 1:
-            # TODO: Регистрация в банке (Данные подгружаются из User вроде ничего дополнительного спрашивать не надо)
+            # denis - new client's id; sberbank - bank object
+            # denis = sberbank.register("Denis", "Barilov", "Moscow", "12 34 567890")
             pass
         elif answer == 2:
             self.open_plan()
         elif answer == 3:
-            # TODO: Дополнить данные
+            # misha - new client's id; sberbank - bank object
+            # sberbank.update(misha, "Dolgoprudny", "9999999999")
             pass
         elif answer == 4:
             self.profile()
