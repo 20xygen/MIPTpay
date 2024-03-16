@@ -14,11 +14,11 @@ class Person:
     __name: str
     __surname: str
     __address: str
-    __passport: int
+    __passport: str
     __banks: Dict[str, int]
     __accounts: Dict[str, int]
 
-    def __init__(self, login: str, password: str, name: str, surname: str, address: str = None, passport: int = None):
+    def __init__(self, login: str, password: str, name: str, surname: str, address: str = None, passport: str = None):
         import dataoperator
         self.__login = login
         self.__password = password
@@ -28,6 +28,7 @@ class Person:
         self.__passport = passport
         self.__id = dataoperator.DataOperator().put(self)
         self.__banks = {}
+        self.__accounts = {}
 
     def login(self, login: str, password: str):
         # TODO: Сделать систему проверки пользователя
@@ -61,6 +62,6 @@ class Person:
     def banks(self):
         return self.__banks
 
-    def update(self, address: str, passport: int):
+    def update(self, address: str, passport: str):
         self.__address = address
         self.__passport = passport

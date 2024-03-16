@@ -135,6 +135,7 @@ class Bank:
             return False
 
     def update(self, owner: int, address: str, passport: str) -> bool:
+        # TODO: нет проверки на праивльно введённый паспорт
         if owner not in self.__clients:
             return False
         else:
