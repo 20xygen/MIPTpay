@@ -5,6 +5,10 @@ from bank import Bank
 from user_interface import *
 
 '''Среда тестирования.'''
+sberbank = Bank("Sberbank")
+sber_debit = sberbank.add_plan(PlanFactory.create_debit_plan(TransferLimit(1e6, 1e4)))
+sber_credit = sberbank.add_plan(PlanFactory.create_credit_plan(TransferLimit(1e6, 1e4), LowerLimit(-3e5, -3e3), Commission(-0.1, -0.2)))
+sber_deposit = sberbank.add_plan(PlanFactory.create_deposit_plan(TransferLimit(1e6, 1e4), Period(5, 10), Commission(0.1, 0.2)))
 user_inter = UserInterface()
 user_inter.login_and_register()
 

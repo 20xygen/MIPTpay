@@ -1,5 +1,5 @@
 from person import *
-
+from dataoperator import *
 
 """
 
@@ -40,28 +40,42 @@ class UserInterface:
 
     def open_plan(self):
         # TODO: У каждого банка могут быть по нескольку планов разных категорий (реализуй выбор среди таковых)
-        print("""Это меню открытия счёта пожалуйста выберете счёт который вы хотите открыть:
-                  1. Дебитовый счет
-                  2. Депозитный счет
-                  3. Кредитный счет
-                  4. Главное меню""")
-        answer = int(input("Введите 1, 2, 3:"))
+        print("""Это меню открытия счёта пожалуйста введите банк в котором вы хотите открыть счёт: """)
+        bank_name = str(input())
+        bank = DataOperator().get_bank_by_name(bank_name)
+        print("Выберите счёт из предлагаемых данным банком:")
+        planss: Dict[int, Plan] = {}
+        counter = 1
+        for ident in bank.plans:
+            planss[counter] = DataOperator().get(ident, "Plan")
+        for i, plan in planss:
+            print(i, ") ")
         if answer == 1:
-            # den_basic - new account's id; sberbank - bank object; denis - client id; sber_debit - plan id
-            # den_basic = sberbank.open_account(denis, sber_debit)
+            # TODO: не дописано
             pass
-        elif answer == 2:
-            # den_deposit - new account's id; sberbank - bank object; denis - client id; sber_deposit - plan id
-            # den_deposit = sberbank.open_account(denis, sber_deposit)
-            pass
-        elif answer == 3:
-            # den_credit - new account's id; sberbank - bank object; denis - client id; sber-credit - plan id
-            # den_credit = sberbank.open_account(denis, sber_credit)
-            pass
-        elif answer == 4:
-            self.main_menu()
-        else:
-            print("Такого варианта нет попробуйте ещё раз")
+        #     print("Введите название банка в котором хотите открыть счёт:")
+        #     bank_name = str(input())
+        #     bank = DataOperator().get_bank_by_name(bank_name)
+        #     client_id = self.__user.banks[bank]
+        #
+        #     new_acc = bank.open_account()
+        #     # Проверка на регистрацию в банке
+        #
+        #     # den_basic - new account's id; sberbank - bank object; denis - client id; sber_debit - plan id
+        #     # den_basic = sberbank.open_account(denis, sber_debit)
+        #     pass
+        # elif answer == 2:
+        #     # den_deposit - new account's id; sberbank - bank object; denis - client id; sber_deposit - plan id
+        #     # den_deposit = sberbank.open_account(denis, sber_deposit)
+        #     pass
+        # elif answer == 3:
+        #     # den_credit - new account's id; sberbank - bank object; denis - client id; sber-credit - plan id
+        #     # den_credit = sberbank.open_account(denis, sber_credit)
+        #     pass
+        # elif answer == 4:
+        #     self.main_menu()
+        # else:
+        #     print("Такого варианта нет попробуйте ещё раз")
 
     def profile(self):
         print("""Это страница вашего профиля
@@ -118,6 +132,48 @@ class UserInterface:
             print("Такого варианта нет")
             self.operations()
 
+    def registration(self):
+        print("Введите название банка в котором вы хотите зарегистрироваться:")
+        bank_name = str(input())
+        try:
+            bank = DataOperator().get_bank_by_name(bank_name)
+            new_id = bank.register(self.__user.name, self.__user.surname, self.__user.address,
+                                str(self.__user.passport))
+            self.__user.banks[bank.name] = new_id
+            print("Вы успешно зарегистрировались")
+            self.main_menu()
+        except:
+            print("Такого банка не существует")
+            self.main_menu()
+
+    def update_data(self):
+        if self.__user.banks:
+            print("Введите название банка в котором вы хотите зменить данные:")
+            bank_name = str(input())
+            bank = DataOperator().get_bank_by_name(bank_name)
+            address = self.__user.address
+            passport = str(self.__user.passport)
+            print("Хотите поменять адрес: (Y/N)")
+            ans = str(input())
+            if ans == "Y":
+                print("Введите адресс:")
+                address = str(input())
+            print("Хотите поменять паспорт: (Y/N)")
+            ans = str(input())
+            if ans == "Y":
+                print("Введите паспорт:")
+                passport = str(input())
+            try:
+                bank.update(self.__user.banks[bank.name], address, passport)
+                print("Данные успешно изменены")
+                self.main_menu()
+            except:
+                print("Вы не зарегистрированы в этом банке")
+                self.main_menu()
+        else:
+            print("Вы не зарегистрированы ни в одном банке")
+            self.main_menu()
+
     def main_menu(self):
         print("""Это главное меню приложения вы можете сделать следующее:
                     1. Зарегистрироваться в банке
@@ -128,15 +184,11 @@ class UserInterface:
                     6. Выход""")
         answer = int(input("Введите число от 1 до 4:"))
         if answer == 1:
-            # denis - new client's id; sberbank - bank object
-            # denis = sberbank.register("Denis", "Barilov", "Moscow", "12 34 567890")
-            pass
+            self.registration()
         elif answer == 2:
             self.open_plan()
         elif answer == 3:
-            # misha - new client's id; sberbank - bank object
-            # sberbank.update(misha, "Dolgoprudny", "9999999999")
-            pass
+            self.update_data()
         elif answer == 4:
             self.profile()
         elif answer == 5:

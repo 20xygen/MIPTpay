@@ -15,6 +15,7 @@ class Person:
     __surname: str
     __address: str
     __passport: int
+    __banks: Dict[str, int]
     __plans: []
 
     def __init__(self, login: str, password: str, name: str, surname: str, address: str = None, passport: int = None):
@@ -26,6 +27,7 @@ class Person:
         self.__address = address
         self.__passport = passport
         self.__id = dataoperator.DataOperator().put(self)
+        self.__banks = {}
 
     def login(self, login: str, password: str):
         # TODO: Сделать систему проверки пользователя
@@ -54,6 +56,10 @@ class Person:
     @property
     def plans(self):
         return self.__plans
+
+    @property
+    def banks(self):
+        return self.__banks
 
     def update(self, address: str, passport: int):
         self.__address = address

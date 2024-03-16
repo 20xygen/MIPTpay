@@ -34,6 +34,14 @@ class Bank:
     def id(self):
         return self.__id
 
+    @property
+    def name(self):
+        return self.__name
+
+    @property
+    def plans(self):
+        return self.__plans
+
     def register(self, name: str, surname: str, address: Optional[str] = None, passport: Optional[str] = None) -> Optional[int]:
         for id in self.__clients:
             from dataoperator import DataOperator
