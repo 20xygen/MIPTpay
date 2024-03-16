@@ -4,9 +4,9 @@ from dataoperator import DataOperator
 from bank import Bank
 from user_interface import *
 
-'''Среда тестирования.'''
-user_inter = UserInterface()
-user_inter.login_and_register()
+# '''Среда тестирования.'''
+# user_inter = UserInterface()
+# user_inter.login_and_register()
 
 
 '''! Comment previous lines to test manually !'''
@@ -36,6 +36,9 @@ c = DataOperator().clients()
 a = DataOperator().accounts()
 t = DataOperator().transactions()
 ct = TimeKeeper().current_time()
+
+
+print(DataOperator().get(sber_credit, "Plan").get_properties())
 
 
 TimeKeeper().get()

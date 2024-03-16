@@ -1,5 +1,7 @@
 from accesstools import available_from
 from inspect import currentframe as cf
+from typing import List
+from planfactory import PlanProperty, Commission, Period, LowerLimit, UpperLimit, TransferLimit
 
 class Plan:
     '''Тариф счета. Информация о комиссиях и ограничениях.'''
@@ -14,6 +16,9 @@ class Plan:
     @property
     def id(self):
         return self.__id
+
+    def get_properties(self) -> List[PlanProperty]:
+        return []
 
 class DebitPlan(Plan):
     '''Дебетовый тариф.'''
@@ -35,6 +40,9 @@ class DebitPlan(Plan):
         super().__init__()
         self.__transfer_limit = transfer_limit
         self.__decreased_transfer_limit = decreased_transfer_limit
+
+    def get_properties(self) -> List[PlanProperty]:
+        return [TransferLimit(self.__transfer_limit, self.__decreased_transfer_limit)]
 
 
 class DepositPlan(Plan):
@@ -88,6 +96,11 @@ class DepositPlan(Plan):
         self.__transfer_limit = transfer_limit
         self.__decreased_transfer_limit = decreased_transfer_limit
 
+    def get_properties(self) -> List[PlanProperty]:
+        return [TransferLimit(self.__transfer_limit, self.__decreased_transfer_limit),
+                Period(self.__period, self.__decreased_period),
+                Commission(self.__commission, self.__increased_commission)]
+
 
 
 class CreditPlan(Plan):
@@ -140,5 +153,10 @@ class CreditPlan(Plan):
         self.__increased_commission = increased_commission
         self.__transfer_limit = transfer_limit
         self.__decreased_transfer_limit = decreased_transfer_limit
+
+    def get_properties(self) -> List[PlanProperty]:
+        return [TransferLimit(self.__transfer_limit, self.__decreased_transfer_limit),
+                LowerLimit(self.__lower_limit, self.__decreased_lower_limit),
+                Commission(self.__commission, self.__increased_commission)]
 
 
