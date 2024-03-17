@@ -71,3 +71,4 @@ class Person:
     def update(self, address: str, passport: str):
         self.__address = address
         self.__passport = passport
+
