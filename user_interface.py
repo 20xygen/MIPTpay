@@ -156,8 +156,8 @@ class UserInterface:
             except:
                 print("Пожалуйста введите число!")
                 self.transaction(account_id, bank)
-            client = DataOperator().get_bank_by_name(self.__user.name)
-            crosspayment.get().transfer(bank.id, account_id, second_bank.id, second_account_id, client.id, s)
+            acc = self.__user.banks[bank.name]
+            crosspayment.get().transfer(bank.id, account_id, second_bank.id, second_account_id, acc, s)
         elif ans == 3:
             self.operations()
         else:
