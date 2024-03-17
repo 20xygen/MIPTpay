@@ -91,6 +91,8 @@ class Account:
         st = str(self.id) + ("(open)" if self.opened else "(closed)") + '\n'
         from dataoperator import DataOperator
         owner_obj = DataOperator().get(self.owner, "Client")
+        if owner_obj is None:
+            "Error in account::info()"
         st += f"Owner: {owner_obj.name} {owner_obj.surname}\n"
         st += ("Precarious" if owner_obj.precarious else "Not precarious") + f": {owner_obj.address} {owner_obj.passport}\n"
         st += str(self.money) + "\n"
@@ -115,7 +117,10 @@ class DebitAccount(Account):
         available_from(cf(), "Bank")
         from dataoperator import DataOperator
         plan_obj = DataOperator().get(self.plan, "Plan")
-        lim = plan_obj.transfer_limit if not DataOperator().get(self.owner, "Client").precarious else plan_obj.decreased_transfer_limit
+        client_obj = DataOperator().get(self.owner, "Client")
+        if plan_obj is None or client_obj is None:
+            return False
+        lim = plan_obj.transfer_limit if not client_obj.precarious else plan_obj.decreased_transfer_limit
         if amount > 0 and self.transfer + amount <= lim:
             return True
         return False
@@ -124,7 +129,10 @@ class DebitAccount(Account):
         available_from(cf(), "Bank")
         from dataoperator import DataOperator
         plan_obj = DataOperator().get(self.plan, "Plan")
-        lim = plan_obj.transfer_limit if not DataOperator().get(self.owner, "Client").precarious else plan_obj.decreased_transfer_limit
+        client_obj = DataOperator().get(self.owner, "Client")
+        if plan_obj is None or client_obj is None:
+            return False
+        lim = plan_obj.transfer_limit if not client_obj.precarious else plan_obj.decreased_transfer_limit
         if 0 < amount <= self.money and self.transfer + amount <= lim:
             return True
         return False
@@ -161,7 +169,10 @@ class DepositAccount(Account):
         from dataoperator import DataOperator
         plan_obj = DataOperator().get(self.__plan, "Plan")
         modifier = 1 + plan_obj.commission
-        if DataOperator().get(self.owner, "Client").precarious:
+        client_obj = DataOperator().get(self.owner, "Client")
+        if client_obj is None:
+            return False
+        if client_obj.precarious:
             modifier += plan_obj.increased_commission
         self.money *= modifier # ** (timekeeper.get() - self.__freeze_date)
 
@@ -169,7 +180,10 @@ class DepositAccount(Account):
         available_from(cf(), "Bank")
         from dataoperator import DataOperator
         plan_obj = DataOperator().get(self.plan, "Plan")
-        lim = plan_obj.transfer_limit if not DataOperator().get(self.owner, "Client").precarious else plan_obj.decreased_transfer_limit
+        client_obj = DataOperator().get(self.owner, "Client")
+        if plan_obj is None or client_obj is None:
+            return False
+        lim = plan_obj.transfer_limit if not client_obj.precarious else plan_obj.decreased_transfer_limit
         if amount > 0 and self.transfer + amount <= lim:
             return True
         return False
@@ -179,7 +193,10 @@ class DepositAccount(Account):
         from dataoperator import DataOperator
         from timekeeper import TimeKeeper
         plan_obj = DataOperator().get(self.plan, "Plan")
-        lim = plan_obj.transfer_limit if not DataOperator().get(self.owner, "Client").precarious else plan_obj.decreased_transfer_limit
+        client_obj = DataOperator().get(self.owner, "Client")
+        if plan_obj is None or client_obj is None:
+            return False
+        lim = plan_obj.transfer_limit if not client_obj.precarious else plan_obj.decreased_transfer_limit
         per = plan_obj.period if not DataOperator().get(self.owner, "Client").precarious else plan_obj.decreased_period
         if 0 < amount <= self.money and self.__freeze_date >= TimeKeeper().get() + per and self.transfer + amount <= lim:
             return True
@@ -208,8 +225,11 @@ class CreditAccount(Account):
             pass
         from dataoperator import DataOperator
         plan_obj = DataOperator().get(self.__plan, "Plan")
+        client_obj = DataOperator().get(self.owner, "Client")
+        if plan_obj is None or client_obj is None:
+            return False
         modifier = 1 + plan_obj.commission
-        if DataOperator().get(self.owner, "Client").precarious:
+        if client_obj.precarious:
             modifier += plan_obj.increased_commission
         self.money *= modifier
 
@@ -217,8 +237,11 @@ class CreditAccount(Account):
         available_from(cf(), "Bank")
         from dataoperator import DataOperator
         plan_obj = DataOperator().get(self.__plan, "Plan")
-        tra = plan_obj.transfer_limit if not DataOperator().get(self.owner, "Client").precarious else plan_obj.decreased_transfer_limit
-        lim = plan_obj.lower_limit if not DataOperator().get(self.owner, "Client").precarious else plan_obj.decreased_lower_limit
+        client_obj = DataOperator().get(self.owner, "Client")
+        if plan_obj is None or client_obj is None:
+            return False
+        tra = plan_obj.transfer_limit if not client_obj.precarious else plan_obj.decreased_transfer_limit
+        lim = plan_obj.lower_limit if not client_obj.precarious else plan_obj.decreased_lower_limit
         if self.money - amount >= lim and amount > 0 and self.transfer + amount <= tra:
             return True
         return True
@@ -227,7 +250,10 @@ class CreditAccount(Account):
         available_from(cf(), "Bank")
         from dataoperator import DataOperator
         plan_obj = DataOperator().get(self.plan, "Plan")
-        lim = plan_obj.transfer_limit if not DataOperator().get(self.owner, "Client").precarious else plan_obj.decreased_transfer_limit
+        client_obj = DataOperator().get(self.owner, "Client")
+        if plan_obj is None or client_obj is None:
+            return False
+        lim = plan_obj.transfer_limit if not client_obj.precarious else plan_obj.decreased_transfer_limit
         if amount > 0 and self.transfer + amount <= lim:
             return True
         return False
