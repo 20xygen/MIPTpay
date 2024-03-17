@@ -34,6 +34,18 @@ class Bank:
     def id(self):
         return self.__id
 
+    @property
+    def name(self):
+        return self.__name
+
+    @property
+    def plans(self):
+        return self.__plans
+
+    @property
+    def clients(self):
+        return self.__clients
+
     def register(self, name: str, surname: str, address: Optional[str] = None, passport: Optional[str] = None) -> Optional[int]:
         for id in self.__clients:
             from dataoperator import DataOperator
@@ -51,6 +63,8 @@ class Bank:
         if passport is not None:
             self.__registrator.passport(passport)
         client = self.__registrator.get().id
+        if client is None:
+            return None
         self.__clients.append(client)
         return client
 
@@ -66,6 +80,8 @@ class Bank:
             return None
         from dataoperator import DataOperator
         plan_obj = DataOperator().get(plan, "Plan")
+        if plan_obj is None:
+            return None
         acc = AccountFactory.create(owner, plan_obj).id
         self.__accounts.append(acc)
         return acc
@@ -76,6 +92,8 @@ class Bank:
         from dataoperator import DataOperator
         dep: Account = DataOperator().get(departure, "Account")
         dest: Account = DataOperator().get(destination, "Account")
+        if dest is None or dep is None:
+            return False
         trans = Transaction(departure, destination, amount)
         if dep.get_offer(amount) and dest.put_offer(amount):
             dep.get(amount)
@@ -89,12 +107,16 @@ class Bank:
         available_from(cf(), "CrossPaymentSystem")
         from dataoperator import DataOperator
         dep = DataOperator().get(account, "Account")
+        if dep is None:
+            return None
         dep.get(amount)
 
     def do_put(self, account: int, amount: float):
         available_from(cf(), "CrossPaymentSystem")
         from dataoperator import DataOperator
         dep = DataOperator().get(account, "Account")
+        if dep is None:
+            return None
         dep.put(amount)
 
     def get(self, account: int, amount: float) -> bool:
@@ -102,6 +124,8 @@ class Bank:
             return False
         from dataoperator import DataOperator
         dep = DataOperator().get(account, "Account")
+        if dep is None:
+            return False
         trans = Transaction(0, account, amount)
         if dep.get_offer(amount):
             self.do_get(account, amount)
@@ -116,6 +140,8 @@ class Bank:
             return False
         from dataoperator import DataOperator
         dest = DataOperator().get(account, "Account")
+        if dest is None:
+            return False
         trans = Transaction(account, 0, amount)
         DataOperator().put(trans)
         if dest.put_offer(amount):
@@ -127,17 +153,27 @@ class Bank:
             return False
 
     def update(self, owner: int, address: str, passport: str) -> bool:
+        pattern = re.compile("\d{10}")
+        if passport is not None:
+            passport = passport.replace(" ", "")
+            if not pattern.match(passport):
+                return False
         if owner not in self.__clients:
             return False
         else:
             from dataoperator import DataOperator
-            DataOperator().get(owner, "Client").update(address, passport)
+            client_obj = DataOperator().get(owner, "Client")
+            if client_obj is None:
+                return False
+            client_obj.update(address, passport)
 
     def valid_client(self, account: int, client: int) -> bool:
         if client not in self.__clients:
             return False
         from dataoperator import DataOperator
         client_obj = DataOperator().get(account, "Account")
+        if client_obj is None:
+            return False
         if client_obj is None:
             return False
         return client_obj.owner == client
@@ -147,6 +183,8 @@ class Bank:
             return False
         from dataoperator import DataOperator
         account_obj = DataOperator().get(account, "Account")
+        if account_obj is None:
+            return False
         return account_obj.get_offer(amount)
 
     def put_offer(self, account: int, amount: float) -> bool:
@@ -154,4 +192,6 @@ class Bank:
             return False
         from dataoperator import DataOperator
         account_obj = DataOperator().get(account, "Account")
+        if account_obj is None:
+            return False
         return account_obj.put_offer(amount)

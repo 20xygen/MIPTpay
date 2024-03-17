@@ -1,24 +1,40 @@
 from typing import Dict
+
+import dataoperator
 from account import Account
 from client import Client
 
 
 class Person:
     '''Person - живой человек. Он может регистрироваться в банках и заводить счета.'''
-
-    __id: int # PK
+    # TODO: Логины, пароли и тд
+    __id: int  # PK
+    __login: str
+    __password: str
     __name: str
     __surname: str
     __address: str
-    __passport: int
+    __passport: str
+    __banks: Dict[str, int]
+    __accounts: Dict[str, int]
+    __plans: Dict[int, int]
 
-    def __init__(self, name: str, surname: str, address: str = None, passport: int = None):
+    def __init__(self, login: str, password: str, name: str, surname: str, address: str = None, passport: str = None):
         import dataoperator
+        self.__login = login
+        self.__password = password
         self.__name = name
         self.__surname = surname
         self.__address = address
         self.__passport = passport
-        self.__id = dataoperator.put(self)
+        self.__id = dataoperator.DataOperator().put(self)
+        self.__banks = {}
+        self.__accounts = {}
+        self.__plans = {}
+
+    def login(self, login: str, password: str):
+        # TODO: Сделать систему проверки пользователя
+        pass
 
     @property
     def id(self):
@@ -40,14 +56,18 @@ class Person:
     def passport(self):
         return self.__passport
 
-    def update(self, address: str, passport: int):
+    @property
+    def accounts(self):
+        return self.__accounts
+
+    @property
+    def banks(self):
+        return self.__banks
+
+    @property
+    def plans(self):
+        return self.__plans
+
+    def update(self, address: str, passport: str):
         self.__address = address
         self.__passport = passport
-
-
-
-
-
-
-
-

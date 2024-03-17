@@ -6,6 +6,9 @@ from plan import Plan
 from typing import Dict, Union
 from transaction import Transaction
 
+'''Модуль взаимодействия логики с базой данных.
+Хранит (бронирует) объекты,
+которые в данный момент используются системой.'''
 
 clients: Dict[int, Client] = {}
 clients_counter = 0
@@ -25,10 +28,10 @@ transactions_counter = 0
 persons: Dict[int, Person] = {}
 persons_counter = 0
 
-
 '''Модуль взаимодействия логики с базой данных.
 Хранит (бронирует) объекты,
 которые в данный момент используются системой.'''
+
 
 class DataOperator:
     def get(self, id: int, type: str) -> Union[Client, Bank, Account, Plan, Transaction, Person, None]:
@@ -77,6 +80,17 @@ class DataOperator:
             persons_counter += 1
             persons[persons_counter] = obj
             return persons_counter
+
+    def get_bank_by_name(self, name: str):
+        for ident, bank in banks.items():
+            if bank.name == name:
+                return bank
+
+    def get_client_by_name(self, name: str):
+        for ident, client in clients.items():
+            if client.name == name:
+                return client
+
 
     def account_info(self) -> str:
         st = ""
