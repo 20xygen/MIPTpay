@@ -43,6 +43,10 @@ class Bank:
         return self.__plans
 
     @property
+    def accounts(self):
+        return self.__accounts
+
+    @property
     def clients(self):
         return self.__clients
 

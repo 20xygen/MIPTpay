@@ -3,6 +3,7 @@ from planfactory import *
 from dataoperator import DataOperator
 from bank import Bank
 import crosspayment
+from admin import Admin
 
 
 '''Среда тестирования.'''
@@ -108,3 +109,9 @@ TimeKeeper().increase()
 print("Day 8 ------------------------\n")
 
 print(DataOperator().account_info())
+
+print(Admin().account_info(den_credit))
+print(Admin().plan_info(sber_debit))
+print(Admin().client_info(denis))
+print(Admin().bank_info(sberbank.id))
+
