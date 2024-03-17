@@ -1,4 +1,3 @@
-from plan import DebitPlan, DepositPlan, CreditPlan
 from typing import Optional
 
 class PlanProperty:
@@ -15,6 +14,11 @@ class Commission(PlanProperty):
         else:
             self.increased_commission = commission
 
+    def info(self) -> str:
+        ans = f"Комиссия, начисляемая или взымаемая бынком: {self.commission}\n"
+        ans += f"(Комиссия при ненадежном аккаунте: {self.increased_commission})"
+        return ans
+
 class Period(PlanProperty):
     period: int
     decreased_period: int
@@ -25,6 +29,11 @@ class Period(PlanProperty):
             self.decreased_period = decreased_period
         else:
             self.decreased_period = period
+
+    def info(self) -> str:
+        ans = f"Срок вклада: {self.period}\n"
+        ans += f"(Срок при ненадежном аккаунте: {self.decreased_period})"
+        return ans
 
 class LowerLimit(PlanProperty):
     lower_limit: float
@@ -37,6 +46,11 @@ class LowerLimit(PlanProperty):
         else:
             self.decreased_lower_limit = lower_limit
 
+    def info(self) -> str:
+        ans = f"Минимальный остаток: {self.lower_limit}\n"
+        ans += f"(Минимальный остаток при ненадежном аккаунте: {self.decreased_lower_limit})"
+        return ans
+
 class UpperLimit(PlanProperty):
     upper_limit: float
     decreased_upper_limit: float
@@ -47,6 +61,11 @@ class UpperLimit(PlanProperty):
             self.decreased_upper_limit = decreased_upper_limit
         else:
             self.decreased_upper_limit = upper_limit
+
+    def info(self) -> str:
+        ans = f"Максимальный балланс: {self.upper_limit}\n"
+        ans += f"(Максимальный балланс при ненадежном аккаунте: {self.decreased_upper_limit})"
+        return ans
 
 class TransferLimit(PlanProperty):
     transfer_limit: float
@@ -59,14 +78,21 @@ class TransferLimit(PlanProperty):
         else:
             self.decreased_transfer_limit = transfer_limit
 
+    def info(self) -> str:
+        ans = f"Лимит на переводы: {self.transfer_limit}\n"
+        ans += f"(Лимит на переводы при ненадежном аккаунте: {self.decreased_transfer_limit})"
+        return ans
+
 class PlanFactory:
     @staticmethod
     def create_debit_plan(transfer_limit: TransferLimit):
+        from plan import DebitPlan
         return DebitPlan(transfer_limit.transfer_limit, transfer_limit.decreased_transfer_limit)
 
     @staticmethod
     def create_deposit_plan(transfer_limit: TransferLimit,
                             period: Period, commission: Commission):
+        from plan import DepositPlan
         return DepositPlan(period.period, period.decreased_period,
                          commission.commission, commission.increased_commission,
                          transfer_limit.transfer_limit, transfer_limit.decreased_transfer_limit)
@@ -74,6 +100,7 @@ class PlanFactory:
     @staticmethod
     def create_credit_plan(transfer_limit: TransferLimit,
                             lower_limit: LowerLimit, commission: Commission):
+        from plan import CreditPlan
         return CreditPlan(lower_limit.lower_limit, lower_limit.decreased_lower_limit,
                          commission.commission, commission.increased_commission,
                          transfer_limit.transfer_limit, transfer_limit.decreased_transfer_limit)
