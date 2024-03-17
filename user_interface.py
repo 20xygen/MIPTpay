@@ -87,6 +87,7 @@ class UserInterface:
             print("Такой счёт уже зарегистрирован")
             self.main_menu()
         self.__user.accounts[bank_name] = new_account
+        self.__user.plans[new_account] = plan.id
         print("Новый счёт успешно открыт. Номер васшего счёта: ", new_account)
         self.main_menu()
 
@@ -98,10 +99,10 @@ class UserInterface:
         print("Ваш адрес: ", self.__user.address)
         print("Ваш паспорт: ", self.__user.passport)
         print("Открытые счета: ")
-        for bank_name, account_id in self.__user.accounts:
-            plan = DataOperator().get(account_id, "Plan")
+        for account_id, plan_id in self.__user.plans.items():
+            plan = DataOperator().get(plan_id, "Plan")
             properties = plan.get_properties()
-            print("Ваш счёт банка: ", bank_name, "Номер счёта: ", account_id)
+            print("Номер счёта: ", account_id)
             for p in properties:
                 print(p.info())
         print("1. Вернуться в главное меню")
@@ -138,8 +139,8 @@ class UserInterface:
                 print("Пожалуйста введите число!")
                 self.transaction(account_id, bank)
             bank.transfer(account_id, second_account_id, s)
+            print("Ваши деньги успешно переведены")
         elif ans == 2:
-            # TODO: функция будет работать только если человек клиент только одно банка...
             second_bank_name = str(input("Введите банк получателя:"))
             try:
                 second_bank = DataOperator().get_bank_by_name(second_bank_name)
@@ -158,6 +159,7 @@ class UserInterface:
                 self.transaction(account_id, bank)
             acc = self.__user.banks[bank.name]
             crosspayment.get().transfer(bank.id, account_id, second_bank.id, second_account_id, acc, s)
+            print("Ваши деньги успешно переведены")
         elif ans == 3:
             self.operations()
         else:
@@ -167,10 +169,8 @@ class UserInterface:
     def operations(self):
         print("Это страница операций")
         print("Ваши счета:")
-        planss: Dict[int, Plan] = {}
-        counter = 1
-        for ident in self.__user.accounts:
-            plan = DataOperator().get(ident, "Plan")
+        for account_id, plan_id in self.__user.plans.items():
+            plan = DataOperator().get(plan_id, "Plan")
             plan_type = ""
             if isinstance(plan, DebitPlan):
                 plan_type = "Дебетовый тариф"
@@ -178,20 +178,17 @@ class UserInterface:
                 plan_type = "Депозитный тариф"
             elif isinstance(plan, CreditPlan):
                 plan_type = "Кредитный тариф"
-            planss[counter] = plan
             properties = plan.get_properties()
-            print(counter, ") ", plan_type, " Номер счёта: ", ident)
+            print("Номер счёта: ", account_id, "Тип: ", plan_type)
             for p in properties:
                 print(p.info())
-            counter += 1
         try:
-            account_num = int(input("Введите номер счёта с которым вы хотите совершить операцию:"))
+            account_id = int(input("Введите номер счёта с которым вы хотите совершить операцию:"))
         except:
             print("Пожалуйста введите число!")
             self.operations()
-        account_id = planss[account_num].id
         global_bank_name = ""
-        for bank_name, ident in self.__user.banks:
+        for bank_name, ident in self.__user.banks.items():
             if ident == account_id:
                 global_bank_name = bank_name
         bank = DataOperator().get_bank_by_name(global_bank_name)
@@ -213,6 +210,7 @@ class UserInterface:
                 print("Пожалуйста введите число!")
                 self.operations()
             bank.put(account_id, s)
+            print("Ваши деньги успешно зачислены")
         elif answer == 2:
             try:
                 s = int(input("Введите сумму для снятия:"))
@@ -220,6 +218,7 @@ class UserInterface:
                 print("Пожалуйста введите число!")
                 self.operations()
             bank.put(account_id, s)
+            print("Ваши деньги успешно сняты")
         elif answer == 3:
             self.transaction(account_id, bank)
         elif answer == 4:
@@ -306,3 +305,18 @@ class UserInterface:
         else:
             print("Введено неверное число")
             self.main_menu()
+
+    def bank_create(self):
+        sberbank = Bank("Sberbank")
+        sber_debit = sberbank.add_plan(PlanFactory.create_debit_plan(TransferLimit(1e6, 1e4)))
+        sber_credit = sberbank.add_plan(
+            PlanFactory.create_credit_plan(TransferLimit(1e6, 1e4), LowerLimit(-3e5, -3e3), Commission(-0.1, -0.2)))
+        sber_deposit = sberbank.add_plan(
+            PlanFactory.create_deposit_plan(TransferLimit(1e6, 1e4), Period(5, 10), Commission(0.1, 0.2)))
+
+        tinkoff = Bank("Tinkoff")
+        tink_debit = tinkoff.add_plan(PlanFactory.create_debit_plan(TransferLimit(1e6, 1e4)))
+        tink_credit = tinkoff.add_plan(
+            PlanFactory.create_credit_plan(TransferLimit(1e6, 1e4), LowerLimit(-3e5, -3e3), Commission(-0.1, -0.2)))
+        tink_deposit = tinkoff.add_plan(
+            PlanFactory.create_deposit_plan(TransferLimit(1e6, 1e4), Period(5, 10), Commission(0.1, 0.2)))
