@@ -19,7 +19,10 @@ def input_int(left: int, right: int, message: str) -> int:
     while(True):
         try:
             inp = int(input(message))
-            assert left <= inp <= right
+            if left != None:
+                assert left <= inp
+            if right != None:
+                assert inp <= right
             break
         except:
             print("Некорректный ввод.")
@@ -31,15 +34,21 @@ class UserInterface:
     def login_and_register(self):
         print("""Вас приветствует MiptPay! Ваши действия:
                     1. Зарегестрироваться
-                    2. Войти""")
+                    2. Войти (в тестовом режиме эта функция недоступна)""")
         answer = input_int(1, 2, "Введите 1 или 2:")
         if answer == 1:
             login = str(input("Придумайте логин:"))
             password = str(input("Придумайте пароль:"))
             name = str(input("Введите ваше имя:"))
             surname = str(input("Введите вашу фамилию:"))
-            address = str(input("Введите ваш адрес:"))
-            passport = str(input("Введите ваш номер паспорта (Формат: 00 00 000000):"))
+            address = str(input("Введите ваш адрес (enter для пропуска):"))
+            if len(address) < 1:
+                print("Пропущен ввод адреса. Данные можно будет дополнить позднее.")
+                address = None
+            passport = str(input("Введите ваш номер паспорта (формат: 00 00 000000) (enter для пропуска):"))
+            if len(passport) < 1:
+                print("Пропущен ввод паспорта. Данные можно будет дополнить позднее.")
+                passport = None
             self.__user = Person(login, password, name, surname, address, passport)
             self.main_menu()
         elif answer == 2:
@@ -47,9 +56,6 @@ class UserInterface:
             password = str(input("Введите ваш пароль:"))
             self.__user.login(login, password)
             self.main_menu()
-        else:
-            print("Такого варианта нет, попробуйте ещё раз")
-            self.login_and_register()
 
     def open_plan(self):
         print("""Это меню открытия счёта пожалуйста введите банк в котором вы хотите открыть счёт: """)
@@ -77,16 +83,8 @@ class UserInterface:
             for p in properties:
                 print(p.info())
             counter += 1
-        try:
-            ans = int(input("Введите номер:"))
-        except:
-            print("Пожалуйста введите число!")
-            self.open_plan()
-        if ans < counter:
-            plan = planss[ans]
-        else:
-            print("Неверный номер:")
-            self.main_menu()
+        ans = input_int(0, counter - 1, "Введите номер:")
+        plan = planss[ans]
         client_id = self.__user.banks[bank_name]
         new_account = bank.open_account(client_id, plan.id)
         if new_account is None:
@@ -112,38 +110,19 @@ class UserInterface:
             for p in properties:
                 print(p.info())
         print("1. Вернуться в главное меню")
-        try:
-            answer = int(input("Введите 1:"))
-        except:
-            print("Пожалуйста введите число!")
-            self.profile()
+        answer = input_int(1, 1, "Введите 1:")
         if answer == 1:
             self.main_menu()
-        else:
-            print("Такого варианта нет")
-            self.profile()
 
     def transaction(self, account_id: int, bank: Bank):
         print("Это страница перевода между счетами:"
               "1. В одном банке"
               "2. Между банками"
               "3. Назад")
-        try:
-            ans = int(input("Введите от 1 до 3:"))
-        except:
-            print("Пожалуйста введите число!")
-            self.transaction(account_id, bank)
+        ans = input_int(1, 3, "Введите число от 1 до 3:")
         if ans == 1:
-            try:
-                second_account_id = int(input("Введите номер счёта получателя:"))
-            except:
-                print("Пожалуйста введите число!")
-                self.transaction(account_id, bank)
-            try:
-                s = int(input("Введите сумму перевода:"))
-            except:
-                print("Пожалуйста введите число!")
-                self.transaction(account_id, bank)
+            second_account_id = input_int(None, None, "Введите номер счёта получателя:")
+            s = input_int(None, None, "Введите сумму перевода:")
             bank.transfer(account_id, second_account_id, s)
             print("Ваши деньги успешно переведены")
         elif ans == 2:
@@ -153,16 +132,8 @@ class UserInterface:
             except:
                 print("Такой банк не зарегистрирован")
                 self.transaction(account_id, bank)
-            try:
-                second_account_id = int(input("Введите номер счёта получателя:"))
-            except:
-                print("Пожалуйста введите число!")
-                self.transaction(account_id, bank)
-            try:
-                s = int(input("Введите сумму перевода:"))
-            except:
-                print("Пожалуйста введите число!")
-                self.transaction(account_id, bank)
+            second_account_id = input_int(None, None, "Введите номер счёта получателя:")
+            s = input_int(None, None, "Введите сумму перевода:")
             acc = self.__user.banks[bank.name]
             crosspayment.get().transfer(bank.id, account_id, second_bank.id, second_account_id, acc, s)
             print("Ваши деньги успешно переведены")
@@ -188,11 +159,7 @@ class UserInterface:
             print("Номер счёта: ", account_id, "Тип: ", plan_type)
             for p in properties:
                 print(p.info())
-        try:
-            account_id = int(input("Введите номер счёта с которым вы хотите совершить операцию:"))
-        except:
-            print("Пожалуйста введите число!")
-            self.operations()
+        account_id = input_int(None, None, "Введите номер счёта с которым вы хотите совершить операцию:")
         global_bank_name = ""
         for bank_name, ident in self.__user.banks.items():
             if ident == account_id:
@@ -204,25 +171,13 @@ class UserInterface:
                      3. Перевести со счёта на счёт
                      4. Закрыть счёт
                      5. Главное меню""")
-        try:
-            answer = int(input("Введите число от 1 до 5:"))
-        except:
-            print("Пожалуйста введите число!")
-            self.operations()
+        answer = input_int(1, 5, "Введите число от 1 до 5:")
         if answer == 1:
-            try:
-                s = int(input("Введите сумму для зачисления:"))
-            except:
-                print("Пожалуйста введите число!")
-                self.operations()
+            s = input_int(None, None, "Введите сумму для зачисления:")
             bank.put(account_id, s)
             print("Ваши деньги успешно зачислены")
         elif answer == 2:
-            try:
-                s = int(input("Введите сумму для снятия:"))
-            except:
-                print("Пожалуйста введите число!")
-                self.operations()
+            s = input_int(None, None, "Введите сумму для снятия:")
             bank.put(account_id, s)
             print("Ваши деньги успешно сняты")
         elif answer == 3:
@@ -246,6 +201,7 @@ class UserInterface:
                                    str(self.__user.passport))
             if new_id is None:
                 print("Данные указаны в неверном формате")
+                self.registration()
             self.__user.banks[bank.name] = new_id
             print("Вы успешно зарегистрировались")
             self.main_menu()
@@ -290,12 +246,9 @@ class UserInterface:
                         3. Дополнить данные
                         4. Профиль
                         5. Операции со счётом
-                        6. Выход""")
-        try:
-            answer = int(input("Введите число от 1 до 6:"))
-        except:
-            print("Некорректный ввод!")
-            self.main_menu()
+                        6. Перейти к следующему дню
+                        7. Выход""")
+        answer = input_int(1, 6, "Введите число от 1 до 6:")
         if answer == 1:
             self.registration()
         elif answer == 2:
@@ -307,6 +260,9 @@ class UserInterface:
         elif answer == 5:
             self.operations()
         elif answer == 6:
+            __import__("timekeeper"). TimeKeeper().increase()
+            print(DataOperator().account_info())
+        elif answer == 7:
             exit(0)
         else:
             print("Введено неверное число")

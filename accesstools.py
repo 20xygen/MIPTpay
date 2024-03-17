@@ -3,6 +3,7 @@ similar_names = [["Account", "DebitAccount", "DepositAccount", "CreditAccount"],
 
 gods = ["DataOperator", "Admin"]
 
+
 def available_from(me, *valid: str):
     # t = dir(me.f_back.f_locals)
     # try:
@@ -12,7 +13,7 @@ def available_from(me, *valid: str):
     #     pass
     dep = me.f_back.f_locals["self"].__class__.__qualname__
     self = me.f_locals["self"].__class__.__qualname__
-    with_similar = []
+    with_similar = [] + gods
     for i in valid:
         flag = False
         for j in similar_names:
