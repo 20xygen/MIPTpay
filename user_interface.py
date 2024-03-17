@@ -1,3 +1,4 @@
+import crosspayment
 from person import *
 from dataoperator import *
 from plan import *
@@ -74,7 +75,7 @@ class UserInterface:
             print("Такой счёт уже зарегистрирован")
             self.main_menu()
         self.__user.accounts[bank_name] = new_account
-        print("Новый счёт успешно открыт")
+        print("Новый счёт успешно открыт. Номер васшего счёта: ", new_account)
         self.main_menu()
 
     def profile(self):
@@ -88,7 +89,7 @@ class UserInterface:
         for bank_name, account_id in self.__user.accounts:
             plan = DataOperator().get(account_id, "Plan")
             properties = plan.get_properties()
-            print("Ваш счёт банка: ", bank_name)
+            print("Ваш счёт банка: ", bank_name, "Номер счёта: ", account_id)
             for p in properties:
                 print(p.info())
         print("1. Вернуться в главное меню")
@@ -99,22 +100,24 @@ class UserInterface:
             print("Такого варианта нет")
             self.profile()
 
-    def transaction(self):
+    def transaction(self, account_id: int, bank: Bank):
         print("Это страница перевода между счетами:"
               "1. В одном банке"
               "2. Между банками"
               "3. Назад")
         ans = int(input("Введите от 1 до 3:"))
         if ans == 1:
-            # Как человеку задать счёт для перевода?????
-            # sberbank - bank object, den_basic and misha_deposit - account id-s
-            # sberbank.transfer(den_basic, misha_deposit, 10000)
-            pass
+            second_account_id = int(input("Введите номер счёта получателя:"))
+            s = int(input("Введите сумму перевода:"))
+            bank.transfer(account_id, second_account_id, s)
         elif ans == 2:
-            # Как человеку задать счёт для перевода?????
-            # denis, sberbank.id and den_basic - sender's info; tinkoff.id and artem_basic - responder's info; done - boolean indicator
-            # done = crosspayment.get().transfer(sberbank.id, den_basic, tinkoff.id, artem_basic, denis, 5000)
-            pass
+            # TODO: функция будет работать только если человек клиент только одно банка...
+            second_bank_name = str(input("Введите банк получателя:"))
+            second_bank = DataOperator().get_bank_by_name(second_bank_name)
+            second_account_id = int(input("Введите номер счёта получателя:"))
+            s = int(input("Введите сумму перевода:"))
+            client = DataOperator().get_bank_by_name(self.__user.name)
+            crosspayment.get().transfer(bank.id, account_id, second_bank.id, second_account_id, client.id, s)
         elif ans == 3:
             self.operations()
         else:
@@ -137,7 +140,7 @@ class UserInterface:
                 plan_type = "Кредитный тариф"
             planss[counter] = plan
             properties = plan.get_properties()
-            print(counter, ") ", plan_type, ":")
+            print(counter, ") ", plan_type, " Номер счёта: ", ident)
             for p in properties:
                 print(p.info())
             counter += 1
@@ -162,7 +165,7 @@ class UserInterface:
             s = int(input("Введите сумму для снятия:"))
             bank.put(account_id, s)
         elif answer == 3:
-            self.transaction()
+            self.transaction(account_id, bank)
         elif answer == 4:
             print("Данная операция ещё не реализована")
             self.operations()
@@ -207,7 +210,7 @@ class UserInterface:
                 print("Введите паспорт:")
                 passport = str(input())
             if bank.update(self.__user.banks[bank.name], address, passport):
-                 print("Данные успешно изменены")
+                print("Данные успешно изменены")
             else:
                 print("Вы не зарегистрированы в этом банке")
             self.main_menu()
