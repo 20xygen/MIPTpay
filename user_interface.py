@@ -15,6 +15,16 @@ check out the main.py for complete understanding
 """
 
 
+def input_int(left: int, right: int, message: str) -> int:
+    while(True):
+        try:
+            inp = int(input(message))
+            assert left <= inp <= right
+            break
+        except:
+            print("Некорректный ввод.")
+    return inp
+
 class UserInterface:
     __user: Person
 
@@ -22,11 +32,7 @@ class UserInterface:
         print("""Вас приветствует MiptPay! Ваши действия:
                     1. Зарегестрироваться
                     2. Войти""")
-        try:
-            answer = int(input("Введите 1 или 2:"))
-        except:
-            print("Пожалуйста введите число!")
-            self.login_and_register()
+        answer = input_int(1, 2, "Введите 1 или 2:")
         if answer == 1:
             login = str(input("Придумайте логин:"))
             password = str(input("Придумайте пароль:"))
@@ -286,9 +292,9 @@ class UserInterface:
                         5. Операции со счётом
                         6. Выход""")
         try:
-            answer = int(input("Введите число от 1 до 4:"))
+            answer = int(input("Введите число от 1 до 6:"))
         except:
-            print("Пожалуйста введите число!")
+            print("Некорректный ввод!")
             self.main_menu()
         if answer == 1:
             self.registration()
