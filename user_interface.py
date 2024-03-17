@@ -22,14 +22,18 @@ class UserInterface:
         print("""Вас приветствует MiptPay! Ваши действия:
                     1. Зарегестрироваться
                     2. Войти""")
-        answer = int(input("Введите 1 или 2:"))
+        try:
+            answer = int(input("Введите 1 или 2:"))
+        except:
+            print("Пожалуйста введите число!")
+            self.login_and_register()
         if answer == 1:
             login = str(input("Придумайте логин:"))
             password = str(input("Придумайте пароль:"))
             name = str(input("Введите ваше имя:"))
             surname = str(input("Введите вашу фамилию:"))
             address = str(input("Введите ваш адрес:"))
-            passport = str(input("Введите ваш номер паспорта:"))
+            passport = str(input("Введите ваш номер паспорта (Формат: 00 00 000000):"))
             self.__user = Person(login, password, name, surname, address, passport)
             self.main_menu()
         elif answer == 2:
@@ -44,7 +48,11 @@ class UserInterface:
     def open_plan(self):
         print("""Это меню открытия счёта пожалуйста введите банк в котором вы хотите открыть счёт: """)
         bank_name = str(input())
-        bank = DataOperator().get_bank_by_name(bank_name)
+        try:
+            bank = DataOperator().get_bank_by_name(bank_name)
+        except:
+            print("Введённые банк не поддерживается нашей системой")
+            self.open_plan()
         print("Выберите счёт из предлагаемых данным банком:")
         planss: Dict[int, Plan] = {}
         counter = 1
@@ -63,7 +71,11 @@ class UserInterface:
             for p in properties:
                 print(p.info())
             counter += 1
-        ans = int(input("Введите номер:"))
+        try:
+            ans = int(input("Введите номер:"))
+        except:
+            print("Пожалуйста введите число!")
+            self.open_plan()
         if ans < counter:
             plan = planss[ans]
         else:
@@ -93,7 +105,11 @@ class UserInterface:
             for p in properties:
                 print(p.info())
         print("1. Вернуться в главное меню")
-        answer = int(input("Введите 1:"))
+        try:
+            answer = int(input("Введите 1:"))
+        except:
+            print("Пожалуйста введите число!")
+            self.profile()
         if answer == 1:
             self.main_menu()
         else:
@@ -105,24 +121,48 @@ class UserInterface:
               "1. В одном банке"
               "2. Между банками"
               "3. Назад")
-        ans = int(input("Введите от 1 до 3:"))
+        try:
+            ans = int(input("Введите от 1 до 3:"))
+        except:
+            print("Пожалуйста введите число!")
+            self.transaction(account_id, bank)
         if ans == 1:
-            second_account_id = int(input("Введите номер счёта получателя:"))
-            s = int(input("Введите сумму перевода:"))
+            try:
+                second_account_id = int(input("Введите номер счёта получателя:"))
+            except:
+                print("Пожалуйста введите число!")
+                self.transaction(account_id, bank)
+            try:
+                s = int(input("Введите сумму перевода:"))
+            except:
+                print("Пожалуйста введите число!")
+                self.transaction(account_id, bank)
             bank.transfer(account_id, second_account_id, s)
         elif ans == 2:
             # TODO: функция будет работать только если человек клиент только одно банка...
             second_bank_name = str(input("Введите банк получателя:"))
-            second_bank = DataOperator().get_bank_by_name(second_bank_name)
-            second_account_id = int(input("Введите номер счёта получателя:"))
-            s = int(input("Введите сумму перевода:"))
+            try:
+                second_bank = DataOperator().get_bank_by_name(second_bank_name)
+            except:
+                print("Такой банк не зарегистрирован")
+                self.transaction(account_id, bank)
+            try:
+                second_account_id = int(input("Введите номер счёта получателя:"))
+            except:
+                print("Пожалуйста введите число!")
+                self.transaction(account_id, bank)
+            try:
+                s = int(input("Введите сумму перевода:"))
+            except:
+                print("Пожалуйста введите число!")
+                self.transaction(account_id, bank)
             client = DataOperator().get_bank_by_name(self.__user.name)
             crosspayment.get().transfer(bank.id, account_id, second_bank.id, second_account_id, client.id, s)
         elif ans == 3:
             self.operations()
         else:
             print("Такого варианта нет:")
-            self.transaction()
+            self.transaction(account_id, bank)
 
     def operations(self):
         print("Это страница операций")
@@ -144,7 +184,11 @@ class UserInterface:
             for p in properties:
                 print(p.info())
             counter += 1
-        account_num = int(input("Введите номер счёта с которым вы хотите совершить операцию:"))
+        try:
+            account_num = int(input("Введите номер счёта с которым вы хотите совершить операцию:"))
+        except:
+            print("Пожалуйста введите число!")
+            self.operations()
         account_id = planss[account_num].id
         global_bank_name = ""
         for bank_name, ident in self.__user.banks:
@@ -157,12 +201,24 @@ class UserInterface:
                      3. Перевести со счёта на счёт
                      4. Закрыть счёт
                      5. Главное меню""")
-        answer = int(input("Введите число от 1 до 5:"))
+        try:
+            answer = int(input("Введите число от 1 до 5:"))
+        except:
+            print("Пожалуйста введите число!")
+            self.operations()
         if answer == 1:
-            s = int(input("Введите сумму для зачисления:"))
+            try:
+                s = int(input("Введите сумму для зачисления:"))
+            except:
+                print("Пожалуйста введите число!")
+                self.operations()
             bank.put(account_id, s)
         elif answer == 2:
-            s = int(input("Введите сумму для снятия:"))
+            try:
+                s = int(input("Введите сумму для снятия:"))
+            except:
+                print("Пожалуйста введите число!")
+                self.operations()
             bank.put(account_id, s)
         elif answer == 3:
             self.transaction(account_id, bank)
@@ -196,7 +252,11 @@ class UserInterface:
         if self.__user.banks:
             print("Введите название банка в котором вы хотите заменить данные:")
             bank_name = str(input())
-            bank = DataOperator().get_bank_by_name(bank_name)
+            try:
+                bank = DataOperator().get_bank_by_name(bank_name)
+            except:
+                print("Такого банка не существует")
+                self.update_data()
             address = self.__user.address
             passport = str(self.__user.passport)
             print("Хотите поменять адрес: (Y/N)")
@@ -226,7 +286,11 @@ class UserInterface:
                         4. Профиль
                         5. Операции со счётом
                         6. Выход""")
-        answer = int(input("Введите число от 1 до 4:"))
+        try:
+            answer = int(input("Введите число от 1 до 4:"))
+        except:
+            print("Пожалуйста введите число!")
+            self.main_menu()
         if answer == 1:
             self.registration()
         elif answer == 2:
