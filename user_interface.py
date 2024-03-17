@@ -21,7 +21,7 @@ class UserInterface:
     def login_and_register(self):
         print("""Вас приветствует MiptPay! Ваши действия:
                     1. Зарегестрироваться
-                    2. Войти""")
+                    2. Войти (в тестовом режиме эта функция недоступна)""")
         try:
             answer = int(input("Введите 1 или 2:"))
         except:
@@ -32,8 +32,14 @@ class UserInterface:
             password = str(input("Придумайте пароль:"))
             name = str(input("Введите ваше имя:"))
             surname = str(input("Введите вашу фамилию:"))
-            address = str(input("Введите ваш адрес:"))
-            passport = str(input("Введите ваш номер паспорта (Формат: 00 00 000000):"))
+            address = str(input("Введите ваш адрес (enter для пропуска):"))
+            if len(address) < 1:
+                print("Пропущен ввод адреса. Данные можно будет дополнить позднее.")
+                address = None
+            passport = str(input("Введите ваш номер паспорта (формат: 00 00 000000) (enter для пропуска):"))
+            if len(passport) < 1:
+                print("Пропущен ввод паспорта. Данные можно будет дополнить позднее.")
+                passport = None
             self.__user = Person(login, password, name, surname, address, passport)
             self.main_menu()
         elif answer == 2:
@@ -284,7 +290,8 @@ class UserInterface:
                         3. Дополнить данные
                         4. Профиль
                         5. Операции со счётом
-                        6. Выход""")
+                        6. Перейти к следующему дню
+                        7. Выход""")
         try:
             answer = int(input("Введите число от 1 до 4:"))
         except:
@@ -301,6 +308,9 @@ class UserInterface:
         elif answer == 5:
             self.operations()
         elif answer == 6:
+            __import__("timekeeper"). TimeKeeper().increase()
+            print(DataOperator().account_info())
+        elif answer == 7:
             exit(0)
         else:
             print("Введено неверное число")
