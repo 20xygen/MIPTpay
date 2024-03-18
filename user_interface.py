@@ -60,11 +60,11 @@ class UserInterface:
     def open_plan(self):
         print("""Это меню открытия счёта пожалуйста введите банк в котором вы хотите открыть счёт: """)
         bank_name = str(input())
-        try:
-            bank = DataOperator().get_bank_by_name(bank_name)
-        except:
+        if DataOperator().get_bank_by_name(bank_name) is None:
             print("Введённые банк не поддерживается нашей системой")
             self.open_plan()
+        else:
+            bank = DataOperator().get_bank_by_name(bank_name)
         print("Выберите счёт из предлагаемых данным банком:")
         planss: Dict[int, Plan] = {}
         counter = 1
@@ -127,11 +127,11 @@ class UserInterface:
             print("Ваши деньги успешно переведены")
         elif ans == 2:
             second_bank_name = str(input("Введите банк получателя:"))
-            try:
-                second_bank = DataOperator().get_bank_by_name(second_bank_name)
-            except:
-                print("Такой банк не зарегистрирован")
+            if DataOperator().get_bank_by_name(second_bank_name) is None:
+                print("Введённые банк не поддерживается нашей системой")
                 self.transaction(account_id, bank)
+            else:
+                second_bank = DataOperator().get_bank_by_name(second_bank_name)
             second_account_id = input_int(None, None, "Введите номер счёта получателя:")
             s = input_int(None, None, "Введите сумму перевода:")
             acc = self.__user.banks[bank.name]
@@ -195,7 +195,10 @@ class UserInterface:
     def registration(self):
         print("Введите название банка в котором вы хотите зарегистрироваться:")
         bank_name = str(input())
-        try:
+        if DataOperator().get_bank_by_name(bank_name) is None:
+            print("Введённые банк не поддерживается нашей системой")
+            self.main_menu()
+        else:
             bank = DataOperator().get_bank_by_name(bank_name)
             new_id = bank.register(self.__user.name, self.__user.surname, self.__user.address,
                                    str(self.__user.passport))
@@ -205,19 +208,16 @@ class UserInterface:
             self.__user.banks[bank.name] = new_id
             print("Вы успешно зарегистрировались")
             self.main_menu()
-        except:
-            print("Такого банка не существует")
-            self.main_menu()
 
     def update_data(self):
         if self.__user.banks:
             print("Введите название банка в котором вы хотите заменить данные:")
             bank_name = str(input())
-            try:
-                bank = DataOperator().get_bank_by_name(bank_name)
-            except:
-                print("Такого банка не существует")
+            if DataOperator().get_bank_by_name(bank_name) is None:
+                print("Введённые банк не поддерживается нашей системой")
                 self.update_data()
+            else:
+                bank = DataOperator().get_bank_by_name(bank_name)
             address = self.__user.address
             passport = str(self.__user.passport)
             print("Хотите поменять адрес: (Y/N)")
@@ -248,7 +248,7 @@ class UserInterface:
                         5. Операции со счётом
                         6. Перейти к следующему дню
                         7. Выход""")
-        answer = input_int(1, 6, "Введите число от 1 до 6:")
+        answer = input_int(1, 7, "Введите число от 1 до 7:")
         if answer == 1:
             self.registration()
         elif answer == 2:

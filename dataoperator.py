@@ -85,6 +85,7 @@ class DataOperator:
         for ident, bank in banks.items():
             if bank.name == name:
                 return bank
+        return None
 
     def get_client_by_name(self, name: str):
         for ident, client in clients.items():
