@@ -2,7 +2,7 @@ from client import Client
 from typing import Optional
 
 class ClientBuilder:
-    '''Bulder class for creating Client instances.'''
+    """ Builder class for creating Client instances. """
 
     __brick: Optional[Client]
 

@@ -1,7 +1,6 @@
 from typing import List, Optional
-from plan import Plan, DepositPlan, CreditPlan
-import dataoperator
-from account import Account, DepositAccount, CreditAccount, DebitAccount
+from plan import Plan
+from account import Account
 from transaction import Transaction
 from accountfactory import AccountFactory
 from clientbuilder import ClientBuilder
@@ -11,8 +10,8 @@ from inspect import currentframe as cf
 
 
 class Bank:
-    '''У банка есть привязанные к нему планы, счета и клиенты.
-    На среднем уровне взаимодействие происходит через него.'''
+    """ The bank has plans, accounts and clients linked to it.
+    At the middle level, the interaction takes place through it. """
 
     __id: int # PK
     __name: str

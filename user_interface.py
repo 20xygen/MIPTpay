@@ -1,18 +1,7 @@
 import crosspayment
-from person import *
 from dataoperator import *
 from plan import *
 from planfactory import *
-
-"""
-
-print(DataOperator().account_info())  # print info about all accounts
-TimeKeeper().get()  # to get current date
-TimeKeeper().increase()  # go to next day (and update all accounts)
-
-check out the main.py for complete understanding
-
-"""
 
 
 def input_int(left: int, right: int, message: str) -> int:
@@ -28,7 +17,10 @@ def input_int(left: int, right: int, message: str) -> int:
             print("Некорректный ввод.")
     return inp
 
+
 class UserInterface:
+    """ A class that operates with a console interface. """
+
     __user: Person
 
     def login_and_register(self):

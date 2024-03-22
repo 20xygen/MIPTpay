@@ -4,7 +4,7 @@ from typing import List
 from planfactory import PlanProperty, Commission, Period, LowerLimit, UpperLimit, TransferLimit
 
 class Plan:
-    '''Тариф счета. Информация о комиссиях и ограничениях.'''
+    """ The invoice rate. Information about fees and restrictions. """
 
     __id: int # PK
 
@@ -21,7 +21,7 @@ class Plan:
         return []
 
 class DebitPlan(Plan):
-    '''Дебетовый тариф.'''
+    """ Debit rate. """
 
     __transfer_limit: float
     __decreased_transfer_limit: float
@@ -46,7 +46,7 @@ class DebitPlan(Plan):
 
 
 class DepositPlan(Plan):
-    '''Депозитный тариф.'''
+    """ Deposit rate. """
 
     __period: int
     __decreased_period: int
@@ -104,7 +104,7 @@ class DepositPlan(Plan):
 
 
 class CreditPlan(Plan):
-    '''Кредитный тариф.'''
+    """ Credit rate. """
 
     __lower_limit: float
     __decreased_lower_limit: float

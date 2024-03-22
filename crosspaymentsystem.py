@@ -3,6 +3,8 @@ from typing import Optional
 
 
 class CrossPaymentSystem:
+    """ Class providing an opportunity to conduct interbank transactions. """
+
     def transfer(self, dep_bank: int, departure: int, dest_bank: int, destination: int, sender: int,
                  amount: float) -> bool:
         from dataoperator import DataOperator

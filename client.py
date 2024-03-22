@@ -3,9 +3,8 @@ from inspect import currentframe as cf
 from typing import Optional
 
 class Client:
-    '''Личный кабинет клиента банка.
-    У одного человека (Human) их может быть много
-    (по одному на банк).'''
+    """ Personal account of the bank's client.
+    One person can have many of them (one per bank). """
 
     __id: int # PK
     __name: str

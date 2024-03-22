@@ -3,7 +3,7 @@ from account import Account, DepositAccount, DebitAccount, CreditAccount
 from plan import Plan, DepositPlan, CreditPlan
 
 class AccountFactory:
-    '''Factory (Factory method) class for creating Account instances.'''
+    """ Factory (Factory method) class for creating Account instances. """
 
     @staticmethod
     def create(owner: int, plan: Plan) -> Account:

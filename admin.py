@@ -1,5 +1,7 @@
 class Admin():
-  """Admin - агрегатор структурных классов проекта. Дает доступ к исчерпывающей информации об объектах."""
+  """ Admin is an aggregator of the project's structural classes.
+  Provides access to comprehensive information about the objects. """
+
   def info(self, object):
     print(1)
     real_names = [system_name.split("__")[1] for system_name in object.__dict__.keys()]

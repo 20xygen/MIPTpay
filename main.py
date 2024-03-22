@@ -4,7 +4,7 @@ from dataoperator import DataOperator
 from bank import Bank
 from user_interface import *
 
-'''Запуск приложения.'''
+""" Application execution. """
 
 user_inter = UserInterface()
 user_inter.bank_create()

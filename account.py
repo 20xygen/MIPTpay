@@ -1,16 +1,14 @@
-import dataoperator
 from accesstools import available_from
 from inspect import currentframe as cf
-from plan import DebitPlan, DepositPlan, CreditPlan
 
 
 class Account:
-    '''Банковский счет, привязан к клиенту банка.
-    Через него происходят основные манипуляции на нижнем уровне.'''
+    """ A bank account linked to a bank customer.
+    Through it, the main manipulations take place at the lower level. """
 
     __id: int # PK
     __owner: int
-    __opened: bool  # todo: action blocking decorator
+    __opened: bool  # TODO: action blocking decorator
     __money: float
     __transfer: float
 
@@ -78,7 +76,6 @@ class Account:
     def get_offer(self, amount: float) -> bool:
         available_from(cf(), "Bank")
         if amount > 0 and self.__money >= amount:
-            # self.__money -= amount
             return True
         return False
 
@@ -99,9 +96,8 @@ class Account:
         return st
 
 class DebitAccount(Account):
-    '''Дебетовый счет – обычный счет:
-    деньги можно снимать в любой момент,
-    в минус уходить нельзя. Комиссий нет.'''
+    """ Debit account – a regular account: money can be withdrawn at any time,
+    you can not go into the negative. There are no commissions. """
 
     __plan: int
 
@@ -139,9 +135,9 @@ class DebitAccount(Account):
 
 
 class DepositAccount(Account):
-    '''Депозит – счет, с ĸоторого нельзя снимать
-    и переводить деньги до тех пор,
-    поĸа не заĸончится его сроĸ (пополнять можно).'''
+    """ A deposit is an account that cannot be withdrawn from
+    and transfer the money until its term ends (you can replenish it). """
+
     __plan: int
     __freeze_date: int
 
@@ -162,7 +158,6 @@ class DepositAccount(Account):
         plan_obj = DataOperator().get(plan, "Plan")
         from timekeeper import TimeKeeper
         self.__freeze_date = TimeKeeper().get()
-        # self.__id = DataOperator().put(self)
 
     def update(self):
         available_from(cf(), "TimeKeeper")
@@ -174,7 +169,7 @@ class DepositAccount(Account):
             return False
         if client_obj.precarious:
             modifier += plan_obj.increased_commission
-        self.money *= modifier # ** (timekeeper.get() - self.__freeze_date)
+        self.money *= modifier
 
     def put_offer(self, amount: float) -> bool:
         available_from(cf(), "Bank")
@@ -203,16 +198,15 @@ class DepositAccount(Account):
         return False
 
 class CreditAccount(Account):
-    '''Кредитный счет – имеет ĸредитный лимит,
-    в рамĸах ĸоторого можно уходить в минус (в плюс тоже можно).
-    Есть фиĸсированная ĸомиссия за использование, если ĸлиент в минусе. '''
+    """ A credit account has a credit limit, within
+    the limits of which you can go into the negative (you can also go into the plus).
+    There is a fee for use if the customer is in the red. """
 
     __plan: int
 
     def __init__(self, owner: int, plan: int):
         super().__init__(owner)
         self.__plan = plan
-        # self.__id = DataOperator().put(self)
 
     @property
     def plan(self):

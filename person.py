@@ -6,8 +6,9 @@ from client import Client
 
 
 class Person:
-    '''Person - живой человек. Он может регистрироваться в банках и заводить счета.'''
-    # TODO: Логины, пароли и тд
+    """ The personal account of a real person - the user of the application. """
+
+    # TODO: logins, passwords, etc
     __id: int  # PK
     __login: str
     __password: str

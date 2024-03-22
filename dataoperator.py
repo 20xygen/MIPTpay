@@ -6,10 +6,6 @@ from plan import Plan
 from typing import Dict, Union
 from transaction import Transaction
 
-'''Модуль взаимодействия логики с базой данных.
-Хранит (бронирует) объекты,
-которые в данный момент используются системой.'''
-
 clients: Dict[int, Client] = {}
 clients_counter = 0
 
@@ -28,12 +24,11 @@ transactions_counter = 0
 persons: Dict[int, Person] = {}
 persons_counter = 0
 
-'''Модуль взаимодействия логики с базой данных.
-Хранит (бронирует) объекты,
-которые в данный момент используются системой.'''
-
 
 class DataOperator:
+    """ The class of interaction of logic with the database.
+    Stores (reserves) objects that are currently being used by the system. """
+
     def get(self, id: int, type: str) -> Union[Client, Bank, Account, Plan, Transaction, Person, None]:
         type_to_container = {
             "Client": clients,

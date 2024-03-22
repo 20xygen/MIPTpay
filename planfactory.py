@@ -1,7 +1,11 @@
 from typing import Optional
 
+
 class PlanProperty:
+    """ An object that stores a unit of information for a specific plan. """
+
     pass
+
 
 class Commission(PlanProperty):
     commission: float

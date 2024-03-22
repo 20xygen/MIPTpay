@@ -6,7 +6,7 @@ import crosspayment
 from admin import Admin
 
 
-'''Среда тестирования.'''
+""" Testing module. """
 
 
 sberbank = Bank("Sberbank")
