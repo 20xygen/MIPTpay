@@ -1,7 +1,9 @@
 import crosspayment
-from dataoperator import *
-from plan import *
-from planfactory import *
+from dataoperator import DataOperator
+from person import Person
+from plan import Plan, DepositPlan, CreditPlan, DebitPlan
+from bank import Bank
+from planfactory import PlanFactory, TransferLimit, LowerLimit, Commission, Period
 
 
 def input_int(left: int, right: int, message: str) -> int:
@@ -58,7 +60,7 @@ class UserInterface:
         else:
             bank = DataOperator().get_bank_by_name(bank_name)
         print("Выберите счёт из предлагаемых данным банком:")
-        planss: Dict[int, Plan] = {}
+        plans: Dict[int, Plan] = {}
         counter = 1
         for ident in bank.plans:
             plan = DataOperator().get(ident, "Plan")
@@ -69,14 +71,14 @@ class UserInterface:
                 plan_type = "Депозитный тариф"
             elif isinstance(plan, CreditPlan):
                 plan_type = "Кредитный тариф"
-            planss[counter] = plan
+            plans[counter] = plan
             properties = plan.get_properties()
             print(counter, ") ", plan_type, ":")
             for p in properties:
                 print(p.info())
             counter += 1
         ans = input_int(0, counter - 1, "Введите номер:")
-        plan = planss[ans]
+        plan = plans[ans]
         client_id = self.__user.banks[bank_name]
         new_account = bank.open_account(client_id, plan.id)
         if new_account is None:
