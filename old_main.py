@@ -1,10 +1,6 @@
-from timekeeper import TimeKeeper
-from planfactory import *
-from dataoperator import DataOperator
-from bank import Bank
-import crosspayment
-from admin import Admin
-
+from src import (Bank, PlanFactory, TransferLimit, LowerLimit, Period, Commission, DataOperator, TimeKeeper,
+                 Admin)
+from src.banking import crosspayment
 
 """ Testing module. """
 
@@ -50,7 +46,7 @@ misha = sberbank.register("Mikhail", "Kalinin")
 misha_credit = sberbank.open_account(misha, sber_credit)
 sberbank.get(misha_credit, 50000)
 misha_deposit = sberbank.open_account(misha, sber_deposit)
-sberbank.put(misha_deposit, 150000)
+sberbank.put(misha_deposit, 15000000000)
 
 print(DataOperator().account_info())
 
@@ -80,7 +76,7 @@ TimeKeeper().get()
 TimeKeeper().increase()
 print("Day 5 ------------------------\n")
 
-done = crosspayment.get().transfer(sberbank.id, den_basic, tinkoff.id, artem_basic, denis, 5000)
+done = crosspayment.get_cpf().transfer(sberbank.id, den_basic, tinkoff.id, artem_basic, denis, 5000)
 print(done)
 
 print(DataOperator().account_info())

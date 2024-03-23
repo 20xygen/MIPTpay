@@ -1,5 +1,5 @@
 from typing import List
-from dataoperator import DataOperator
+import src
 
 current_time: int = 0
 update_queue: List[int] = []
@@ -17,7 +17,7 @@ class TimeKeeper:  # TODO: make singleton.
 
     def increase(self):
         for account in update_queue:
-            DataOperator().get(account, "Account").update()
+            src.DataOperator().get(account, "Account").update()
         global current_time
         current_time += 1
 

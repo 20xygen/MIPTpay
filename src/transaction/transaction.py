@@ -1,4 +1,4 @@
-import dataoperator
+import src
 
 
 class Transaction:
@@ -16,8 +16,7 @@ class Transaction:
         self.__destination = destination
         self.__amount = amount
         self.__status = 0
-        from dataoperator import DataOperator
-        self.__id = DataOperator().put(self)
+        self.__id = src.DataOperator().put(self)
 
     @property
     def id(self):

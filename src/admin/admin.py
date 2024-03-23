@@ -1,3 +1,6 @@
+import src
+
+
 class Admin():
   """ Admin is an aggregator of the project's structural classes.
   Provides access to comprehensive information about the objects. """
@@ -14,9 +17,7 @@ class Admin():
         continue
     return '\n'.join(s)
   def account_info(self, account):
-    from account import Account
-    from dataoperator import DataOperator
-    account = DataOperator().get(account, "Account")
+    account = src.DataOperator().get(account, "Account")
     result = ""
     result += f"id: {account.id}\n"
     result += f"owner: {account.owner}\n"
@@ -27,9 +28,7 @@ class Admin():
     return result
 
   def bank_info(self, bank):
-    from bank import Bank
-    from dataoperator import DataOperator
-    bank = DataOperator().get(bank, "Bank")
+    bank = src.DataOperator().get(bank, "Bank")
     result = ""
     result += f"id: {bank.id}\n"
     result += f"name: {bank.name}\n"
@@ -39,9 +38,7 @@ class Admin():
     return result
 
   def client_info(self, client):
-    from client import Client
-    from dataoperator import DataOperator
-    client = DataOperator().get(client, "Client")
+    client = src.DataOperator().get(client, "Client")
     result = ""
     result += f"id: {client.id}\n"
     result += f"name: {client.name}\n"
@@ -52,9 +49,7 @@ class Admin():
     return result
 
   def person_info(self, person):
-    from person import Person
-    from dataoperator import DataOperator
-    person = DataOperator().get(person, "Person")
+    person = src.DataOperator().get(person, "Person")
     result = ""
     result += f"id: {person.id}\n"
     result += f"login: {person.login}\n"
@@ -69,9 +64,7 @@ class Admin():
     return result
 
   def plan_info(self, plan):
-    from plan import Plan
-    from dataoperator import DataOperator
-    plan = DataOperator().get(plan, "Plan")
+    plan = src.DataOperator().get(plan, "Plan")
     result = ""
     result += f"id: {plan.id}\n"
     result += f"transfer_limit: {plan.transfer_limit}\n"
@@ -79,9 +72,7 @@ class Admin():
     return result
 
   def transaction_info(self, transaction):
-    from transaction import Transaction
-    from dataoperator import DataOperator
-    transaction = DataOperator().get(transaction, "Transaction")
+    transaction = src.DataOperator().get(transaction, "Transaction")
     result = ""
     result += f"id: {transaction.id}\n"
     result += f"departure: {transaction.departure}\n"
