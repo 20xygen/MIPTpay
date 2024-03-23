@@ -19,9 +19,8 @@ class Commission(PlanProperty):
             self.increased_commission = commission
 
     def info(self) -> str:
-        ans = f"Комиссия, начисляемая или взымаемая бынком: {self.commission}
-        ans += f"(Комиссия при ненадежном аккаунте: {self.increased_commission})"
-        return ans
+        return f"""Комиссия, начисляемая или взимаемая банком: {self.commission}
+        (Комиссия при ненадежном аккаунте: {self.increased_commission})"""
 
 class Period(PlanProperty):
     period: int
@@ -35,9 +34,8 @@ class Period(PlanProperty):
             self.decreased_period = period
 
     def info(self) -> str:
-        ans = f"Срок вклада: {self.period}
-        ans += f"(Срок при ненадежном аккаунте: {self.decreased_period})"
-        return ans
+        return f"""Срок вклада: {self.period}
+        (Срок при ненадежном аккаунте: {self.decreased_period})"""
 
 class LowerLimit(PlanProperty):
     lower_limit: float
@@ -51,9 +49,8 @@ class LowerLimit(PlanProperty):
             self.decreased_lower_limit = lower_limit
 
     def info(self) -> str:
-        ans = f"Минимальный остаток: {self.lower_limit}
-        ans += f"(Минимальный остаток при ненадежном аккаунте: {self.decreased_lower_limit})"
-        return ans
+        return f"""Минимальный остаток: {self.lower_limit}
+        (Минимальный остаток при ненадежном аккаунте: {self.decreased_lower_limit})"""
 
 class UpperLimit(PlanProperty):
     upper_limit: float
@@ -67,9 +64,8 @@ class UpperLimit(PlanProperty):
             self.decreased_upper_limit = upper_limit
 
     def info(self) -> str:
-        ans = f"Максимальный балланс: {self.upper_limit}
-        ans += f"(Максимальный балланс при ненадежном аккаунте: {self.decreased_upper_limit})"
-        return ans
+        return f"""Максимальный балланс: {self.upper_limit}
+        (Максимальный балланс при ненадежном аккаунте: {self.decreased_upper_limit})"""
 
 class TransferLimit(PlanProperty):
     transfer_limit: float
@@ -83,6 +79,5 @@ class TransferLimit(PlanProperty):
             self.decreased_transfer_limit = transfer_limit
 
     def info(self) -> str:
-        ans = f"Лимит на переводы: {self.transfer_limit}
-        ans += f"(Лимит на переводы при ненадежном аккаунте: {self.decreased_transfer_limit})"
-        return ans
+        return f"""Лимит на переводы: {self.transfer_limit}
+        (Лимит на переводы при ненадежном аккаунте: {self.decreased_transfer_limit})"""
