@@ -83,14 +83,14 @@ class Account:
 
     def info(self) -> str:
         src.available_from(cf(), "Bank", "DataOperator")
-        st = str(self.id) + ("(open)" if self.opened else "(closed)") + '\n'
+        st = str(self.id) + ("(open)" if self.opened else "(closed)")
         owner_obj = src.DataOperator().get(self.owner, "Client")
         if owner_obj is None:
             "Error in account::info()"
-        st += f"Owner: {owner_obj.name} {owner_obj.surname}\n"
-        st += ("Precarious" if owner_obj.precarious else "Not precarious") + f": {owner_obj.address} {owner_obj.passport}\n"
-        st += str(self.money) + "\n"
-        return st
+        return f"""{st}
+        Owner: {owner_obj.name} {owner_obj.surname}
+        {("Precarious" if owner_obj.precarious else "Not precarious") + f": {owner_obj.address} {owner_obj.passport}"}
+        {str(self.money)}"""
 
 class DebitAccount(Account):
     """ Debit account – a regular account: money can be withdrawn at any time,
