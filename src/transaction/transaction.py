@@ -22,6 +22,9 @@ class Transaction:
     def id(self):
         return self.__id
 
+    def amount(self):
+        return self.__amount
+
     def prove(self):
         self.__status = 1
 

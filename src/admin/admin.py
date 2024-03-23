@@ -82,7 +82,15 @@ class Admin():
     return result
 
   def revert_transaction(self, transaction: int) -> bool:
-    # TODO: implement
-    pass
+    transaction = src.DataOperator.get(transaction, "Transaction")
+    transaction.cancel()
+    departure = src.DataOperator.get(transaction._Transaction__departure, "Account")
+    destination = src.DataOperator.get(transaction._Transaction__destination, "Account")
+    if destination.money >= transaction.amount():
+      departure.money += transaction.amount()
+      destination.money -= transaction.amount()
+      return "Success"
+    else:
+      return "Unable to revert transaction: Insufficient funds"
 
 
