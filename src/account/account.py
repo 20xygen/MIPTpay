@@ -87,9 +87,9 @@ class Account:
         owner_obj = src.DataOperator().get(self.owner, "Client")
         if owner_obj is None:
             "Error in account::info()"
-        st += f"Owner: {owner_obj.name} {owner_obj.surname}\n"
-        st += ("Precarious" if owner_obj.precarious else "Not precarious") + f": {owner_obj.address} {owner_obj.passport}\n"
-        st += str(self.money) + "\n"
+        st += f"Owner: {owner_obj.name} {owner_obj.surname}
+        st += ("Precarious" if owner_obj.precarious else "Not precarious") + f": {owner_obj.address} {owner_obj.passport}
+        st += str(self.money) + "
         return st
 
 class DebitAccount(Account):
