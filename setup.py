@@ -6,7 +6,7 @@ setup(
     packages=find_packages(),
     install_requires=[],
     author='Barilov Denis, Mikhail Kalinin, Artem Udovenko',
-    author_email='you@example.com',
+    author_email='barilov.di@phystech.edu',
     description='Bank system emulation',
     license='MIT',
     url='https://gitlab.akhcheck.ru/denis.barilov/miptpay',
