@@ -1,0 +1,14 @@
+[build-system]
+requires = []
+build-backend = "setuptools.build_meta"
+
+[tool.poetry]
+name = "MIPTpay"
+version = "1.0"
+description = "Bank system emulation"
+authors = ["Barilov Denis <barilov.di@phystech.edu>",
+           "Kalinin Mikhail <kalinin.mi@phystech.edu>",
+           "Udovenko Artem <udovenko.ai@phystech.edu>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
