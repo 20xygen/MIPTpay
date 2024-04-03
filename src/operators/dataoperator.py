@@ -1,40 +1,32 @@
-from person import Person
-from client import Client
-from account import Account
-from bank import Bank
-from plan import Plan
 from typing import Dict, Union
-from transaction import Transaction
+import src
 
-'''Модуль взаимодействия логики с базой данных.
-Хранит (бронирует) объекты,
-которые в данный момент используются системой.'''
 
-clients: Dict[int, Client] = {}
+clients: Dict[int, src.Client] = {}
 clients_counter = 0
 
-accounts: Dict[int, Account] = {}
+accounts: Dict[int, src.Account] = {}
 accounts_counter = 0
 
-banks: Dict[int, Bank] = {}
+banks: Dict[int, src.Bank] = {}
 banks_counter = 0
 
-plans: Dict[int, Plan] = {}
+plans: Dict[int, src.Plan] = {}
 plans_counter = 0
 
-transactions: Dict[int, Transaction] = {}
+transactions: Dict[int, src.Transaction] = {}
 transactions_counter = 0
 
-persons: Dict[int, Person] = {}
+persons: Dict[int, src.Person] = {}
 persons_counter = 0
-
-'''Модуль взаимодействия логики с базой данных.
-Хранит (бронирует) объекты,
-которые в данный момент используются системой.'''
 
 
 class DataOperator:
-    def get(self, id: int, type: str) -> Union[Client, Bank, Account, Plan, Transaction, Person, None]:
+    """ The class of interaction of logic with the database.
+    Stores (reserves) objects that are currently being used by the system. """
+
+    def get(self, id: int, type: str) -> Union[src.Client, src.Bank, src.Account, src.Plan, src.Transaction, src.Person,
+                                               None]:
         type_to_container = {
             "Client": clients,
             "Bank": banks,
@@ -56,27 +48,27 @@ class DataOperator:
         global plans, plans_counter
         global transactions, transactions_counter
         global persons, persons_counter
-        if isinstance(obj, Client):
+        if isinstance(obj, src.Client):
             clients_counter += 1
             clients[clients_counter] = obj
             return clients_counter
-        if isinstance(obj, Bank):
+        if isinstance(obj, src.Bank):
             banks_counter += 1
             banks[banks_counter] = obj
             return banks_counter
-        if isinstance(obj, Account):
+        if isinstance(obj, src.Account):
             accounts_counter += 1
             accounts[accounts_counter] = obj
             return accounts_counter
-        if isinstance(obj, Plan):
+        if isinstance(obj, src.Plan):
             plans_counter += 1
             plans[plans_counter] = obj
             return plans_counter
-        if isinstance(obj, Transaction):
+        if isinstance(obj, src.Transaction):
             transactions_counter += 1
             transactions[transactions_counter] = obj
             return transactions_counter
-        if isinstance(obj, Person):
+        if isinstance(obj, src.Person):
             persons_counter += 1
             persons[persons_counter] = obj
             return persons_counter

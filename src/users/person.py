@@ -1,13 +1,11 @@
 from typing import Dict
-
-import dataoperator
-from account import Account
-from client import Client
+import src
 
 
 class Person:
-    '''Person - живой человек. Он может регистрироваться в банках и заводить счета.'''
-    # TODO: Логины, пароли и тд
+    """ The personal account of a real users - the user of the application. """
+
+    # TODO: logins, passwords, etc
     __id: int  # PK
     __login: str
     __password: str
@@ -20,14 +18,13 @@ class Person:
     __plans: Dict[int, int]
 
     def __init__(self, login: str, password: str, name: str, surname: str, address: str = None, passport: str = None):
-        import dataoperator
         self.__login = login
         self.__password = password
         self.__name = name
         self.__surname = surname
         self.__address = address
         self.__passport = passport
-        self.__id = dataoperator.DataOperator().put(self)
+        self.__id = src.DataOperator().put(self)
         self.__banks = {}
         self.__accounts = {}
         self.__plans = {}

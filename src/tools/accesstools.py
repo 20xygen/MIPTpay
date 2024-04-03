@@ -4,13 +4,10 @@ similar_names = [["Account", "DebitAccount", "DepositAccount", "CreditAccount"],
 gods = ["DataOperator", "Admin"]
 
 
+""" A module that represents a tool for creating strict privacy of certain methods. """
+
+
 def available_from(me, *valid: str):
-    # t = dir(me.f_back.f_locals)
-    # try:
-    #     k = me.f_back.f_locals
-    #     r = me.f_back.f_locals['__class__']
-    # except Exception:
-    #     pass
     dep = me.f_back.f_locals["self"].__class__.__qualname__
     self = me.f_locals["self"].__class__.__qualname__
     with_similar = [] + gods
@@ -20,7 +17,6 @@ def available_from(me, *valid: str):
             if i in j:
                 flag = True
                 with_similar += j
-                # with_similar.append(*j)
         if not flag:
             with_similar.append(i)
     flag = False
@@ -28,7 +24,6 @@ def available_from(me, *valid: str):
         if self in j:
             flag = True
             with_similar += j
-            # with_similar.append(*j)
     if not flag:
         with_similar.append(self)
     if dep not in with_similar:

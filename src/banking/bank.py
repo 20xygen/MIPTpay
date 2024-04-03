@@ -1,34 +1,27 @@
 from typing import List, Optional
-from plan import Plan, DepositPlan, CreditPlan
-import dataoperator
-from account import Account, DepositAccount, CreditAccount, DebitAccount
-from transaction import Transaction
-from accountfactory import AccountFactory
-from clientbuilder import ClientBuilder
 import re
-from accesstools import available_from
 from inspect import currentframe as cf
+import src
 
 
 class Bank:
-    '''У банка есть привязанные к нему планы, счета и клиенты.
-    На среднем уровне взаимодействие происходит через него.'''
+    """ The banking has plans, accounts and clients linked to it.
+    At the middle level, the interaction takes place through it. """
 
     __id: int # PK
     __name: str
     __clients: List[int]
     __accounts: List[int]
     __plans: List[int]
-    __registrator: ClientBuilder
+    __registrator: src.ClientBuilder
 
     def __init__(self, name: str):
         self.__clients = []
         self.__accounts = []
         self.__plans = []
         self.__name = name
-        self.__registrator = ClientBuilder()
-        from dataoperator import DataOperator
-        self.__id = DataOperator().put(self)
+        self.__registrator = src.ClientBuilder()
+        self.__id = src.DataOperator().put(self)
 
     @property
     def id(self):
@@ -52,8 +45,7 @@ class Bank:
 
     def register(self, name: str, surname: str, address: Optional[str] = None, passport: Optional[str] = None) -> Optional[int]:
         for id in self.__clients:
-            from dataoperator import DataOperator
-            client = DataOperator().get(id, "Client")
+            client = src.DataOperator().get(id, "Client")
             if client.name == name and client.surname == surname:
                 return None
         pattern = re.compile("\d{10}")
@@ -72,7 +64,7 @@ class Bank:
         self.__clients.append(client)
         return client
 
-    def add_plan(self, plan: Plan) -> Optional[int]:
+    def add_plan(self, plan: src.Plan) -> Optional[int]:
         for id in self.__plans:
             if id == plan.id:
                 return None
@@ -82,23 +74,21 @@ class Bank:
     def open_account(self, owner: int, plan: int) -> Optional[int]:
         if not owner in self.__clients or not plan in self.__plans:
             return None
-        from dataoperator import DataOperator
-        plan_obj = DataOperator().get(plan, "Plan")
+        plan_obj = src.DataOperator().get(plan, "Plan")
         if plan_obj is None:
             return None
-        acc = AccountFactory.create(owner, plan_obj).id
+        acc = src.AccountFactory.create(owner, plan_obj).id
         self.__accounts.append(acc)
         return acc
 
     def transfer(self, departure: int, destination: int, amount: int) -> bool:
         if not departure in self.__accounts or not destination in self.__accounts:
             return False
-        from dataoperator import DataOperator
-        dep: Account = DataOperator().get(departure, "Account")
-        dest: Account = DataOperator().get(destination, "Account")
+        dep: src.Account = src.DataOperator().get(departure, "Account")
+        dest: src.Account = src.DataOperator().get(destination, "Account")
         if dest is None or dep is None:
             return False
-        trans = Transaction(departure, destination, amount)
+        trans = src.Transaction(departure, destination, amount)
         if dep.get_offer(amount) and dest.put_offer(amount):
             dep.get(amount)
             dest.put(amount)
@@ -108,17 +98,15 @@ class Bank:
         return False
 
     def do_get(self, account: int, amount: float):
-        available_from(cf(), "CrossPaymentSystem")
-        from dataoperator import DataOperator
-        dep = DataOperator().get(account, "Account")
+        src.available_from(cf(), "CrossPaymentSystem")
+        dep = src.DataOperator().get(account, "Account")
         if dep is None:
             return None
         dep.get(amount)
 
     def do_put(self, account: int, amount: float):
-        available_from(cf(), "CrossPaymentSystem")
-        from dataoperator import DataOperator
-        dep = DataOperator().get(account, "Account")
+        src.available_from(cf(), "CrossPaymentSystem")
+        dep = src.DataOperator().get(account, "Account")
         if dep is None:
             return None
         dep.put(amount)
@@ -126,11 +114,10 @@ class Bank:
     def get(self, account: int, amount: float) -> bool:
         if not account in self.__accounts:
             return False
-        from dataoperator import DataOperator
-        dep = DataOperator().get(account, "Account")
+        dep = src.DataOperator().get(account, "Account")
         if dep is None:
             return False
-        trans = Transaction(0, account, amount)
+        trans = src.Transaction(0, account, amount)
         if dep.get_offer(amount):
             self.do_get(account, amount)
             trans.prove()
@@ -142,12 +129,11 @@ class Bank:
     def put(self, account: int, amount: float) -> bool:
         if not account in self.__accounts:
             return False
-        from dataoperator import DataOperator
-        dest = DataOperator().get(account, "Account")
+        dest = src.DataOperator().get(account, "Account")
         if dest is None:
             return False
-        trans = Transaction(account, 0, amount)
-        DataOperator().put(trans)
+        trans = src.Transaction(account, 0, amount)
+        src.DataOperator().put(trans)
         if dest.put_offer(amount):
             self.do_put(account, amount)
             trans.prove()
@@ -165,8 +151,7 @@ class Bank:
         if owner not in self.__clients:
             return False
         else:
-            from dataoperator import DataOperator
-            client_obj = DataOperator().get(owner, "Client")
+            client_obj = src.DataOperator().get(owner, "Client")
             if client_obj is None:
                 return False
             client_obj.update(address, passport)
@@ -174,8 +159,7 @@ class Bank:
     def valid_client(self, account: int, client: int) -> bool:
         if client not in self.__clients:
             return False
-        from dataoperator import DataOperator
-        client_obj = DataOperator().get(account, "Account")
+        client_obj = src.DataOperator().get(account, "Account")
         if client_obj is None:
             return False
         if client_obj is None:
@@ -185,8 +169,7 @@ class Bank:
     def get_offer(self, account: int, amount: float) -> bool:
         if not account in self.__accounts:
             return False
-        from dataoperator import DataOperator
-        account_obj = DataOperator().get(account, "Account")
+        account_obj = src.DataOperator().get(account, "Account")
         if account_obj is None:
             return False
         return account_obj.get_offer(amount)
@@ -194,8 +177,7 @@ class Bank:
     def put_offer(self, account: int, amount: float) -> bool:
         if not account in self.__accounts:
             return False
-        from dataoperator import DataOperator
-        account_obj = DataOperator().get(account, "Account")
+        account_obj = src.DataOperator().get(account, "Account")
         if account_obj is None:
             return False
         return account_obj.put_offer(amount)

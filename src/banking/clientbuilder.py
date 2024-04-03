@@ -1,13 +1,14 @@
-from client import Client
 from typing import Optional
+import src
+
 
 class ClientBuilder:
-    '''Bulder class for creating Client instances.'''
+    """ Builder class for creating Client instances. """
 
-    __brick: Optional[Client]
+    __brick: Optional[src.Client]
 
     def reset(self, name: str, surname: str):
-        self.__brick = Client(name, surname)
+        self.__brick = src.Client(name, surname)
 
     def address(self, address: str):
         self.__brick.address = address
@@ -15,7 +16,7 @@ class ClientBuilder:
     def passport(self, passport: str):
         self.__brick.passport = passport
 
-    def get(self) -> Client:
+    def get(self) -> src.Client:
         brick = self.__brick
         brick.validate()
         self.__brick = None

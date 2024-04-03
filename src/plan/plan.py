@@ -1,39 +1,37 @@
-from accesstools import available_from
 from inspect import currentframe as cf
 from typing import List
-from planfactory import PlanProperty, Commission, Period, LowerLimit, UpperLimit, TransferLimit
+import src
 
 class Plan:
-    '''Тариф счета. Информация о комиссиях и ограничениях.'''
+    """ The invoice rate. Information about fees and restrictions. """
 
     __id: int # PK
 
     def __init__(self):
-        import dataoperator
-        from dataoperator import DataOperator
+        from src.operators.dataoperator import DataOperator
         self.__id = DataOperator().put(self)
 
     @property
     def id(self):
         return self.__id
 
-    def get_properties(self) -> List[PlanProperty]:
+    def get_properties(self) -> List[src.PlanProperty]:
         return []
 
 class DebitPlan(Plan):
-    '''Дебетовый тариф.'''
+    """ Debit rate. """
 
     __transfer_limit: float
     __decreased_transfer_limit: float
 
     @property
     def transfer_limit(self):
-        available_from(cf(), "Bank", "Account")
+        src.available_from(cf(), "Bank", "Account")
         return self.__transfer_limit
 
     @property
     def decreased_transfer_limit(self):
-        available_from(cf(), "Bank", "Account")
+        src.available_from(cf(), "Bank", "Account")
         return self.__decreased_transfer_limit
 
     def __init__(self, transfer_limit: float, decreased_transfer_limit: float):
@@ -41,12 +39,12 @@ class DebitPlan(Plan):
         self.__transfer_limit = transfer_limit
         self.__decreased_transfer_limit = decreased_transfer_limit
 
-    def get_properties(self) -> List[PlanProperty]:
-        return [TransferLimit(self.__transfer_limit, self.__decreased_transfer_limit)]
+    def get_properties(self) -> List[src.PlanProperty]:
+        return [src.TransferLimit(self.__transfer_limit, self.__decreased_transfer_limit)]
 
 
 class DepositPlan(Plan):
-    '''Депозитный тариф.'''
+    """ Deposit rate. """
 
     __period: int
     __decreased_period: int
@@ -57,32 +55,32 @@ class DepositPlan(Plan):
 
     @property
     def transfer_limit(self):
-        available_from(cf(), "Bank", "Account")
+        src.available_from(cf(), "Bank", "Account")
         return self.__transfer_limit
 
     @property
     def decreased_transfer_limit(self):
-        available_from(cf(), "Bank", "Account")
+        src.available_from(cf(), "Bank", "Account")
         return self.__decreased_transfer_limit
 
     @property
     def period(self):
-        available_from(cf(), "Bank", "Account")
+        src.available_from(cf(), "Bank", "Account")
         return self.__period
 
     @property
     def decreased_period(self):
-        available_from(cf(), "Bank", "Account")
+        src.available_from(cf(), "Bank", "Account")
         return self.__decreased_period
 
     @property
     def commission(self):
-        available_from(cf(), "Bank", "Account")
+        src.available_from(cf(), "Bank", "Account")
         return self.__commission
 
     @property
     def increased_commission(self):
-        available_from(cf(), "Bank", "Account")
+        src.available_from(cf(), "Bank", "Account")
         return self.__increased_commission
 
     def __init__(self, period: int, decreased_period: int,
@@ -96,15 +94,15 @@ class DepositPlan(Plan):
         self.__transfer_limit = transfer_limit
         self.__decreased_transfer_limit = decreased_transfer_limit
 
-    def get_properties(self) -> List[PlanProperty]:
-        return [TransferLimit(self.__transfer_limit, self.__decreased_transfer_limit),
-                Period(self.__period, self.__decreased_period),
-                Commission(self.__commission, self.__increased_commission)]
+    def get_properties(self) -> List[src.PlanProperty]:
+        return [src.TransferLimit(self.__transfer_limit, self.__decreased_transfer_limit),
+                src.Period(self.__period, self.__decreased_period),
+                src.Commission(self.__commission, self.__increased_commission)]
 
 
 
 class CreditPlan(Plan):
-    '''Кредитный тариф.'''
+    """ Credit rate. """
 
     __lower_limit: float
     __decreased_lower_limit: float
@@ -115,32 +113,32 @@ class CreditPlan(Plan):
 
     @property
     def transfer_limit(self):
-        available_from(cf(), "Bank", "Account")
+        src.available_from(cf(), "Bank", "Account")
         return self.__transfer_limit
 
     @property
     def decreased_transfer_limit(self):
-        available_from(cf(), "Bank", "Account")
+        src.available_from(cf(), "Bank", "Account")
         return self.__decreased_transfer_limit
 
     @property
     def lower_limit(self):
-        available_from(cf(), "Bank", "Account")
+        src.available_from(cf(), "Bank", "Account")
         return self.__lower_limit
 
     @property
     def decreased_lower_limit(self):
-        available_from(cf(), "Bank", "Account")
+        src.available_from(cf(), "Bank", "Account")
         return self.__decreased_lower_limit
 
     @property
     def commission(self):
-        available_from(cf(), "Bank", "Account")
+        src.available_from(cf(), "Bank", "Account")
         return self.__commission
 
     @property
     def increased_commission(self):
-        available_from(cf(), "Bank", "Account")
+        src.available_from(cf(), "Bank", "Account")
         return self.__increased_commission
 
     def __init__(self, lower_limit: float, decreased_lower_limit: float,
@@ -154,9 +152,9 @@ class CreditPlan(Plan):
         self.__transfer_limit = transfer_limit
         self.__decreased_transfer_limit = decreased_transfer_limit
 
-    def get_properties(self) -> List[PlanProperty]:
-        return [TransferLimit(self.__transfer_limit, self.__decreased_transfer_limit),
-                LowerLimit(self.__lower_limit, self.__decreased_lower_limit),
-                Commission(self.__commission, self.__increased_commission)]
+    def get_properties(self) -> List[src.PlanProperty]:
+        return [src.TransferLimit(self.__transfer_limit, self.__decreased_transfer_limit),
+                src.LowerLimit(self.__lower_limit, self.__decreased_lower_limit),
+                src.Commission(self.__commission, self.__increased_commission)]
 
 

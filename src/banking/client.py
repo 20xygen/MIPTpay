@@ -1,11 +1,10 @@
-from accesstools import available_from
 from inspect import currentframe as cf
 from typing import Optional
+import src
 
 class Client:
-    '''Личный кабинет клиента банка.
-    У одного человека (Human) их может быть много
-    (по одному на банк).'''
+    """ Personal account of the banking's client.
+    One users can have many of them (one per banking). """
 
     __id: int # PK
     __name: str
@@ -23,12 +22,11 @@ class Client:
             self.__precarious = True
         else:
             self.__precarious = False
-        from dataoperator import DataOperator
-        self.__id = DataOperator().put(self)
+        self.__id = src.DataOperator().put(self)
 
     @property
     def precarious(self):
-        available_from(cf(), "Bank", "ClientBuilder", "Account")
+        src.available_from(cf(), "Bank", "ClientBuilder", "Account")
         return self.__precarious
 
     @property
@@ -45,26 +43,26 @@ class Client:
 
     @property
     def address(self):
-        available_from(cf(), "Bank", "ClientBuilder", "Account")
+        src.available_from(cf(), "Bank", "ClientBuilder", "Account")
         return self.__address
 
     @property
     def passport(self):
-        available_from(cf(), "Bank", "ClientBuilder", "Account")
+        src.available_from(cf(), "Bank", "ClientBuilder", "Account")
         return self.__passport
 
     @address.setter
     def address(self, address: str):
-        available_from(cf(), "Bank", "ClientBuilder")
+        src.available_from(cf(), "Bank", "ClientBuilder")
         self.__address = address
 
     @passport.setter
     def passport(self, passport: str):
-        available_from(cf(), "Bank", "ClientBuilder")
+        src.available_from(cf(), "Bank", "ClientBuilder")
         self.__passport = passport
 
     def update(self, address: str, passport: str):
-        available_from(cf(), "Bank", "ClientBuilder")
+        src.available_from(cf(), "Bank", "ClientBuilder")
         self.__address = address
         self.__passport = passport
         self.validate()
