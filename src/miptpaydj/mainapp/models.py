@@ -1,0 +1,135 @@
+from django.db import models
+
+
+class Bank(models.Model):
+    name = models.CharField(max_length=50)
+
+    class Meta:
+        ordering = ['-id']
+        verbose_name = 'Банк'
+        verbose_name_plural = 'Банки'
+
+    def __str__(self):
+        return self.name
+
+
+class Person(models.Model):
+    login = models.CharField(max_length=50)
+    password = models.CharField(max_length=50)
+    name = models.CharField(max_length=50)
+    surname = models.CharField(max_length=50)
+    address = models.CharField(max_length=200)
+    passport = models.IntegerField()
+
+    class Meta:
+        ordering = ['-id']
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
+
+    def __str__(self):
+        return f'{self.name} {self.surname}'
+
+
+class Client(models.Model):
+    bank = models.ForeignKey(Bank, on_delete=models.CASCADE)
+    person = models.ForeignKey(Person, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50)
+    surname = models.CharField(max_length=50)
+    address = models.CharField(max_length=200)
+    passport = models.IntegerField()
+    precarious = models.BooleanField()
+
+    class Meta:
+        ordering = ['-id']
+        verbose_name = 'Аккаунт'
+        verbose_name_plural = 'Аккаунты'
+
+    def __str__(self):
+        return f'{self.name} {self.surname}'
+
+
+class PlanCategory(models.Model):
+    name = models.CharField(max_length=50)
+    commission = models.BooleanField()
+    period = models.BooleanField()
+    lower_limit = models.BooleanField()
+    upper_limit = models.BooleanField()
+    transfer_limit = models.BooleanField()
+
+    class Meta:
+        ordering = ['-id']
+        verbose_name = 'Категория плана'
+        verbose_name_plural = 'Категории планов'
+
+    def __str__(self):
+        return self.name
+
+
+class Plan(models.Model):
+    name = models.CharField(max_length=50)
+    bank = models.ForeignKey(Bank, on_delete=models.CASCADE)
+    category = models.ForeignKey(PlanCategory, on_delete=models.CASCADE)
+    commission = models.DecimalField(max_digits=8, decimal_places=6)
+    increased_commission = models.DecimalField(max_digits=8, decimal_places=6)
+    period = models.IntegerField()
+    decreased_period = models.IntegerField()
+    lower_limit = models.DecimalField(max_digits=14, decimal_places=2)
+    decreased_lower_limit = models.DecimalField(max_digits=14, decimal_places=2)
+    upper_limit = models.DecimalField(max_digits=14, decimal_places=2)
+    decreased_upper_limit = models.DecimalField(max_digits=14, decimal_places=2)
+    transfer_limit = models.DecimalField(max_digits=14, decimal_places=2)
+    decreased_transfer_limit = models.DecimalField(max_digits=14, decimal_places=2)
+
+    class Meta:
+        ordering = ['-id']
+        verbose_name = 'Тарифный план'
+        verbose_name_plural = 'Тарифные планы'
+
+    def __str__(self):
+        return self.name
+
+
+class Account(models.Model):
+    bank = models.ForeignKey(Bank, on_delete=models.CASCADE)
+    owner = models.ForeignKey(Client, on_delete=models.CASCADE)
+    opened = models.BooleanField()
+    money = models.DecimalField(max_digits=14, decimal_places=2)
+    transfer = models.DecimalField(max_digits=14, decimal_places=2)
+    plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
+    freeze_date = models.DateField()
+
+    class Meta:
+        ordering = ['-id']
+        verbose_name = 'Счет'
+        verbose_name_plural = 'Счета'
+
+    def __str__(self):
+        return "Безымянный счет"
+
+
+class Transaction(models.Model):
+    departure = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='transaction2departure')
+    destination = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='transaction2destination')
+    amount = models.DecimalField(max_digits=14, decimal_places=2)
+    status = models.IntegerField()
+
+    class Meta:
+        ordering = ['-id']
+        verbose_name = 'Транзакция'
+        verbose_name_plural = 'Транзакции'
+
+    def __str__(self):
+        return "Безымянная транзакция"
+
+
+class Diary(models.Model):
+    parameter = models.CharField(max_length=50)
+    value = models.IntegerField()
+
+    class Meta:
+        ordering = ['-id']
+        verbose_name = 'Страница параметров'
+        verbose_name_plural = 'Параметры'
+
+    def __str__(self):
+        return self.parameter
