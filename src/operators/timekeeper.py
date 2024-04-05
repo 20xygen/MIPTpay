@@ -18,6 +18,7 @@ class TimeKeeper:  # TODO: make singleton.
     def increase(self):
         for account in update_queue:
             src.DataOperator().get(account, "Account").update()
+            src.DataOperator().done_with(account, "Account")
         global current_time
         current_time += 1
 

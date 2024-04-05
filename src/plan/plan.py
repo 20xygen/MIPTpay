@@ -9,7 +9,7 @@ class Plan:
 
     def __init__(self):
         from src.operators.dataoperator import DataOperator
-        self.__id = DataOperator().put(self)
+        self.__id = DataOperator().put(self, False)
 
     @property
     def id(self):
@@ -38,6 +38,7 @@ class DebitPlan(Plan):
         super().__init__()
         self.__transfer_limit = transfer_limit
         self.__decreased_transfer_limit = decreased_transfer_limit
+        src.DataOperator().done_with(self.id, "Plan")
 
     def get_properties(self) -> List[src.PlanProperty]:
         return [src.TransferLimit(self.__transfer_limit, self.__decreased_transfer_limit)]
@@ -93,6 +94,7 @@ class DepositPlan(Plan):
         self.__increased_commission = increased_commission
         self.__transfer_limit = transfer_limit
         self.__decreased_transfer_limit = decreased_transfer_limit
+        src.DataOperator().done_with(self.id, "Plan")
 
     def get_properties(self) -> List[src.PlanProperty]:
         return [src.TransferLimit(self.__transfer_limit, self.__decreased_transfer_limit),
@@ -151,10 +153,9 @@ class CreditPlan(Plan):
         self.__increased_commission = increased_commission
         self.__transfer_limit = transfer_limit
         self.__decreased_transfer_limit = decreased_transfer_limit
+        src.DataOperator().done_with(self.id, "Plan")
 
     def get_properties(self) -> List[src.PlanProperty]:
         return [src.TransferLimit(self.__transfer_limit, self.__decreased_transfer_limit),
                 src.LowerLimit(self.__lower_limit, self.__decreased_lower_limit),
                 src.Commission(self.__commission, self.__increased_commission)]
-
-

@@ -16,7 +16,7 @@ class Transaction:
         self.__destination = destination
         self.__amount = amount
         self.__status = 0
-        self.__id = src.DataOperator().put(self)
+        self.__id = src.DataOperator().put(self, False) # Transaction closes later
 
     @property
     def id(self):

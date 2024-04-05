@@ -21,7 +21,7 @@ class Bank:
         self.__plans = []
         self.__name = name
         self.__registrator = src.ClientBuilder()
-        self.__id = src.DataOperator().put(self)
+        self.__id = src.DataOperator().put(self, False)
 
     @property
     def id(self):
@@ -44,10 +44,10 @@ class Bank:
         return self.__clients
 
     def register(self, name: str, surname: str, address: Optional[str] = None, passport: Optional[str] = None) -> Optional[int]:
-        for id in self.__clients:
-            client = src.DataOperator().get(id, "Client")
-            if client.name == name and client.surname == surname:
-                return None
+        # for id in self.__clients:
+        #     client = src.DataOperator().get(id, "Client")
+        #     if client.name == name and client.surname == surname:
+        #         return None
         pattern = re.compile("\d{10}")
         if passport is not None:
             passport = passport.replace(" ", "")
@@ -62,14 +62,16 @@ class Bank:
         if client is None:
             return None
         self.__clients.append(client)
+        src.DataOperator().done_with(client, "Client")
         return client
 
-    def add_plan(self, plan: src.Plan) -> Optional[int]:
-        for id in self.__plans:
-            if id == plan.id:
-                return None
-        self.__plans.append(plan.id)
-        return plan.id
+    def add_plan(self, plan: int) -> Optional[int]:
+        # for id in self.__plans:
+        #     if id == plan.id:
+        #         return None
+        self.__plans.append(plan)
+        # src.DataOperator().done_with(plan.id, "Plan")
+        return plan
 
     def open_account(self, owner: int, plan: int) -> Optional[int]:
         if not owner in self.__clients or not plan in self.__plans:
@@ -79,6 +81,8 @@ class Bank:
             return None
         acc = src.AccountFactory.create(owner, plan_obj).id
         self.__accounts.append(acc)
+        # src.DataOperator().done_with(acc, "Account")
+        src.DataOperator().done_with(plan, "Plan")
         return acc
 
     def transfer(self, departure: int, destination: int, amount: int) -> bool:
@@ -93,22 +97,32 @@ class Bank:
             dep.get(amount)
             dest.put(amount)
             trans.prove()
+            src.DataOperator().done_with(dep.id, "Account")
+            src.DataOperator().done_with(dest.id, "Account")
+            src.DataOperator().done_with(trans.id, "Transaction")
             return True
         trans.cancel()
+        src.DataOperator().done_with(dep.id, "Account")
+        src.DataOperator().done_with(dest.id, "Account")
+        src.DataOperator().done_with(trans.id, "Transaction")
         return False
 
     def do_get(self, account: int, amount: float):
         src.available_from(cf(), "CrossPaymentSystem")
         dep = src.DataOperator().get(account, "Account")
         if dep is None:
+            src.DataOperator().done_with(account, "Account")
             return None
+        src.DataOperator().done_with(account, "Account")
         dep.get(amount)
 
     def do_put(self, account: int, amount: float):
         src.available_from(cf(), "CrossPaymentSystem")
         dep = src.DataOperator().get(account, "Account")
         if dep is None:
+            src.DataOperator().done_with(account, "Account")
             return None
+        src.DataOperator().done_with(account, "Account")
         dep.put(amount)
 
     def get(self, account: int, amount: float) -> bool:
@@ -121,9 +135,13 @@ class Bank:
         if dep.get_offer(amount):
             self.do_get(account, amount)
             trans.prove()
+            src.DataOperator().done_with(trans.id, "Transaction")
+            src.DataOperator().done_with(dep.id, "Account")
             return True
         else:
             trans.cancel()
+            src.DataOperator().done_with(trans.id, "Transaction")
+            src.DataOperator().done_with(dep.id, "Account")
             return False
 
     def put(self, account: int, amount: float) -> bool:
@@ -131,15 +149,20 @@ class Bank:
             return False
         dest = src.DataOperator().get(account, "Account")
         if dest is None:
+            # src.DataOperator().done_with(dest.id, "Account")
             return False
         trans = src.Transaction(account, 0, amount)
-        src.DataOperator().put(trans)
+        # src.DataOperator().put(trans)
         if dest.put_offer(amount):
             self.do_put(account, amount)
             trans.prove()
+            src.DataOperator().done_with(trans.id, "Transaction")
+            src.DataOperator().done_with(dest.id, "Account")
             return True
         else:
             trans.cancel()
+            src.DataOperator().done_with(trans.id, "Transaction")
+            src.DataOperator().done_with(dest.id, "Account")
             return False
 
     def update(self, owner: int, address: str, passport: str) -> bool:
@@ -153,31 +176,37 @@ class Bank:
         else:
             client_obj = src.DataOperator().get(owner, "Client")
             if client_obj is None:
+                src.DataOperator().done_with(owner, "Client")
                 return False
             client_obj.update(address, passport)
+            src.DataOperator().done_with(owner, "Client")
 
     def valid_client(self, account: int, client: int) -> bool:
         if client not in self.__clients:
             return False
-        client_obj = src.DataOperator().get(account, "Account")
-        if client_obj is None:
-            return False
-        if client_obj is None:
-            return False
-        return client_obj.owner == client
+        account_obj = src.DataOperator().get(account, "Account")
+        ret = False
+        if account_obj is not None:
+            ret = account_obj.owner == client
+        src.DataOperator().done_with(account, "Account")
+        return ret
 
     def get_offer(self, account: int, amount: float) -> bool:
         if not account in self.__accounts:
             return False
         account_obj = src.DataOperator().get(account, "Account")
-        if account_obj is None:
-            return False
-        return account_obj.get_offer(amount)
+        ret = False
+        if account_obj is not None:
+            ret = account_obj.get_offer(amount)
+        src.DataOperator().done_with(account, "Account")
+        return ret
 
     def put_offer(self, account: int, amount: float) -> bool:
         if not account in self.__accounts:
             return False
         account_obj = src.DataOperator().get(account, "Account")
-        if account_obj is None:
-            return False
-        return account_obj.put_offer(amount)
+        ret = False
+        if account_obj is not None:
+            ret = account_obj.put_offer(amount)
+        src.DataOperator().done_with(account, "Account")
+        return ret

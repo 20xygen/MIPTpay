@@ -22,7 +22,7 @@ class Client:
             self.__precarious = True
         else:
             self.__precarious = False
-        self.__id = src.DataOperator().put(self)
+        self.__id = src.DataOperator().put(self, False)
 
     @property
     def precarious(self):
