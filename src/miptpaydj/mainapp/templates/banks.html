@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banks</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Banks</h1>
+        <nav>
+            <ul>
+                <li><a href="{% url 'banks' %}">Banks</a></li>
+                <li><a href="{% url 'plans' %}">Plans</a></li>
+                <li><a href="{% url 'persons' %}">Persons</a></li>
+                <li><a href="{% url 'clients' %}">Clients</a></li>
+                <li><a href="{% url 'accounts' %}">Accounts</a></li>
+                <li><a href="{% url 'transactions' %}">Transactions</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Number of Users</th>
+                    <th>Number of Clients</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for bank in banks %}
+                <tr>
+                    <td>{{ bank.id }}</td>
+                    <td>{{ bank.name }}</td>
+                    <td>{{ bank.persons.count }}</td>
+                    <td>{{ bank.clients.count }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+</body>
+</html>
