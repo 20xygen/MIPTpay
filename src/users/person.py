@@ -29,9 +29,15 @@ class Person:
         self.__accounts = {}
         self.__plans = {}
 
-    def login(self, login: str, password: str):
+    def log_in(self, login: str, password: str):
         # TODO: Сделать систему проверки пользователя
         pass
+
+    def login(self):
+        return self.__login
+
+    def password(self):
+        return self.__password
 
     @property
     def id(self):

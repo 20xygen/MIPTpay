@@ -22,8 +22,13 @@ class Transaction:
     def id(self):
         return self.__id
 
+    @property
     def amount(self):
         return self.__amount
+
+    @property
+    def status(self):
+        return self.__status
 
     def prove(self):
         self.__status = 1

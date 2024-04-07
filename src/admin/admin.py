@@ -52,7 +52,7 @@ class Admin():
   def person_info(self, person):
     person = src.DataOperator().get(person, "Person")
     ret = f"""id: {person.id}
-    login: {person.login}
+    login: {person.log_in}
     password: {person.password}
     name: {person.name}
     surname: {person.surname}

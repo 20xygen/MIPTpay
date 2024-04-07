@@ -1,11 +1,11 @@
 from django.contrib import admin
-from .models import Bank, Person, Client, PlanCategory, Plan, Account, Transaction, Diary
+from .models import BankModel, PersonModel, ClientModel, PlanCategoryModel, PlanModel, AccountModel, TransactionModel, DiaryModel
 
-admin.site.register(Bank)
-admin.site.register(Person)
-admin.site.register(Client)
-admin.site.register(PlanCategory)
-admin.site.register(Plan)
-admin.site.register(Account)
-admin.site.register(Transaction)
-admin.site.register(Diary)
+admin.site.register(BankModel)
+admin.site.register(PersonModel)
+admin.site.register(ClientModel)
+admin.site.register(PlanCategoryModel)
+admin.site.register(PlanModel)
+admin.site.register(AccountModel)
+admin.site.register(TransactionModel)
+admin.site.register(DiaryModel)

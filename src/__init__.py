@@ -24,6 +24,14 @@ from src.operators.dataoperator import DataOperator
 
 from src.interface.user_interface import UserInterface
 
+from miptpaydj import mainapp
+from miptpaydj import miptpaydj
+
+from miptpaydj.mainapp.models import BankModel, PersonModel, ClientModel, PlanCategoryModel, PlanModel, AccountModel, TransactionModel, DiaryModel
+
+from plan.plancategory import PlanCategory
+
+from operators import adapters
 
 __all__ = ['available_from',
            'PlanProperty', 'Commission', 'Period', 'LowerLimit', 'UpperLimit', 'TransferLimit',
@@ -40,5 +48,7 @@ __all__ = ['available_from',
            'DataOperator',
            'Person',
            'Admin',
-           'UserInterface'
+           'UserInterface',
+           'mainapp', 'miptpaydj',
+           'BankModel', 'PersonModel', 'ClientModel', 'PlanCategoryModel', 'PlanModel', 'AccountModel', 'TransactionModel', 'DiaryModel'
            ]

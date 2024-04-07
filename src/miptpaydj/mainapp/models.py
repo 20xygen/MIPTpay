@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class Bank(models.Model):
+class BankModel(models.Model):
     name = models.CharField(max_length=50)
 
     class Meta:
@@ -13,7 +13,7 @@ class Bank(models.Model):
         return self.name
 
 
-class Person(models.Model):
+class PersonModel(models.Model):
     login = models.CharField(max_length=50)
     password = models.CharField(max_length=50)
     name = models.CharField(max_length=50)
@@ -30,9 +30,9 @@ class Person(models.Model):
         return f'{self.name} {self.surname}'
 
 
-class Client(models.Model):
-    bank = models.ForeignKey(Bank, on_delete=models.CASCADE)
-    person = models.ForeignKey(Person, on_delete=models.CASCADE)
+class ClientModel(models.Model):
+    bank = models.ForeignKey(BankModel, on_delete=models.CASCADE)
+    person = models.ForeignKey(PersonModel, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
     surname = models.CharField(max_length=50)
     address = models.CharField(max_length=200)
@@ -48,7 +48,7 @@ class Client(models.Model):
         return f'{self.name} {self.surname}'
 
 
-class PlanCategory(models.Model):
+class PlanCategoryModel(models.Model):
     name = models.CharField(max_length=50)
     commission = models.BooleanField()
     period = models.BooleanField()
@@ -65,10 +65,10 @@ class PlanCategory(models.Model):
         return self.name
 
 
-class Plan(models.Model):
+class PlanModel(models.Model):
     name = models.CharField(max_length=50)
-    bank = models.ForeignKey(Bank, on_delete=models.CASCADE)
-    category = models.ForeignKey(PlanCategory, on_delete=models.CASCADE)
+    bank = models.ForeignKey(BankModel, on_delete=models.CASCADE)
+    category = models.ForeignKey(PlanCategoryModel, on_delete=models.CASCADE)
     commission = models.DecimalField(max_digits=8, decimal_places=6)
     increased_commission = models.DecimalField(max_digits=8, decimal_places=6)
     period = models.IntegerField()
@@ -89,14 +89,14 @@ class Plan(models.Model):
         return self.name
 
 
-class Account(models.Model):
-    bank = models.ForeignKey(Bank, on_delete=models.CASCADE)
-    owner = models.ForeignKey(Client, on_delete=models.CASCADE)
+class AccountModel(models.Model):
+    bank = models.ForeignKey(BankModel, on_delete=models.CASCADE)
+    owner = models.ForeignKey(ClientModel, on_delete=models.CASCADE)
     opened = models.BooleanField()
     money = models.DecimalField(max_digits=14, decimal_places=2)
     transfer = models.DecimalField(max_digits=14, decimal_places=2)
-    plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
-    freeze_date = models.DateField()
+    plan = models.ForeignKey(PlanModel, on_delete=models.CASCADE)
+    freeze_date = models.IntegerField()
 
     class Meta:
         ordering = ['-id']
@@ -107,9 +107,9 @@ class Account(models.Model):
         return "Безымянный счет"
 
 
-class Transaction(models.Model):
-    departure = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='transaction2departure')
-    destination = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='transaction2destination')
+class TransactionModel(models.Model):
+    departure = models.ForeignKey(AccountModel, on_delete=models.CASCADE, related_name='transaction2departure')
+    destination = models.ForeignKey(AccountModel, on_delete=models.CASCADE, related_name='transaction2destination')
     amount = models.DecimalField(max_digits=14, decimal_places=2)
     status = models.IntegerField()
 
@@ -122,9 +122,9 @@ class Transaction(models.Model):
         return "Безымянная транзакция"
 
 
-class Diary(models.Model):
+class DiaryModel(models.Model):
     parameter = models.CharField(max_length=50)
-    value = models.IntegerField()
+    value = models.CharField(max_length=50)
 
     class Meta:
         ordering = ['-id']
