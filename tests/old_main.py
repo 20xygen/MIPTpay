@@ -1,3 +1,4 @@
+import src
 from src import (Bank, PlanFactory, TransferLimit, LowerLimit, Period, Commission, DataOperator, TimeKeeper,
                  Admin)
 from src.banking import crosspayment
@@ -125,3 +126,8 @@ DataOperator().done_with(sberbank.id, "Bank")
 DataOperator().done_with(tinkoff.id, "Bank")
 
 DataOperator().print_online()
+
+# Person tests
+
+den = src.Person("20xygen", "1234", "Denis", "Barilov", "Moscow", "1234 123456")
+print(den.name)

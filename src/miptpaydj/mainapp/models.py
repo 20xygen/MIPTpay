@@ -104,7 +104,11 @@ class AccountModel(models.Model):
         verbose_name_plural = 'Счета'
 
     def __str__(self):
-        return "Безымянный счет"
+        if self.id:
+            return f"Счет {self.id}"
+        else:
+            return "Безымянный счет"
+
 
 
 class TransactionModel(models.Model):

@@ -3,14 +3,14 @@ from datetime import datetime
 from dateutil import parser
 
 
-class Adepter:
+class Adapter:
     def create_bank(self, bank: src.Bank):
         model = src.BankModel(name=bank.name)
         model.save()
         return model
 
     def create_person(self, person: src.Person):
-        model = src.PersonModel(login=person.log_in, password=person.password, name=person.name, surname=person.surname, address=person.address, passport=int(person.passport))
+        model = src.PersonModel(login=person.log_in, password=person.password, name=person.name, surname=person.surname, address=person.address, passport=int(person.passport.replace(" ", "")))
         model.save()
         return model
 
@@ -21,16 +21,16 @@ class Adepter:
 
     def create_plan(self, plan: src.Plan, bank: src.BankModel, name: str):
         model = src.PlanModel(name=name, bank=bank, commission=0, increased_commission=0, period=0, decreased_period=0, lower_limit=0, decreased_lower_limit=0, upper_limit=0, decreased_upper_limit=0, transfer_limit=0, decreased_transfer_limit=0)
-        category: src.PlanCategory
+        category: src.PlanCategoryModel
         if isinstance(plan, src.DebitPlan):
             category = src.PlanCategoryModel.objects.get(name='Debit')
-            model.category = 'Debit'
+            model.category = category
         elif isinstance(plan, src.DepositPlan):
             category = src.PlanCategoryModel.objects.get(name='Deposit')
-            model.category = 'Deposit'
+            model.category = category
         elif isinstance(plan, src.CreditPlan):
             category = src.PlanCategoryModel.objects.get(name='Credit')
-            model.category = 'Credit'
+            model.category = category
         if category.commission:
             model.commission = plan.commission
             model.increased_commission = plan.increased_commission
@@ -56,10 +56,23 @@ class Adepter:
         else:
             model.freeze_date = 0
         model.save()
+        return model
 
     def create_transaction(self, transaction: src.Transaction, dep: src.AccountModel, dest: src.AccountModel):
         model = src.TransactionModel(departure=dep, destination=dest, amount=transaction.amount, status=transaction.status)
+        model.save()
+        return model
 
     def set_date(self):
-        date, created = src.DiaryModel.objects.get_or_create(name="Date")
-        date.value(str(datetime.now()))
+        model, created = src.DiaryModel.objects.get_or_create(parameter="Date")
+        model.value = str(datetime.now())
+        model.save()
+        return model
+
+    def get_date_diff(self):  # -> datetime.timedelta
+        raw = parser.parse(str(src.DiaryModel.objects.get(name='Date').value))
+        date = datetime(raw.year, raw.month, raw.day, raw.hour, raw.minute, raw.second)
+        diff = datetime.now() - date
+        return diff
+
+

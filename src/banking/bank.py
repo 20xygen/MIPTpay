@@ -75,6 +75,7 @@ class Bank:
 
     def open_account(self, owner: int, plan: int) -> Optional[int]:
         if not owner in self.__clients or not plan in self.__plans:
+            print(owner, self.__clients, plan, self.__plans)
             return None
         plan_obj = src.DataOperator().get(plan, "Plan")
         if plan_obj is None:

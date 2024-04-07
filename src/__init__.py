@@ -1,3 +1,9 @@
+import os
+import django
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'src.miptpaydj.miptpaydj.settings')
+django.setup()
+
 from src.tools.accesstools import available_from
 
 from src.plan.planproperty import PlanProperty, Commission, Period, LowerLimit, UpperLimit, TransferLimit
@@ -24,14 +30,16 @@ from src.operators.dataoperator import DataOperator
 
 from src.interface.user_interface import UserInterface
 
-from miptpaydj import mainapp
-from miptpaydj import miptpaydj
+from src.miptpaydj import mainapp
+from src.miptpaydj import miptpaydj
 
-from miptpaydj.mainapp.models import BankModel, PersonModel, ClientModel, PlanCategoryModel, PlanModel, AccountModel, TransactionModel, DiaryModel
+from src.miptpaydj.mainapp.models import BankModel, PersonModel, ClientModel, PlanCategoryModel, PlanModel, AccountModel, TransactionModel, DiaryModel
 
-from plan.plancategory import PlanCategory
+# from plan.plancategory import PlanCategory
 
-from operators import adapters
+from src.operators.adapters import Adapter
+
+from src.miptpaydj.mainapp import apps
 
 __all__ = ['available_from',
            'PlanProperty', 'Commission', 'Period', 'LowerLimit', 'UpperLimit', 'TransferLimit',
@@ -50,5 +58,7 @@ __all__ = ['available_from',
            'Admin',
            'UserInterface',
            'mainapp', 'miptpaydj',
-           'BankModel', 'PersonModel', 'ClientModel', 'PlanCategoryModel', 'PlanModel', 'AccountModel', 'TransactionModel', 'DiaryModel'
+           'BankModel', 'PersonModel', 'ClientModel', 'PlanCategoryModel', 'PlanModel', 'AccountModel', 'TransactionModel', 'DiaryModel',
+           'Adapter',
+           'apps',
            ]

@@ -33,9 +33,11 @@ class Person:
         # TODO: Сделать систему проверки пользователя
         pass
 
+    @property
     def login(self):
         return self.__login
 
+    @property
     def password(self):
         return self.__password
 
@@ -74,4 +76,5 @@ class Person:
     def update(self, address: str, passport: str):
         self.__address = address
         self.__passport = passport
+
 

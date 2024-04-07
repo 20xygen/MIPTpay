@@ -36,6 +36,7 @@ class DataOperator:
         }
         container = type_to_container.get(type, {})
         if id not in container.keys():
+            print(type, ": not found object with id", id)
             return None
         else:
             # TODO: load from DB
