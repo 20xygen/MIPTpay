@@ -47,15 +47,15 @@ sber_credit_model = src.Adapter().create_plan(sber_credit, sber_model, "Sberbank
 
 tink_debit = src.PlanFactory.create_debit_plan(src.TransferLimit(1e6, 1e4))
 tink.add_plan(tink_debit.id)
-tink_debit_model = src.Adapter().create_plan(sber_debit, sber_model, "Sberbank deposit plan")
+tink_debit_model = src.Adapter().create_plan(sber_debit, sber_model, "Tinkoff deposit plan")
 
 tink_deposit = src.PlanFactory.create_deposit_plan(src.TransferLimit(1e6, 1e4), src.Period(5, 10), src.Commission(0.1, 0.2))
 tink.add_plan(tink_deposit.id)
-tink_deposit_model = src.Adapter().create_plan(sber_debit, sber_model, "Sberbank deposit plan")
+tink_deposit_model = src.Adapter().create_plan(sber_debit, sber_model, "Tinkoff deposit plan")
 
 tink_credit = src.PlanFactory.create_credit_plan(src.TransferLimit(1e6, 1e4), src.LowerLimit(-3e5, -3e3), src.Commission(-0.1, -0.2))
 tink.add_plan(tink_credit.id)
-tink_credit_model = src.Adapter().create_plan(sber_debit, sber_model, "Sberbank deposit plan")
+tink_credit_model = src.Adapter().create_plan(sber_debit, sber_model, "Tinkoff deposit plan")
 
 # Persons
 
@@ -100,7 +100,6 @@ misha_tink_model = src.Adapter().create_client(misha_tink, tink_model, misha_mod
 denis_sber_debit_id = sber.open_account(denis_sber.id, sber_debit.id)
 denis_sber_debit = src.DataOperator().get(denis_sber_debit_id, "Account")
 src.DataOperator().done_with(denis_sber_debit_id, "Account")
-print(type(denis_sber_debit))
 denis_sber_debit_model = src.Adapter().create_account(denis_sber_debit, sber_model, denis_sber_model, sber_debit_model)
 
 denis_sber_deposit_id = sber.open_account(denis_sber.id, sber_deposit.id)

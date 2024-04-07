@@ -28,8 +28,6 @@
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
-                    <th>Number of Users</th>
-                    <th>Number of Clients</th>
                 </tr>
             </thead>
             <tbody>
@@ -37,8 +35,6 @@
                 <tr>
                     <td>{{ bank.id }}</td>
                     <td>{{ bank.name }}</td>
-                    <td>{{ bank.persons.count }}</td>
-                    <td>{{ bank.clients.count }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

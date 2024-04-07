@@ -29,7 +29,8 @@
                     <th>ID</th>
                     <th>Name</th>
                     <th>Surname</th>
-                    <!-- Add other necessary headers here -->
+                    <th>Address</th>
+                    <th>Passport</th>
                 </tr>
             </thead>
             <tbody>
@@ -38,7 +39,8 @@
                     <td>{{ person.id }}</td>
                     <td>{{ person.name }}</td>
                     <td>{{ person.surname }}</td>
-                    <!-- Add other necessary data cells here -->
+                    <td>{{ person.address }}</td>
+                    <td>{{ person.passport }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

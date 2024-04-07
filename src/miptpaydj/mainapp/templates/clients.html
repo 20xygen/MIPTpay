@@ -28,8 +28,12 @@
                 <tr>
                     <th>ID</th>
                     <th>Bank</th>
-                    <th>Owner</th>
-                    <!-- Добавьте другие необходимые заголовки здесь -->
+                    <th>Person</th>
+                    <th>Name</th>
+                    <th>Surname</th>
+                    <th>Address</th>
+                    <th>Passport</th>
+                    <th>Precarious</th>
                 </tr>
             </thead>
             <tbody>
@@ -38,7 +42,11 @@
                     <td>{{ client.id }}</td>
                     <td>{{ client.bank.name }}</td>
                     <td>{{ client.name }} {{ client.surname }}</td>
-                    <!-- Добавьте другие необходимые ячейки с данными здесь -->
+                    <td>{{ client.name }}</td>
+                    <td>{{ client.surname }}</td>
+                    <td>{% if client.address %}{{ client.address }}{% else %}N/A{% endif %}</td>
+                    <td>{% if client.passport %}{{ client.passport }}{% else %}N/A{% endif %}</td>
+                    <td>{{ client.precarious }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
