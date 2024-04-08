@@ -1,6 +1,6 @@
 import src
 from datetime import datetime
-from dateutil import parser
+#from dateutil import parser
 
 
 class Adapter:
@@ -70,10 +70,10 @@ class Adapter:
         model.save()
         return model
 
-    def get_date_diff(self):  # -> datetime.timedelta
-        raw = parser.parse(str(src.DiaryModel.objects.get(name='Date').value))
-        date = datetime(raw.year, raw.month, raw.day, raw.hour, raw.minute, raw.second)
-        diff = datetime.now() - date
-        return diff
+    # def get_date_diff(self):  # -> datetime.timedelta
+    #     raw = parser.parse(str(src.DiaryModel.objects.get(name='Date').value))
+    #     date = datetime(raw.year, raw.month, raw.day, raw.hour, raw.minute, raw.second)
+    #     diff = datetime.now() - date
+    #     return diff
 
 
