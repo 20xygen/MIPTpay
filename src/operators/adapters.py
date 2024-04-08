@@ -15,6 +15,7 @@ class Adapter:
         return model
 
     def create_client(self, client: src.Client, bank: src.BankModel, person: src.PersonModel):
+        # print(bank.name)
         model = src.ClientModel(bank=bank, person=person, name=client.name, surname=client.surname, address=(client.address if client.address is not None else ""), passport=(int(client.passport) if client.passport is not None else 0), precarious=client.precarious)
         model.save()
         return model

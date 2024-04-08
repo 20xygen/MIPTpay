@@ -2,7 +2,7 @@ import os
 import django
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'src.miptpaydj.miptpaydj.settings')
-django.setup()
+# django.setup()
 
 from src.tools.accesstools import available_from
 
@@ -41,6 +41,8 @@ from src.operators.adapters import Adapter
 
 from src.miptpaydj.mainapp import apps
 
+from src.miptpaydj.mainapp import views
+
 __all__ = ['available_from',
            'PlanProperty', 'Commission', 'Period', 'LowerLimit', 'UpperLimit', 'TransferLimit',
            'Plan', 'DebitPlan', 'DepositPlan', 'CreditPlan',
@@ -61,4 +63,5 @@ __all__ = ['available_from',
            'BankModel', 'PersonModel', 'ClientModel', 'PlanCategoryModel', 'PlanModel', 'AccountModel', 'TransactionModel', 'DiaryModel',
            'Adapter',
            'apps',
+           'views',
            ]

@@ -29,7 +29,7 @@ sber = src.Bank("Sberbank")
 sber_model = src.Adapter().create_bank(sber)
 
 tink = src.Bank("Tinkoff")
-tink_model = src.Adapter().create_bank(sber)
+tink_model = src.Adapter().create_bank(tink)
 
 # Plans
 

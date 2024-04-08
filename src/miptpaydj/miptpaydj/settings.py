@@ -42,8 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'mainapp.apps.MainappConfig'
-    # 'src.miptpaydj.mainapp.apps.MainappConfig'
+    # 'mainapp.apps.MainappConfig'
+    'src.miptpaydj.mainapp.apps.MainappConfig'
 ]
 
 MIDDLEWARE = [
