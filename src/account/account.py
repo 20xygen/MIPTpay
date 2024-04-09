@@ -47,6 +47,11 @@ class Account:
         src.available_from(cf(), "Bank")
         return self.__transfer
 
+    @transfer.setter
+    def transfer(self, cash: float):
+        src.available_from(cf(), "Bank")
+        self.__transfer = cash
+
     @property
     def opened(self):
         src.available_from(cf(), "Bank")
@@ -61,11 +66,6 @@ class Account:
     def money(self, money):
         src.available_from(cf(), "Bank")
         self.__money = money
-
-    @property
-    def owner(self):
-        src.available_from(cf(), "Bank")
-        return self.__owner
 
     def put_offer(self, cash: float) -> bool:
         src.available_from(cf(), "Bank")

@@ -39,6 +39,16 @@ class Transaction:
     def status(self):
         return self.__status
 
+    @property
+    def departure(self):
+        src.available_from(cf())
+        return self.__departure
+
+    @property
+    def destination(self):
+        src.available_from(cf())
+        return self.__destination
+
     def prove(self):
         self.__status = 1
 
