@@ -59,13 +59,13 @@ tink_credit_model = src.Adapter().create_plan(sber_debit, sber_model, "Tinkoff d
 
 # Persons
 
-denis = src.Person("20xygen", "1234", "Denis", "Barilov", "Moscow", "1234 123456")
+denis = src.Person("20xygen", "1234", "Denis", "Barilov", "barilov.di@phystech.edu", "1234 123456")
 denis_model = src.Adapter().create_person(denis)
 
-misha = src.Person("mikali", "lol", "Mikhail", "Kalinin", "Dolgoprugny", "0000 000000")
+misha = src.Person("mikali", "lol", "Mikhail", "Kalinin", "kalinin.mi@phystech.edu", "0000 000000")
 misha_model = src.Adapter().create_person(misha)
 
-artem = src.Person("artudo", "kek", "Artem", "Udovenko", "Moscow", "7777 777777")
+artem = src.Person("artudo", "kek", "Artem", "Udovenko", "udovenko.ai@phystech.edu", "7777 777777")
 artem_model = src.Adapter().create_person(artem)
 
 # Clients

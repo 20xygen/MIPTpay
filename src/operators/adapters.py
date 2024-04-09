@@ -10,7 +10,7 @@ class Adapter:
         return model
 
     def create_person(self, person: src.Person):
-        model = src.PersonModel(login=person.log_in, password=person.password, name=person.name, surname=person.surname, address=person.address, passport=int(person.passport.replace(" ", "")))
+        model = src.PersonModel(username=person.login, password=person.password, first_name=person.name, last_name=person.surname, email=person.address, passport=int(person.passport.replace(" ", "")))
         model.save()
         return model
 
