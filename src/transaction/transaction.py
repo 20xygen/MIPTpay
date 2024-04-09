@@ -10,7 +10,7 @@ class Transaction:
     __departure: int
     __destination: int
     __amount: float
-    __status: int  # 0 - in progress, 1 - approved, -1 - cancelled
+    __status: int  # 0 - in progress, 1 - approved, -1 - cancelled, -2 - reverted
 
     def __init__(self, departure: int, destination: int, amount: float):
         self.__departure = departure
@@ -44,3 +44,6 @@ class Transaction:
 
     def cancel(self):
         self.__status = -1
+
+    def revert(self):
+        self.__status = -2

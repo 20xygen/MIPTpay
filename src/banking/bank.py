@@ -154,6 +154,30 @@ class Bank:
             src.DataOperator().done_with(dep.id, "Account")
             return False
 
+    def valid_get(self, client: int, account: int, amount: float) -> bool:
+        if account not in self.__accounts:
+            return False
+        if client not in self.__clients:
+            return False
+        dep = src.DataOperator().get(account, "Account")
+        if dep is None:
+            return False
+        if dep.owner() != client:
+            src.DataOperator().done_with(dep.id, "Account")
+            return False
+        trans = src.Transaction(0, account, amount)
+        if dep.get_offer(amount):
+            self.do_get(account, amount)
+            trans.prove()
+            src.DataOperator().done_with(trans.id, "Transaction")
+            src.DataOperator().done_with(dep.id, "Account")
+            return True
+        else:
+            trans.cancel()
+            src.DataOperator().done_with(trans.id, "Transaction")
+            src.DataOperator().done_with(dep.id, "Account")
+            return False
+
     def put(self, account: int, amount: float) -> bool:
         if not account in self.__accounts:
             return False
