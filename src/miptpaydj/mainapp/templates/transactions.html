@@ -1,50 +1,27 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transactions</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
-</head>
-<body>
-    <header>
-        <h1>Transactions</h1>
-        <nav>
-            <ul>
-                <li><a href="{% url 'banks' %}">Banks</a></li>
-                <li><a href="{% url 'plans' %}">Plans</a></li>
-                <li><a href="{% url 'persons' %}">Persons</a></li>
-                <li><a href="{% url 'clients' %}">Clients</a></li>
-                <li><a href="{% url 'accounts' %}">Accounts</a></li>
-                <li><a href="{% url 'transactions' %}">Transactions</a></li>
-            </ul>
-        </nav>
-    </header>
+{% extends 'base.html' %}
+{% block title %}Transactions{% endblock %}
+{% block header %}Transactions{% endblock %}
+{% block content %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Sender Account</th>
+                <th>Receiver Account</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for transaction in transactions %}
+            <tr>
+                <td>{{ transaction.id }}</td>
+                <td>{{ transaction.departure }}</td>
+                <td>{{ transaction.destination }}</td>
+                <td>{{ transaction.amount }}</td>
+                <!-- Add other necessary data cells here -->
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
 
-    <main>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Sender Account</th>
-                    <th>Receiver Account</th>
-                    <th>Amount</th>
-                    <!-- Add other necessary headers here -->
-                </tr>
-            </thead>
-            <tbody>
-                {% for transaction in transactions %}
-                <tr>
-                    <td>{{ transaction.id }}</td>
-                    <td>{{ transaction.departure }}</td>
-                    <td>{{ transaction.destination }}</td>
-                    <td>{{ transaction.amount }}</td>
-                    <!-- Add other necessary data cells here -->
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </main>
-</body>
-</html>

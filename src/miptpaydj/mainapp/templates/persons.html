@@ -1,50 +1,27 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Persons</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
-</head>
-<body>
-    <header>
-        <h1>Persons</h1>
-        <nav>
-            <ul>
-                <li><a href="{% url 'banks' %}">Banks</a></li>
-                <li><a href="{% url 'plans' %}">Plans</a></li>
-                <li><a href="{% url 'persons' %}">Persons</a></li>
-                <li><a href="{% url 'clients' %}">Clients</a></li>
-                <li><a href="{% url 'accounts' %}">Accounts</a></li>
-                <li><a href="{% url 'transactions' %}">Transactions</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <main>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Surname</th>
-                    <th>Address</th>
-                    <th>Passport</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for person in persons %}
-                <tr>
-                    <td>{{ person.id }}</td>
-                    <td>{{ person.name }}</td>
-                    <td>{{ person.surname }}</td>
-                    <td>{{ person.address }}</td>
-                    <td>{{ person.passport }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </main>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block title %}Persons{% endblock %}
+{% block header %}Persons{% endblock %}
+{% block content %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Address</th>
+                <th>Passport</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for person in persons %}
+            <tr>
+                <td>{{ person.id }}</td>
+                <td>{{ person.name }}</td>
+                <td>{{ person.surname }}</td>
+                <td>{{ person.address }}</td>
+                <td>{{ person.passport }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

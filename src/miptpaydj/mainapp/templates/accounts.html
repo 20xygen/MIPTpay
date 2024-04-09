@@ -1,55 +1,33 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Accounts</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
-</head>
-<body>
-    <header>
-        <h1>Accounts</h1>
-        <nav>
-            <ul>
-                <li><a href="{% url 'banks' %}">Banks</a></li>
-                <li><a href="{% url 'plans' %}">Plans</a></li>
-                <li><a href="{% url 'persons' %}">Persons</a></li>
-                <li><a href="{% url 'clients' %}">Clients</a></li>
-                <li><a href="{% url 'accounts' %}">Accounts</a></li>
-                <li><a href="{% url 'transactions' %}">Transactions</a></li>
-            </ul>
-        </nav>
-    </header>
-    <main>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Bank</th>
-                    <th>Owner</th>
-                    <th>Opened</th>
-                    <th>Money</th>
-                    <th>Transfer</th>
-                    <th>Plan</th>
-                    <th>Freeze Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for account in accounts %}
-                <tr>
-                    <td>{{ account.id }}</td>
-                    <td>{{ account.bank.name }}</td>
-                    <td>{{ account.owner.name }} {{ account.owner.curname }}</td>
-                    <td>{{ account.opened }}</td>
-                    <td>{{ account.money }}</td>
-                    <td>{{ account.transfer }}</td>
-                    <td>{{ account.plan.name }}</td>
-                    <td>{{ account.freeze_date }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </main>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block title %}Accounts{% endblock %}
+{% block header %}Accounts{% endblock %}
+{% block content %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Bank</th>
+                <th>Owner</th>
+                <th>Opened</th>
+                <th>Money</th>
+                <th>Transfer</th>
+                <th>Plan</th>
+                <th>Freeze Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for account in accounts %}
+            <tr>
+                <td>{{ account.id }}</td>
+                <td>{{ account.bank.name }}</td>
+                <td>{{ account.owner.name }} {{ account.owner.curname }}</td>
+                <td>{{ account.opened }}</td>
+                <td>{{ account.money }}</td>
+                <td>{{ account.transfer }}</td>
+                <td>{{ account.plan.name }}</td>
+                <td>{{ account.freeze_date }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
