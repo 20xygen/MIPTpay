@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class BankModel(models.Model):
@@ -14,45 +16,12 @@ class BankModel(models.Model):
         return self.name
 
 
-class PersonModel(User):
-    # login = models.CharField(max_length=50)
-    # password = models.CharField(max_length=50)
-    # name = models.CharField(max_length=50)
-    # surname = models.CharField(max_length=50)
-    # address = models.CharField(max_length=200)
-    passport = models.IntegerField()
-
-    @property
-    def login(self):
-        return self.username
-
-    @property
-    def name(self):
-        return self.first_name
-
-    @property
-    def surname(self):
-        return self.last_name
-
-    @property
-    def address(self):
-        return self.email
-
-    @login.setter
-    def login(self, login: str):
-        self.username = login
-
-    @name.setter
-    def name(self, name: str):
-        self.first_name = name
-
-    @surname.setter
-    def surname(self, surname: str):
-        self.last_name = surname
-
-    @address.setter
-    def address(self, address: str):
-        self.email = address
+class PersonModel(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50, null=True)
+    surname = models.CharField(max_length=50, null=True)
+    address = models.CharField(max_length=200, null=True)
+    passport = models.IntegerField(null=True)
 
     class Meta:
         ordering = ['-id']
@@ -61,6 +30,12 @@ class PersonModel(User):
 
     def __str__(self):
         return f'{self.name} {self.surname}'
+
+    @receiver(post_save, sender=User)
+    def update_profile_signal(sender, instance, created, **kwargs):
+        if created:
+            PersonModel.objects.create(user=instance)
+        instance.personmodel.save()
 
 
 class ClientModel(models.Model):
