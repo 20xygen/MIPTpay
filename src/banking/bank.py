@@ -23,6 +23,15 @@ class Bank:
         self.__registrator = src.ClientBuilder()
         self.__id = src.DataOperator().put(self, False)
 
+    def __init__(self, ident: int, name: str, clients: List[int], accounts: List[int], plans: List[int]):
+        src.available_from(cf())  # not available for non-gods
+        self.__id = ident
+        self.__name = name
+        self.__clients = clients
+        self.__accounts = accounts
+        self.__plans = plans
+        self.__registrator = src.ClientBuilder()
+
     @property
     def id(self):
         return self.__id

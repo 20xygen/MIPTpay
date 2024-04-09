@@ -11,6 +11,9 @@ class Plan:
         from src.operators.dataoperator import DataOperator
         self.__id = DataOperator().put(self, False)
 
+    def __init__(self, ident: int):
+        self.__id = ident
+
     @property
     def id(self):
         return self.__id
@@ -23,6 +26,12 @@ class DebitPlan(Plan):
 
     __transfer_limit: float
     __decreased_transfer_limit: float
+
+    def __init__(self, ident: int, transfer_limit: float, decreased_transfer_limit: float):
+        src.available_from(cf())
+        super(ident)
+        self.__transfer_limit = transfer_limit
+        self.__decreased_transfer_limit = decreased_transfer_limit
 
     @property
     def transfer_limit(self):
@@ -53,6 +62,16 @@ class DepositPlan(Plan):
     __increased_commission: float
     __transfer_limit: float
     __decreased_transfer_limit: float
+
+    def __init__(self, ident: int, period: int, decreased_period: int, commission: float, increased_commission: float, transfer_limit: float, decreased_transfer_limit: float):
+        src.available_from(cf())
+        super(ident)
+        self.__period = period
+        self.__decreased_period = decreased_period
+        self.__commission = commission
+        self.__increased_commission = increased_commission
+        self.__transfer_limit = transfer_limit
+        self.__decreased_transfer_limit = decreased_transfer_limit
 
     @property
     def transfer_limit(self):
@@ -112,6 +131,16 @@ class CreditPlan(Plan):
     __increased_commission: float
     __transfer_limit: float
     __decreased_transfer_limit: float
+
+    def __init__(self, ident: int, lower_limit: int, decreased_lower_limit: int, commission: float, increased_commission: float, transfer_limit: float, decreased_transfer_limit: float):
+        src.available_from(cf())
+        super(ident)
+        self.__lower_limit = lower_limit
+        self.__decreased_lower_limit = decreased_lower_limit
+        self.__commission = commission
+        self.__increased_commission = increased_commission
+        self.__transfer_limit = transfer_limit
+        self.__decreased_transfer_limit = decreased_transfer_limit
 
     @property
     def transfer_limit(self):

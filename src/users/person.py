@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, List
 import src
 
 
@@ -13,9 +13,10 @@ class Person:
     __surname: str
     __address: str
     __passport: str
-    __banks: Dict[str, int]
-    __accounts: Dict[str, int]
-    __plans: Dict[int, int]
+    # __banks: Dict[str, int]
+    # __accounts: Dict[str, int]
+    # __plans: Dict[int, int]
+    __clients: List[int]
 
     def __init__(self, login: str, password: str, name: str, surname: str, address: str = None, passport: str = None):
         self.__login = login
@@ -25,9 +26,21 @@ class Person:
         self.__address = address
         self.__passport = passport
         self.__id = src.DataOperator().put(self)
-        self.__banks = {}
-        self.__accounts = {}
-        self.__plans = {}
+        self.__clients = []
+        self.__accounts = []
+        # self.__banks = {}
+        # self.__accounts = {}
+        # self.__plans = {}
+
+    def __init__(self, ident: int, login: str, password: str, name: str, surname: str, address: str, passport: str, clients: List[int]):
+        self.__id = ident
+        self.__login = login
+        self.__password = password
+        self.__name = name
+        self.__surname = surname
+        self.__address = address
+        self.__passport = passport
+        self.__clients = clients
 
     def log_in(self, login: str, password: str):
         # TODO: Сделать систему проверки пользователя
@@ -61,17 +74,17 @@ class Person:
     def passport(self):
         return self.__passport
 
-    @property
-    def accounts(self):
-        return self.__accounts
-
-    @property
-    def banks(self):
-        return self.__banks
-
-    @property
-    def plans(self):
-        return self.__plans
+    # @property
+    # def accounts(self):
+    #     return self.__accounts
+    #
+    # @property
+    # def banks(self):
+    #     return self.__banks
+    #
+    # @property
+    # def plans(self):
+    #     return self.__plans
 
     def update(self, address: str, passport: str):
         self.__address = address

@@ -76,4 +76,41 @@ class Adapter:
     #     diff = datetime.now() - date
     #     return diff
 
+    def get_bank(self, ident: int) -> src.Bank:
+        model = src.BankModel.objects.get(id=ident)
+        clients = [it.id for it in src.ClientModel.objects.filter(bank=model)]
+        accounts = [it.id for it in src.AccountModel.objects.filter(bank=model)]
+        plans = [it.id for it in src.PlanModel.objects.filter(bank=model)]
+        return src.Bank(model.id, model.name, clients, accounts, plans)
 
+    def get_plan(self, ident: int) -> src.Plan:
+        model = src.PlanModel.objects.get(id=ident)
+        category = model.category
+        if category.name == "Debit":
+            return src.DebitPlan(ident, model.transfer_limit, model.decreased_transfer_limit)
+        elif category.name == "Deposit":
+            return src.DepositPlan(model.id, model.period, model.decreased_period, model.commission, model.increased_commission, model.transfer_limit, model.decreased_transfer_limit)
+        elif category.name == "Credit":
+            return src.CreditPlan(model.id, model.lower_limit, model.decreased_lower_limit, model.commission, model.increased_commission, model.transfer_limit, model.decreased_transfer_limit)
+
+    def get_client(self, ident: int) -> src.Client:
+        model = src.ClientModel.objects.get(id=ident)
+        return src.Client(model.id, model.name, model.surname, model.address, str(model.password), model.precarious)
+
+    def get_account(self, ident: int) -> src.Account:
+        model = src.AccountModel.objects.get(id=ident)
+        if model.plan.category.name == "Debit":
+            return src.DebitAccount(model.id, model.owner.id, model.opened, model.money, model.transfer, model.plan.id)
+        elif model.plan.category.name == "Deposit":
+            return src.DepositAccount(model.id, model.owner.id, model.opened, model.money, model.transfer, model.plan.id, model.freeze_date)
+        elif model.plan.category.name == "Credit":
+            return src.CreditAccount(model.id, model.owner.id, model.opened, model.money, model.transfer, model.plan.id)
+
+    def get_transaction(self, ident: int):
+        model = src.TransactionModel.objects.get(id=ident)
+        return src.Transaction(model.id, model.departure.id, model.destinations.id, model.amount, model.status)
+
+    def create_person(self, ident: int):
+        model = src.PersonModel.objects.get(id=ident)
+        clients = [it.id for it in src.ClientModel.objects.filter(person=model)]
+        return src.Person(model.id, model.login, model.password, model.name, model.surname, model.address, model.passport, clients)

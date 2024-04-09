@@ -24,6 +24,14 @@ class Client:
             self.__precarious = False
         self.__id = src.DataOperator().put(self, False)
 
+    def __init__(self, ident: int, name: str, surname: str, address: str, passport:str, precarious: bool):
+        src.available_from(cf())
+        self.__id = ident
+        self.__name = name
+        self.__surname = surname
+        self.__address = address
+        self.__precarious = precarious
+
     @property
     def precarious(self):
         src.available_from(cf(), "Bank", "ClientBuilder", "Account")

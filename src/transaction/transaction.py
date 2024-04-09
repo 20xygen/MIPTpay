@@ -1,3 +1,4 @@
+from inspect import currentframe as cf
 import src
 
 
@@ -17,6 +18,14 @@ class Transaction:
         self.__amount = amount
         self.__status = 0
         self.__id = src.DataOperator().put(self, False) # Transaction closes later
+
+    def __init__(self, ident: int, departure: int, destination: int, amount: float, status: int):
+        src.available_from(cf())
+        self.__id = ident
+        self.__departure = departure
+        self.__destination = destination
+        self.__amount = amount
+        self.__status = status
 
     @property
     def id(self):

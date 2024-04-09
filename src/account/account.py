@@ -20,6 +20,9 @@ class Account:
         self.__id = src.DataOperator().put(self, False)
         src.TimeKeeper().add(self.__id)
 
+    def __init__(self):
+        pass
+
     def put(self, cash: float) -> int:
         src.available_from(cf(), "Bank")
         self.__money += cash
@@ -100,6 +103,16 @@ class DebitAccount(Account):
 
     __plan: int
 
+    def __init__(self, ident: int, owner: int, opened: bool, money: float, transfer: float, plan: int):
+        src.available_from(cf())
+        super()
+        self.__id = ident
+        self.__owner = owner
+        self.__opened = opened
+        self.__money = money
+        self.__transfer = transfer
+        self.__plan = plan
+
     @property
     def plan(self):
         return self.__plan
@@ -146,6 +159,17 @@ class DepositAccount(Account):
 
     __plan: int
     __freeze_date: int
+
+    def __init__(self, ident: int, owner: int, opened: bool, money: float, transfer: float, plan: int, freeze_date: int):
+        src.available_from(cf())
+        super()
+        self.__id = ident
+        self.__owner = owner
+        self.__opened = opened
+        self.__money = money
+        self.__transfer = transfer
+        self.__plan = plan
+        self.__freeze_date = freeze_date
 
     @property
     def plan(self):
@@ -211,6 +235,16 @@ class CreditAccount(Account):
     There is a fee for use if the customer is in the red. """
 
     __plan: int
+
+    def __init__(self, ident: int, owner: int, opened: bool, money: float, transfer: float, plan: int):
+        src.available_from(cf())
+        super()
+        self.__id = ident
+        self.__owner = owner
+        self.__opened = opened
+        self.__money = money
+        self.__transfer = transfer
+        self.__plan = plan
 
     def __init__(self, owner: int, plan: int):
         super().__init__(owner)
