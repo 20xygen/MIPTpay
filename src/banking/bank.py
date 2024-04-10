@@ -90,6 +90,23 @@ class Bank:
         src.DataOperator().done_with(client, "Client")
         return client
 
+    def register_from_person(self, user: int) -> Optional[int]:
+        person = src.DataOperator().get(user, "Person")
+        if person is None:
+            return None
+        self.__registrator.reset(person.name, person.surname)
+        if person.address is not None:
+            self.__registrator.address(person.address)
+        if person.passport is not None:
+            self.__registrator.passport(person.passport)
+        client = self.__registrator.get().id
+        if client is None:
+            return None
+        self.__clients.append(client)
+        src.DataOperator().done_with(client, "Client")
+        src.DataOperator().done_with(user, "Person")
+        return client
+
     def add_plan(self, plan: int) -> Optional[int]:
         # for id in self.__plans:
         #     if id == plan.id:
@@ -172,6 +189,30 @@ class Bank:
             src.DataOperator().done_with(dep.id, "Account")
             return False
 
+    def valid_get(self, client: int, account: int, amount: float) -> bool:
+        if account not in self.__accounts:
+            return False
+        if client not in self.__clients:
+            return False
+        dep = src.DataOperator().get(account, "Account")
+        if dep is None:
+            return False
+        if dep.owner() != client:
+            src.DataOperator().done_with(dep.id, "Account")
+            return False
+        trans = src.Transaction(0, account, amount)
+        if dep.get_offer(amount):
+            self.do_get(account, amount)
+            trans.prove()
+            src.DataOperator().done_with(trans.id, "Transaction")
+            src.DataOperator().done_with(dep.id, "Account")
+            return True
+        else:
+            trans.cancel()
+            src.DataOperator().done_with(trans.id, "Transaction")
+            src.DataOperator().done_with(dep.id, "Account")
+            return False
+
     def put(self, account: int, amount: float) -> bool:
         if not account in self.__accounts:
             return False
@@ -242,3 +283,5 @@ class Bank:
             ret = account_obj.put_offer(amount)
         src.DataOperator().done_with(account, "Account")
         return ret
+
+

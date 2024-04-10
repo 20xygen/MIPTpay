@@ -1,6 +1,6 @@
 import src
 from datetime import datetime
-#from dateutil import parser
+# from dateutil import parser
 
 
 class Adaptor:
@@ -139,3 +139,22 @@ class Adaptor:
         else:
             print("error in multy_get")
             return None
+
+
+class SingleAdaptor:
+    """Singleton wrapper for Adopator class"""
+    __single: int = 0
+    __adaptor: Optional[Adaptor] = None
+
+    def __init__(self):
+        pass
+
+    def get(self) -> Adaptor:
+        if SingleAdaptor.__single == 0:
+            SingleAdaptor.__adaptor = Adaptor()
+            SingleAdaptor.__single = 1
+        return SingleAdaptor.__adaptor
+
+    @property
+    def adaptor(self) -> Adaptor:
+        return self.get()

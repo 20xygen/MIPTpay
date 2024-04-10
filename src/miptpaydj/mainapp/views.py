@@ -1,12 +1,9 @@
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from django.shortcuts import render
-from django.urls import reverse_lazy
-from django.views.generic import FormView
+from django.shortcuts import render, redirect
 
 from src.miptpaydj.mainapp.forms import RegisterForm
 from src.miptpaydj.mainapp.models import BankModel, AccountModel, PlanModel, PersonModel, ClientModel, TransactionModel
-import src
 
 
 def banks(request):
@@ -61,10 +58,22 @@ def hello_world(request):
 def profile(request):
     return render(request, 'profile.html')
 
-class RegisterView(FormView):
-    form_class = RegisterForm
-    template_name = 'registration/register.html'
-    success_url = reverse_lazy('profile')
-    def form_valid(self, form):
-        form.save()
-        return super().form_valid(form)
+
+def signup_view(request):
+    form = RegisterForm(request.POST)
+    if form.is_valid():
+        user = form.save()
+        user.refresh_from_db()
+        user.personmodel.name = form.cleaned_data.get('name')
+        user.personmodel.surname = form.cleaned_data.get('surname')
+        user.personmodel.address = form.cleaned_data.get('address')
+        user.personmodel.passport = form.cleaned_data.get('passport')
+        user.save()
+        username = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password1')
+        user = authenticate(username=username, password=password)
+        login(request, user)
+        return redirect('profile')
+    else:
+        form = RegisterForm()
+    return render(request, 'registration/register.html', {'form': form})
