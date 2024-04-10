@@ -33,6 +33,8 @@ class Bank:
     #     self.__registrator = src.ClientBuilder()
 
     def __init__(self, ident: int = None, name: str = None, clients: List[int] = None, accounts: List[int] = None, plans: List[int] = None):
+        self.__name = name
+        self.__registrator = src.ClientBuilder()
         if ident is not None:
             self.__id = ident
             self.__clients = clients
@@ -43,8 +45,6 @@ class Bank:
             self.__accounts = []
             self.__plans = []
             self.__id = src.DataOperator().put(self, False)
-        self.__name = name
-        self.__registrator = src.ClientBuilder()
 
     @property
     def id(self):

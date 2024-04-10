@@ -38,9 +38,9 @@ class Person:
     #     self.__passport = passport
     #     self.__clients = clients
 
-    def __init__(self, ident: str = None, login: str = None, password: str = None, name: str = None, surname: str = None, address: str = None, passport: str = None, clients: List[int] = None):
-        self.__login = login
-        self.__password = password
+    def __init__(self, ident: int = None, name: str = None, surname: str = None, address: str = None, passport: str = None, clients: List[int] = None):
+        # self.__login = login
+        # self.__password = password
         self.__name = name
         self.__surname = surname
         self.__address = address
@@ -49,6 +49,7 @@ class Person:
             self.__id = ident
             self.__clients = clients
         else:
+            print(f"It is deprecated to construct person with no id ({ident}).")
             self.__clients = []
             self.__id = src.DataOperator().put(self, True)
 
@@ -56,13 +57,13 @@ class Person:
         # TODO: Сделать систему проверки пользователя
         pass
 
-    @property
-    def login(self):
-        return self.__login
-
-    @property
-    def password(self):
-        return self.__password
+    # @property
+    # def login(self):
+    #     return self.__login
+    #
+    # @property
+    # def password(self):
+    #     return self.__password
 
     @property
     def id(self):

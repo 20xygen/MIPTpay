@@ -1,5 +1,6 @@
 import src
 from datetime import datetime
+from typing import Optional
 # from dateutil import parser
 
 
@@ -9,10 +10,16 @@ class Adaptor:
         model.save()
         return model
 
-    def create_person(self, person: src.Person):
-        model = src.PersonModel(username=person.login, password=person.password, first_name=person.name, last_name=person.surname, email=person.address, passport=int(person.passport.replace(" ", "")))
+    def create_person(self, person: src.Person, user: src.User):
+        model = src.PersonModel(name=person.name, surname=person.surname, address=person.address, passport=int(person.passport.replace(" ", "")), user=user)
         model.save()
         return model
+
+    def fill_person(self, model: src.PersonModel, person: src.Person):
+        model.name = person.name
+        model.surname = person.surname
+        model.address = person.address
+        model.passport = int(person.passport.replace(" ", ""))
 
     def create_client(self, client: src.Client, bank: src.BankModel, person: src.PersonModel):
         # print(bank.name)
@@ -27,16 +34,17 @@ class Adaptor:
         if isinstance(plan, src.DebitPlan):
             category = src.PlanCategoryModel.objects.get(name='Debit')
             model.category = category
-            name += f" debit ({model.id})"
+            name += f" debit "
         elif isinstance(plan, src.DepositPlan):
             category = src.PlanCategoryModel.objects.get(name='Deposit')
             model.category = category
-            name += f" deposit ({model.id})"
+            name += f" deposit "
         elif isinstance(plan, src.CreditPlan):
             category = src.PlanCategoryModel.objects.get(name='Credit')
             model.category = category
-            name += f" credit ({model.id})"
-        model.name = name
+            name += f" credit "
+        model.save()
+        model.name = name + str(model.id)
         if category.commission:
             model.commission = plan.commission
             model.increased_commission = plan.increased_commission
@@ -121,7 +129,7 @@ class Adaptor:
     def get_person(self, ident: int):
         model = src.PersonModel.objects.get(id=ident)
         clients = [it.id for it in src.ClientModel.objects.filter(person=model)]
-        return src.Person(model.id, model.login, model.password, model.name, model.surname, model.address, model.passport, clients)
+        return src.Person(model.id, model.name, model.surname, model.address, model.passport, clients)
 
     def multy_get(self, ident: int, cls: str):
         if cls == "Bank":

@@ -1,4 +1,4 @@
-from typing import Dict, Union, List
+from typing import Dict, Union, List, Optional
 import src
 # from src.operators.adapters import Adaptor
 
@@ -66,7 +66,7 @@ class DataOperator:
         if isinstance(obj, src.Client):
             # clients_counter += 1
             bank = src.BankModel.objects.get(id=args[0])
-            person = src.BankModel.objects.get(id=args[1])
+            person = src.PersonModel.objects.get(id=args[1])
             model = adapter.create_client(obj, bank, person)
             clients[model.id] = [obj, amount_in_use]
             print(f" (set id = {model.id})")
@@ -100,11 +100,12 @@ class DataOperator:
             print(f" (set id = {model.id})")
             return model.id
         if isinstance(obj, src.Person):
-            # persons_counter += 1
-            model = adapter.create_person(obj)
-            persons[model.id] = [obj, amount_in_use]
-            print(f" (set id = {model.id})")
-            return model.id
+            raise MemoryError("Putting Person is deprecated")
+            # # persons_counter += 1
+            # model = adapter.create_person(obj, args[0])
+            # persons[model.id] = [obj, amount_in_use]
+            # print(f" (set id = {model.id})")
+            # return model.id
 
     def get_bank_by_name(self, name: str):
         for ident, bank in banks.items():
@@ -156,12 +157,12 @@ class DataOperator:
         else:
             container[id][1] -= 1
             if container[id][1] == 0:
-                print("Saving", id, type)
+                print("Saving", type, id)
                 if type == "Client":
                     model = models.ClientModel.objects.get(id=id)
                     model.name = container[id][0].name
                     model.surname = container[id][0].surname
-                    model.address = container[id][0].address
+                    model.address = container[id][0].address if container[id][0].address is not None else "NO_VALUE"
                     print(container[id][0].passport)
                     model.passport = -1 if (container[id][0].passport is None or container[id][0].passport == "NO_VALUE") else int(container[id][0].passport)
                     print(model.passport)
@@ -208,8 +209,8 @@ class DataOperator:
                     model.save()
                 elif type == "Person":
                     model = models.PersonModel.objects.get(id=id)
-                    model.login = container[id][0].login
-                    model.password = container[id][0].password
+                    # model.login = container[id][0].login
+                    # model.password = container[id][0].password
                     model.name = container[id][0].name
                     model.surname = container[id][0].surname
                     model.address = container[id][0].address

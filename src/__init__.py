@@ -37,6 +37,8 @@ from src.miptpaydj.mainapp.models import BankModel, PersonModel, ClientModel, Pl
 
 # from plan.plancategory import PlanCategory
 
+from django.contrib.auth.models import User
+
 from src.operators.adaptors import Adaptor
 
 print("Assume, Adapter is imported.\n", Adaptor)
@@ -61,6 +63,7 @@ __all__ = ['available_from',
            'Person',
            'Admin',
            'BankModel', 'PersonModel', 'ClientModel', 'PlanCategoryModel', 'PlanModel', 'AccountModel', 'TransactionModel', 'DiaryModel',
+           'User',
            'Adaptor',
            'apps',
            'views',

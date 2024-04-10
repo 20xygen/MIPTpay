@@ -18,12 +18,17 @@ class Plan:
         if ident is not None:
             self.__id = ident
         else:
-            from src.operators.dataoperator import DataOperator
-            self.__id = DataOperator().put(self, False, bank)
+            # from src.operators.dataoperator import DataOperator
+            # self.__id = DataOperator().put(self, False, bank)
+            pass
 
     @property
     def id(self):
         return self.__id
+
+    @id.setter
+    def id(self, ident: int):
+        self.__id = ident
 
     def get_properties(self) -> List[src.PlanProperty]:
         return []
@@ -69,6 +74,9 @@ class DebitPlan(Plan):
         self.transfer_limit = transfer_limit
         self.decreased_transfer_limit = decreased_transfer_limit
         if ident is None:
+            from src.operators.dataoperator import DataOperator
+            self.id = DataOperator().put(self, False, bank)
+
             src.DataOperator().done_with(self.id, "Plan")
 
 
@@ -173,6 +181,9 @@ class DepositPlan(Plan):
         self.__transfer_limit = transfer_limit
         self.__decreased_transfer_limit = decreased_transfer_limit
         if ident is None:
+            from src.operators.dataoperator import DataOperator
+            self.id = DataOperator().put(self, False, bank)
+
             src.DataOperator().done_with(self.id, "Plan")
 
     def get_properties(self) -> List[src.PlanProperty]:
@@ -279,6 +290,9 @@ class CreditPlan(Plan):
         self.__transfer_limit = transfer_limit
         self.__decreased_transfer_limit = decreased_transfer_limit
         if ident is None:
+            from src.operators.dataoperator import DataOperator
+            self.id = DataOperator().put(self, False, bank)
+
             src.DataOperator().done_with(self.id, "Plan")
 
     def get_properties(self) -> List[src.PlanProperty]:

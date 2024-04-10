@@ -35,8 +35,8 @@ class Account:
             self.__opened = True
             self.__money = 0
             self.__transfer = 0
-            self.__id = src.DataOperator().put(self, False, bank)
-            src.TimeKeeper().add(self.__id)
+            # self.__id = src.DataOperator().put(self, False, bank)
+            # src.TimeKeeper().add(self.__id)
 
     def put(self, cash: float) -> int:
         src.available_from(cf(), "Bank")
@@ -53,6 +53,10 @@ class Account:
     @property
     def id(self):
         return self.__id
+
+    @id.setter
+    def id(self, ident: int):
+        self.__id = ident
 
     @property
     def owner(self):
@@ -162,6 +166,9 @@ class DebitAccount(Account):
             self.transfer = transfer
             self.plan = plan
         else:
+            self.plan = plan
+            self.id = src.DataOperator().put(self, False, bank)
+            src.TimeKeeper().add(self.id)
             src.DataOperator().done_with(self.id, "Account")
 
     def put_offer(self, amount: float) -> bool:
@@ -249,6 +256,10 @@ class DepositAccount(Account):
             self.plan = plan
             self.freeze_date = freeze_date
         else:
+            self.plan = plan
+            self.freeze_date = 1234  # TODO: get real date
+            self.id = src.DataOperator().put(self, False, bank)
+            src.TimeKeeper().add(self.id)
             src.DataOperator().done_with(self.id, "Account")
 
     def update(self):
@@ -325,6 +336,9 @@ class CreditAccount(Account):
             self.transfer = transfer
             self.plan = plan
         else:
+            self.plan = plan
+            self.id = src.DataOperator().put(self, False, bank)
+            src.TimeKeeper().add(self.id)
             src.DataOperator().done_with(self.id, "Account")
 
     @property
