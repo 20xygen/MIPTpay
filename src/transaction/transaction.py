@@ -12,20 +12,33 @@ class Transaction:
     __amount: float
     __status: int  # 0 - in progress, 1 - approved, -1 - cancelled
 
-    def __init__(self, departure: int, destination: int, amount: float):
-        self.__departure = departure
-        self.__destination = destination
-        self.__amount = amount
-        self.__status = 0
-        self.__id = src.DataOperator().put(self, False) # Transaction closes later
+    # def __init__(self, departure: int, destination: int, amount: float):
+    #     self.__departure = departure
+    #     self.__destination = destination
+    #     self.__amount = amount
+    #     self.__status = 0
+    #     self.__id = src.DataOperator().put(self, False) # Transaction closes later
 
-    def __init__(self, ident: int, departure: int, destination: int, amount: float, status: int):
-        src.available_from(cf())
-        self.__id = ident
+    # def __init__(self, ident: int, departure: int, destination: int, amount: float, status: int):
+    #     src.available_from(cf())
+    #     self.__id = ident
+    #     self.__departure = departure
+    #     self.__destination = destination
+    #     self.__amount = amount
+    #     self.__status = status
+
+    def __init__(self, ident: int = None, departure: int = None, destination: int = None, amount: float = None, status: int = None):
+        # src.available_from(cf())
         self.__departure = departure
         self.__destination = destination
         self.__amount = amount
-        self.__status = status
+        if ident is not None:
+            self.__id = ident
+            self.__status = status
+        else:
+            self.__status = 0
+            self.__id = src.DataOperator().put(self, False) # Transaction closes later
+
 
     @property
     def id(self):
@@ -38,6 +51,14 @@ class Transaction:
     @property
     def status(self):
         return self.__status
+
+    @property
+    def departure(self):
+        return self.__departure
+
+    @property
+    def destination(self):
+        return self.__destination
 
     def prove(self):
         self.__status = 1

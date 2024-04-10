@@ -15,6 +15,14 @@ def banks(request):
 
 
 def accounts(request):
+    # tst = src.AccountModel.objects.get(id=1)
+    # bnk = src.BankModel.objects.get(id=3)
+
+    # tst = src.DataOperator().get(1, "Account")
+    bank = src.DataOperator().get(3, "Bank")
+    bank.put(12, 100)
+    src.DataOperator().done_with(3, "Bank")
+
     accounts = AccountModel.objects.all()
     return render(request, 'accounts.html', {'accounts': accounts})
 
@@ -30,7 +38,13 @@ def persons(request):
 
 
 def clients(request):
+    bank = src.DataOperator().get(3, "Bank")
+    bank.update(2, "kalinin.mi@phystech.edu", "1000 000000")
+    src.DataOperator().done_with(3, "Bank")
+
     clients = ClientModel.objects.all()
+    clnt = ClientModel.objects.get(id=2)
+    print(clnt.passport)
     return render(request, 'clients.html', {'clients': clients})
 
 

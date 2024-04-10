@@ -145,8 +145,8 @@ class AccountModel(models.Model):
 
 
 class TransactionModel(models.Model):
-    departure = models.ForeignKey(AccountModel, on_delete=models.CASCADE, related_name='transaction2departure')
-    destination = models.ForeignKey(AccountModel, on_delete=models.CASCADE, related_name='transaction2destination')
+    departure = models.IntegerField()
+    destination = models.IntegerField()
     amount = models.DecimalField(max_digits=14, decimal_places=2)
     status = models.IntegerField()
 

@@ -15,21 +15,35 @@ class Bank:
     __plans: List[int]
     __registrator: src.ClientBuilder
 
-    def __init__(self, name: str):
-        self.__clients = []
-        self.__accounts = []
-        self.__plans = []
-        self.__name = name
-        self.__registrator = src.ClientBuilder()
-        self.__id = src.DataOperator().put(self, False)
+    # def __init__(self, name: str):
+    #     self.__clients = []
+    #     self.__accounts = []
+    #     self.__plans = []
+    #     self.__name = name
+    #     self.__registrator = src.ClientBuilder()
+    #     self.__id = src.DataOperator().put(self, False)
+    #
+    # def __init__(self, ident: int, name: str, clients: List[int], accounts: List[int], plans: List[int]):
+    #     src.available_from(cf())  # not available for non-gods
+    #     self.__id = ident
+    #     self.__name = name
+    #     self.__clients = clients
+    #     self.__accounts = accounts
+    #     self.__plans = plans
+    #     self.__registrator = src.ClientBuilder()
 
-    def __init__(self, ident: int, name: str, clients: List[int], accounts: List[int], plans: List[int]):
-        src.available_from(cf())  # not available for non-gods
-        self.__id = ident
+    def __init__(self, ident: int = None, name: str = None, clients: List[int] = None, accounts: List[int] = None, plans: List[int] = None):
+        if ident is not None:
+            self.__id = ident
+            self.__clients = clients
+            self.__accounts = accounts
+            self.__plans = plans
+        else:
+            self.__clients = []
+            self.__accounts = []
+            self.__plans = []
+            self.__id = src.DataOperator().put(self, False)
         self.__name = name
-        self.__clients = clients
-        self.__accounts = accounts
-        self.__plans = plans
         self.__registrator = src.ClientBuilder()
 
     @property
@@ -52,20 +66,22 @@ class Bank:
     def clients(self):
         return self.__clients
 
-    def register(self, name: str, surname: str, address: Optional[str] = None, passport: Optional[str] = None) -> Optional[int]:
+    def register(self, name: str, surname: str, address: str, passport: str, person: int) -> Optional[int]:
         # for id in self.__clients:
         #     client = src.DataOperator().get(id, "Client")
         #     if client.name == name and client.surname == surname:
         #         return None
         pattern = re.compile("\d{10}")
-        if passport is not None:
+        if passport != "NO_VALUE":
             passport = passport.replace(" ", "")
             if not pattern.match(passport):
                 return None
+        self.__registrator.bank(self.__id)
+        self.__registrator.person(person)
         self.__registrator.reset(name, surname)
-        if address is not None:
+        if address != "NO_VALUE":
             self.__registrator.address(address)
-        if passport is not None:
+        if passport != "NO_VALUE":
             self.__registrator.passport(passport)
         client = self.__registrator.get().id
         if client is None:
@@ -89,7 +105,7 @@ class Bank:
         plan_obj = src.DataOperator().get(plan, "Plan")
         if plan_obj is None:
             return None
-        acc = src.AccountFactory.create(owner, plan_obj).id
+        acc = src.AccountFactory.create(owner, plan_obj, self.id).id
         self.__accounts.append(acc)
         # src.DataOperator().done_with(acc, "Account")
         src.DataOperator().done_with(plan, "Plan")
@@ -102,7 +118,7 @@ class Bank:
         dest: src.Account = src.DataOperator().get(destination, "Account")
         if dest is None or dep is None:
             return False
-        trans = src.Transaction(departure, destination, amount)
+        trans = src.Transaction(None, departure, destination, amount, None)
         if dep.get_offer(amount) and dest.put_offer(amount):
             dep.get(amount)
             dest.put(amount)
@@ -132,8 +148,10 @@ class Bank:
         if dep is None:
             src.DataOperator().done_with(account, "Account")
             return None
-        src.DataOperator().done_with(account, "Account")
+        print(dep.money)
         dep.put(amount)
+        print(dep.money)
+        src.DataOperator().done_with(account, "Account")
 
     def get(self, account: int, amount: float) -> bool:
         if not account in self.__accounts:
@@ -141,7 +159,7 @@ class Bank:
         dep = src.DataOperator().get(account, "Account")
         if dep is None:
             return False
-        trans = src.Transaction(0, account, amount)
+        trans = src.Transaction(None, 0, account, amount, None)
         if dep.get_offer(amount):
             self.do_get(account, amount)
             trans.prove()
@@ -158,12 +176,14 @@ class Bank:
         if not account in self.__accounts:
             return False
         dest = src.DataOperator().get(account, "Account")
+        print(dest.money)
         if dest is None:
             # src.DataOperator().done_with(dest.id, "Account")
             return False
-        trans = src.Transaction(account, 0, amount)
+        trans = src.Transaction(None, account, 0, amount, None)
         # src.DataOperator().put(trans)
         if dest.put_offer(amount):
+            print("Possible transaction")
             self.do_put(account, amount)
             trans.prove()
             src.DataOperator().done_with(trans.id, "Transaction")
@@ -180,6 +200,7 @@ class Bank:
         if passport is not None:
             passport = passport.replace(" ", "")
             if not pattern.match(passport):
+                print(f"Passport {passport} does not match pattern")
                 return False
         if owner not in self.__clients:
             return False
@@ -212,6 +233,7 @@ class Bank:
         return ret
 
     def put_offer(self, account: int, amount: float) -> bool:
+        # print("WTF", account, amount)
         if not account in self.__accounts:
             return False
         account_obj = src.DataOperator().get(account, "Account")
