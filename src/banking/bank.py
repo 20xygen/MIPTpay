@@ -74,6 +74,23 @@ class Bank:
         src.DataOperator().done_with(client, "Client")
         return client
 
+    def register_from_person(self, user: int) -> Optional[int]:
+        person = src.DataOperator().get(user, "Person")
+        if person is None:
+            return None
+        self.__registrator.reset(person.name, person.surname)
+        if person.address is not None:
+            self.__registrator.address(person.address)
+        if person.passport is not None:
+            self.__registrator.passport(person.passport)
+        client = self.__registrator.get().id
+        if client is None:
+            return None
+        self.__clients.append(client)
+        src.DataOperator().done_with(client, "Client")
+        src.DataOperator().done_with(user, "Person")
+        return client
+
     def add_plan(self, plan: int) -> Optional[int]:
         # for id in self.__plans:
         #     if id == plan.id:
@@ -244,3 +261,5 @@ class Bank:
             ret = account_obj.put_offer(amount)
         src.DataOperator().done_with(account, "Account")
         return ret
+
+
