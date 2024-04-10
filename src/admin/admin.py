@@ -1,7 +1,8 @@
 import src
+from typing import Optional
 
 
-class Admin():
+class Admin:
     """ Admin is an aggregator of the project's structural classes.
     Provides access to comprehensive information about the objects. """
 
@@ -101,3 +102,22 @@ class Admin():
             destination.money -= transaction.amount
             src.DataOperator().done_with(transaction.destination, "Transaction")
         return flag
+
+
+class SingleAdmin:
+    """Singleton wrapper for Admin class"""
+    __single: int = 0
+    __admin: Optional[Admin] = None
+
+    def __init__(self):
+        pass
+
+    def get(self) -> Admin:
+        if SingleAdmin.__single == 0:
+            SingleAdmin.__admin = Admin()
+            SingleAdmin.__single = 1
+        return SingleAdmin.__admin
+
+
+
+
