@@ -185,3 +185,22 @@ class DataOperator:
             if transaction[1] < 0:
                 print('\t', "Transaction", ident, transaction[1])
         print("\n")
+
+
+class SingleDataOperator:
+    """Singleton wrapper for DataOperator class"""
+    __single: int = 0
+    __dataoperator: Optional[DataOperator] = None
+
+    def __init__(self):
+        pass
+
+    def get(self) -> DataOperator:
+        if SingleDataOperator.__single == 0:
+            SingleDataOperator.__dataoperator = DataOperator()
+            SingleDataOperator.__single = 1
+        return SingleDataOperator.__dataoperator
+
+    @property
+    def dataoperator(self) -> DataOperator:
+        return self.get()

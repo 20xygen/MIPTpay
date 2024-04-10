@@ -118,6 +118,8 @@ class SingleAdmin:
             SingleAdmin.__single = 1
         return SingleAdmin.__admin
 
-
+    @property
+    def admin(self) -> Admin:
+        return self.get()
 
 

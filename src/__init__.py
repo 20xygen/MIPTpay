@@ -37,7 +37,7 @@ from src.miptpaydj.mainapp.models import BankModel, PersonModel, ClientModel, Pl
 
 # from plan.plancategory import PlanCategory
 
-from src.operators.adapters import Adapter
+from src.operators.adaptors import Adaptor
 
 from src.miptpaydj.mainapp import apps
 
@@ -61,7 +61,7 @@ __all__ = ['available_from',
            'UserInterface',
            'mainapp', 'miptpaydj',
            'BankModel', 'PersonModel', 'ClientModel', 'PlanCategoryModel', 'PlanModel', 'AccountModel', 'TransactionModel', 'DiaryModel',
-           'Adapter',
+           'Adaptor',
            'apps',
            'views',
            ]
