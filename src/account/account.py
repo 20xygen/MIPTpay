@@ -364,7 +364,7 @@ class CreditAccount(Account):
             src.DataOperator().done_with(self.plan, "Plan")
             src.DataOperator().done_with(self.owner, "Client")
             return
-        modifier = 1 + plan_obj.commission
+        modifier = 1 - plan_obj.commission
         if client_obj.precarious:
             modifier += plan_obj.increased_commission
         self.money *= modifier
