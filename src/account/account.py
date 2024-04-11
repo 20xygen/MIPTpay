@@ -202,6 +202,10 @@ class DebitAccount(Account):
         src.DataOperator().done_with(self.owner, "Client")
         return ret
 
+    def update(self):
+        src.available_from(cf(), "TimeKeeper")
+        pass
+
 
 class DepositAccount(Account):
     """ A deposit is an account that cannot be withdrawn from
@@ -353,8 +357,7 @@ class CreditAccount(Account):
     def update(self):
         src.available_from(cf(), "Bank", "TimeKeeper")
         if self.money >= 0:
-            pass
-        
+            return
         plan_obj = src.DataOperator().get(self.__plan, "Plan")
         client_obj = src.DataOperator().get(self.owner, "Client")
         if plan_obj is None or client_obj is None:
