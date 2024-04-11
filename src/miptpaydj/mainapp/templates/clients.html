@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Clients{% endblock %}
+{% block header %}Clients{% endblock %}
+{% block content %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Bank</th>
+                <th>Person</th>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Address</th>
+                <th>Passport</th>
+                <th>Precarious</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for client in clients %}
+            <tr>
+                <td>{{ client.id }}</td>
+                <td>{{ client.bank.name }}</td>
+                <td>{{ client.name }} {{ client.surname }}</td>
+                <td>{{ client.name }}</td>
+                <td>{{ client.surname }}</td>
+                <td>{% if client.address %}{{ client.address }}{% else %}N/A{% endif %}</td>
+                <td>{% if client.passport %}{{ client.passport }}{% else %}N/A{% endif %}</td>
+                <td>{{ client.precarious }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

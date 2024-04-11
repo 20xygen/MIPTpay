@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Transactions{% endblock %}
+{% block header %}Transactions{% endblock %}
+{% block content %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Sender Account</th>
+                <th>Receiver Account</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for transaction in transactions %}
+            <tr>
+                <td>{{ transaction.id }}</td>
+                <td>{{ transaction.departure }}</td>
+                <td>{{ transaction.destination }}</td>
+                <td>{{ transaction.amount }}</td>
+                <!-- Add other necessary data cells here -->
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
