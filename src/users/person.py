@@ -18,41 +18,52 @@ class Person:
     # __plans: Dict[int, int]
     __clients: List[int]
 
-    def __init__(self, login: str, password: str, name: str, surname: str, address: str = None, passport: str = None):
-        self.__login = login
-        self.__password = password
-        self.__name = name
-        self.__surname = surname
-        self.__address = address
-        self.__passport = passport
-        self.__id = src.DataOperator().put(self)
-        self.__clients = []
-        self.__accounts = []
-        # self.__banks = {}
-        # self.__accounts = {}
-        # self.__plans = {}
+    # def __init__(self, login: str, password: str, name: str, surname: str, address: str = None, passport: str = None):
+    #     self.__login = login
+    #     self.__password = password
+    #     self.__name = name
+    #     self.__surname = surname
+    #     self.__address = address
+    #     self.__passport = passport
+    #     self.__id = src.DataOperator().put(self, True)
+    #     self.__clients = []
 
-    def __init__(self, ident: int, login: str, password: str, name: str, surname: str, address: str, passport: str, clients: List[int]):
-        self.__id = ident
-        self.__login = login
-        self.__password = password
+    # def __init__(self, ident: int, login: str, password: str, name: str, surname: str, address: str, passport: str, clients: List[int]):
+    #     self.__id = ident
+    #     self.__login = login
+    #     self.__password = password
+    #     self.__name = name
+    #     self.__surname = surname
+    #     self.__address = address
+    #     self.__passport = passport
+    #     self.__clients = clients
+
+    def __init__(self, ident: int = None, name: str = None, surname: str = None, address: str = None, passport: str = None, clients: List[int] = None):
+        # self.__login = login
+        # self.__password = password
         self.__name = name
         self.__surname = surname
         self.__address = address
         self.__passport = passport
-        self.__clients = clients
+        if ident is not None:
+            self.__id = ident
+            self.__clients = clients
+        else:
+            print(f"It is deprecated to construct person with no id ({ident}).")
+            self.__clients = []
+            self.__id = src.DataOperator().put(self, True)
 
     def log_in(self, login: str, password: str):
         # TODO: Сделать систему проверки пользователя
         pass
 
-    @property
-    def login(self):
-        return self.__login
-
-    @property
-    def password(self):
-        return self.__password
+    # @property
+    # def login(self):
+    #     return self.__login
+    #
+    # @property
+    # def password(self):
+    #     return self.__password
 
     @property
     def id(self):

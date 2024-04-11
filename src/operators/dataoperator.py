@@ -1,5 +1,6 @@
-from typing import Dict, Union, List
+from typing import Dict, Union, List, Optional
 import src
+# from src.operators.adapters import Adaptor
 
 
 clients: Dict[int, List[Union[src.Client, int]]] = {}
@@ -34,16 +35,25 @@ class DataOperator:
             "Transaction": transactions,
             "Person": persons
         }
-        container = type_to_container.get(type, {})
-        if id not in container.keys():
-            print(type, ": not found object with id", id)
-            return None
+        container = type_to_container.get(type)
+        print(type, container)
+        if id not in container.keys() or container[id][1] == 0:
+            print("Need to load", id)
+            if id not in container.keys():
+                container[id] = [None, 0]
+            container[id][1] = 1
+            # print(dir(src))
+            adapter = __import__("src.operators.adaptors").Adaptor()
+            container[id][0] = adapter.multy_get(id, type)
+            if type == "Account":
+                print("When constructed", container[id][0].money)
+            return container[id][0]
         else:
-            # TODO: load from DB
+            print("Already have", id)
             container[id][1] += 1
             return container[id][0]
 
-    def put(self, obj, done: bool = True) -> int:
+    def put(self, obj, done: bool, *args) -> int:
         global clients, clients_counter
         global accounts, accounts_counter
         global banks, banks_counter
@@ -51,30 +61,51 @@ class DataOperator:
         global transactions, transactions_counter
         global persons, persons_counter
         amount_in_use = 0 if done else 1
+        print("Putting", type(obj), f"(available - {amount_in_use})", end='')
+        adapter = __import__("src.operators.adaptors").Adaptor()
         if isinstance(obj, src.Client):
-            clients_counter += 1
-            clients[clients_counter] = [obj, amount_in_use]
-            return clients_counter
+            # clients_counter += 1
+            bank = src.BankModel.objects.get(id=args[0])
+            person = src.PersonModel.objects.get(id=args[1])
+            model = adapter.create_client(obj, bank, person)
+            clients[model.id] = [obj, amount_in_use]
+            print(f" (set id = {model.id})")
+            return model.id
         if isinstance(obj, src.Bank):
-            banks_counter += 1
-            banks[banks_counter] = [obj, amount_in_use]
-            return banks_counter
+            # banks_counter += 1
+            model = adapter.create_bank(obj)
+            banks[model.id] = [obj, amount_in_use]
+            print(f" (set id = {model.id})")
+            return model.id
         if isinstance(obj, src.Account):
-            accounts_counter += 1
-            accounts[accounts_counter] = [obj, amount_in_use]
-            return accounts_counter
+            # accounts_counter += 1
+            bank = src.BankModel.objects.get(id=args[0])
+            client = src.ClientModel.objects.get(id=obj.owner)
+            plan = src.PlanModel.objects.get(id=obj.plan)
+            model = adapter.create_account(obj, bank, client, plan)
+            accounts[model.id] = [obj, amount_in_use]
+            print(f" (set id = {model.id})")
+            return model.id
         if isinstance(obj, src.Plan):
-            plans_counter += 1
-            plans[plans_counter] = [obj, amount_in_use]
-            return plans_counter
+            # plans_counter += 1
+            bank = src.BankModel.objects.get(id=args[0])
+            model = adapter.create_plan(obj, bank)
+            plans[model.id] = [obj, amount_in_use]
+            print(f" (set id = {model.id})")
+            return model.id
         if isinstance(obj, src.Transaction):
-            transactions_counter += 1
-            transactions[transactions_counter] = [obj, amount_in_use]
-            return transactions_counter
+            # transactions_counter += 1
+            model = adapter.create_transaction(obj)
+            transactions[model.id] = [obj, amount_in_use]
+            print(f" (set id = {model.id})")
+            return model.id
         if isinstance(obj, src.Person):
-            persons_counter += 1
-            persons[persons_counter] = [obj, amount_in_use]
-            return persons_counter
+            raise MemoryError("Putting Person is deprecated")
+            # # persons_counter += 1
+            # model = adapter.create_person(obj, args[0])
+            # persons[model.id] = [obj, amount_in_use]
+            # print(f" (set id = {model.id})")
+            # return model.id
 
     def get_bank_by_name(self, name: str):
         for ident, bank in banks.items():
@@ -110,6 +141,7 @@ class DataOperator:
         return transactions
 
     def done_with(self, id: int, type: str) -> bool:
+        print("Done with", id, f"({type})")
         type_to_container = {
             "Client": clients,
             "Bank": banks,
@@ -119,11 +151,71 @@ class DataOperator:
             "Person": persons
         }
         container = type_to_container.get(type, {})
+        models = __import__("src.miptpaydj.mainapp.models")
         if id not in container.keys():
             return False
         else:
             container[id][1] -= 1
-            # TODO: save to DB
+            if container[id][1] == 0:
+                print("Saving", type, id)
+                if type == "Client":
+                    model = models.ClientModel.objects.get(id=id)
+                    model.name = container[id][0].name
+                    model.surname = container[id][0].surname
+                    model.address = container[id][0].address if container[id][0].address is not None else "NO_VALUE"
+                    print(container[id][0].passport)
+                    model.passport = -1 if (container[id][0].passport is None or container[id][0].passport == "NO_VALUE") else int(container[id][0].passport)
+                    print(model.passport)
+                    model.precarious = container[id][0].precarious
+                    model.save()
+                elif type == "Bank":
+                    model = models.BankModel.objects.get(id=id)
+                    model.name = container[id][0].name
+                    model.save()
+                elif type == "Account":
+                    model = models.AccountModel.objects.get(id=id)
+                    print(model.money)
+                    model.opened = container[id][0].opened
+                    model.money = container[id][0].money
+                    model.transfer = container[id][0].transfer
+                    if isinstance(container[id][0], src.DepositAccount):
+                        model.freeze_date = container[id][0].freeze_date
+                    print(model.money)
+                    model.save()
+                elif type == "Plan":
+                    model = models.PlanModel.objects.get(id=id)
+                    if isinstance(container[id][0], src.DebitPlan):
+                        model.transfer_limit = container[id][0].transfer_limit
+                        model.decreased_transfer_limit = container[id][0].decreased_transfer_limit
+                    elif isinstance(container[id][0], src.DepositPlan):
+                        model.transfer_limit = container[id][0].transfer_limit
+                        model.decreased_transfer_limit = container[id][0].decreased_transfer_limit
+                        model.commission = container[id][0].commission
+                        model.increased_commission = container[id][0].increased_commission
+                        model.period = container[id][0].period
+                        model.decreased_period = container[id][0].decreased_period
+                    elif isinstance(container[id][0], src.CreditPlan):
+                        model.transfer_limit = container[id][0].transfer_limit
+                        model.decreased_transfer_limit = container[id][0].decreased_transfer_limit
+                        model.commission = container[id][0].commission
+                        model.increased_commission = container[id][0].increased_commission
+                        model.lower_limit = container[id][0].lower_limit
+                        model.decreased_lower_limit = container[id][0].decreased_lower_limit
+                    model.save()
+                elif type == "Transaction":
+                    model = models.TransactionModel.objects.get(id=id)
+                    model.amount = container[id][0].amount
+                    model.status = container[id][0].status
+                    model.save()
+                elif type == "Person":
+                    model = models.PersonModel.objects.get(id=id)
+                    # model.login = container[id][0].login
+                    # model.password = container[id][0].password
+                    model.name = container[id][0].name
+                    model.surname = container[id][0].surname
+                    model.address = container[id][0].address
+                    model.passport = -1 if (container[id][0].name is None or container[id][0].name == "NO_VALUE") else int(container[id][0].name)
+                    model.save()
             return True
 
     def print_online(self):
@@ -185,3 +277,22 @@ class DataOperator:
             if transaction[1] < 0:
                 print('\t', "Transaction", ident, transaction[1])
         print("\n")
+
+
+class SingleDataOperator:
+    """Singleton wrapper for DataOperator class"""
+    __single: int = 0
+    __dataoperator: Optional[DataOperator] = None
+
+    def __init__(self):
+        pass
+
+    def get(self) -> DataOperator:
+        if SingleDataOperator.__single == 0:
+            SingleDataOperator.__dataoperator = DataOperator()
+            SingleDataOperator.__single = 1
+        return SingleDataOperator.__dataoperator
+
+    @property
+    def dataoperator(self) -> DataOperator:
+        return self.get()

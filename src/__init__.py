@@ -28,16 +28,20 @@ from src.admin.admin import Admin
 from src.operators.timekeeper import TimeKeeper
 from src.operators.dataoperator import DataOperator
 
-from src.interface.user_interface import UserInterface
+# from src.interface.user_interface import UserInterface
 
-from src.miptpaydj import mainapp
-from src.miptpaydj import miptpaydj
+# from src.miptpaydj import mainapp
+# from src.miptpaydj import miptpaydj
 
 from src.miptpaydj.mainapp.models import BankModel, PersonModel, ClientModel, PlanCategoryModel, PlanModel, AccountModel, TransactionModel, DiaryModel
 
 # from plan.plancategory import PlanCategory
 
-from src.operators.adapters import Adapter
+from django.contrib.auth.models import User
+
+from src.operators.adaptors import Adaptor
+
+print("Assume, Adapter is imported.\n", Adaptor)
 
 from src.miptpaydj.mainapp import apps
 
@@ -58,10 +62,9 @@ __all__ = ['available_from',
            'DataOperator',
            'Person',
            'Admin',
-           'UserInterface',
-           'mainapp', 'miptpaydj',
            'BankModel', 'PersonModel', 'ClientModel', 'PlanCategoryModel', 'PlanModel', 'AccountModel', 'TransactionModel', 'DiaryModel',
-           'Adapter',
+           'User',
+           'Adaptor',
            'apps',
            'views',
            ]

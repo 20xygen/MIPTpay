@@ -1,18 +1,25 @@
 import src
 from datetime import datetime
-#from dateutil import parser
+from typing import Optional
+# from dateutil import parser
 
 
-class Adapter:
+class Adaptor:
     def create_bank(self, bank: src.Bank):
         model = src.BankModel(name=bank.name)
         model.save()
         return model
 
-    def create_person(self, person: src.Person):
-        model = src.PersonModel(username=person.login, password=person.password, first_name=person.name, last_name=person.surname, email=person.address, passport=int(person.passport.replace(" ", "")))
+    def create_person(self, person: src.Person, user: src.User):
+        model = src.PersonModel(name=person.name, surname=person.surname, address=person.address, passport=int(person.passport.replace(" ", "")), user=user)
         model.save()
         return model
+
+    def fill_person(self, model: src.PersonModel, person: src.Person):
+        model.name = person.name
+        model.surname = person.surname
+        model.address = person.address
+        model.passport = int(person.passport.replace(" ", ""))
 
     def create_client(self, client: src.Client, bank: src.BankModel, person: src.PersonModel):
         # print(bank.name)
@@ -20,18 +27,24 @@ class Adapter:
         model.save()
         return model
 
-    def create_plan(self, plan: src.Plan, bank: src.BankModel, name: str):
-        model = src.PlanModel(name=name, bank=bank, commission=0, increased_commission=0, period=0, decreased_period=0, lower_limit=0, decreased_lower_limit=0, upper_limit=0, decreased_upper_limit=0, transfer_limit=0, decreased_transfer_limit=0)
+    def create_plan(self, plan: src.Plan, bank: src.BankModel):
+        name = bank.name
+        model = src.PlanModel(name="TEMPORARY", bank=bank, commission=0, increased_commission=0, period=0, decreased_period=0, lower_limit=0, decreased_lower_limit=0, upper_limit=0, decreased_upper_limit=0, transfer_limit=0, decreased_transfer_limit=0)
         category: src.PlanCategoryModel
         if isinstance(plan, src.DebitPlan):
             category = src.PlanCategoryModel.objects.get(name='Debit')
             model.category = category
+            name += f" debit "
         elif isinstance(plan, src.DepositPlan):
             category = src.PlanCategoryModel.objects.get(name='Deposit')
             model.category = category
+            name += f" deposit "
         elif isinstance(plan, src.CreditPlan):
             category = src.PlanCategoryModel.objects.get(name='Credit')
             model.category = category
+            name += f" credit "
+        model.save()
+        model.name = name + str(model.id)
         if category.commission:
             model.commission = plan.commission
             model.increased_commission = plan.increased_commission
@@ -59,8 +72,8 @@ class Adapter:
         model.save()
         return model
 
-    def create_transaction(self, transaction: src.Transaction, dep: src.AccountModel, dest: src.AccountModel):
-        model = src.TransactionModel(departure=dep, destination=dest, amount=transaction.amount, status=transaction.status)
+    def create_transaction(self, transaction: src.Transaction):
+        model = src.TransactionModel(departure=transaction.departure, destination=transaction.destination, amount=transaction.amount, status=transaction.status)
         model.save()
         return model
 
@@ -87,30 +100,69 @@ class Adapter:
         model = src.PlanModel.objects.get(id=ident)
         category = model.category
         if category.name == "Debit":
-            return src.DebitPlan(ident, model.transfer_limit, model.decreased_transfer_limit)
+            return src.DebitPlan(ident, model.transfer_limit, model.decreased_transfer_limit, None)
         elif category.name == "Deposit":
-            return src.DepositPlan(model.id, model.period, model.decreased_period, model.commission, model.increased_commission, model.transfer_limit, model.decreased_transfer_limit)
+            return src.DepositPlan(model.id, model.period, model.decreased_period, model.commission, model.increased_commission, model.transfer_limit, model.decreased_transfer_limit, None)
         elif category.name == "Credit":
-            return src.CreditPlan(model.id, model.lower_limit, model.decreased_lower_limit, model.commission, model.increased_commission, model.transfer_limit, model.decreased_transfer_limit)
+            return src.CreditPlan(model.id, model.lower_limit, model.decreased_lower_limit, model.commission, model.increased_commission, model.transfer_limit, model.decreased_transfer_limit, None)
 
     def get_client(self, ident: int) -> src.Client:
         model = src.ClientModel.objects.get(id=ident)
-        return src.Client(model.id, model.name, model.surname, model.address, str(model.password), model.precarious)
+        return src.Client(model.id, model.name, model.surname, model.address, str(model.passport), model.precarious)
 
     def get_account(self, ident: int) -> src.Account:
         model = src.AccountModel.objects.get(id=ident)
+        print("When getting", model.money)
         if model.plan.category.name == "Debit":
-            return src.DebitAccount(model.id, model.owner.id, model.opened, model.money, model.transfer, model.plan.id)
+            obj = src.DebitAccount(model.id, model.owner.id, model.opened, model.money, model.transfer, model.plan.id, None)
+            print("In adapter", obj.money)
+            return obj
         elif model.plan.category.name == "Deposit":
-            return src.DepositAccount(model.id, model.owner.id, model.opened, model.money, model.transfer, model.plan.id, model.freeze_date)
+            return src.DepositAccount(model.id, model.owner.id, model.opened, model.money, model.transfer, model.freeze_date, model.plan.id, None)
         elif model.plan.category.name == "Credit":
-            return src.CreditAccount(model.id, model.owner.id, model.opened, model.money, model.transfer, model.plan.id)
+            return src.CreditAccount(model.id, model.owner.id, model.opened, model.money, model.transfer, model.plan.id, None)
 
     def get_transaction(self, ident: int):
         model = src.TransactionModel.objects.get(id=ident)
         return src.Transaction(model.id, model.departure.id, model.destinations.id, model.amount, model.status)
 
-    def create_person(self, ident: int):
+    def get_person(self, ident: int):
         model = src.PersonModel.objects.get(id=ident)
         clients = [it.id for it in src.ClientModel.objects.filter(person=model)]
-        return src.Person(model.id, model.login, model.password, model.name, model.surname, model.address, model.passport, clients)
+        return src.Person(model.id, model.name, model.surname, model.address, model.passport, clients)
+
+    def multy_get(self, ident: int, cls: str):
+        if cls == "Bank":
+            return self.get_bank(ident)
+        elif cls == "Plan":
+            return self.get_plan(ident)
+        elif cls == "Client":
+            return self.get_client(ident)
+        elif cls == "Account":
+            return self.get_account(ident)
+        elif cls == "Transaction":
+            return self.get_transaction(ident)
+        elif cls == "Person":
+            return self.get_person(ident)
+        else:
+            print("error in multy_get")
+            return None
+
+
+class SingleAdaptor:
+    """Singleton wrapper for Adopator class"""
+    __single: int = 0
+    __adaptor: Optional[Adaptor] = None
+
+    def __init__(self):
+        pass
+
+    def get(self) -> Adaptor:
+        if SingleAdaptor.__single == 0:
+            SingleAdaptor.__adaptor = Adaptor()
+            SingleAdaptor.__single = 1
+        return SingleAdaptor.__adaptor
+
+    @property
+    def adaptor(self) -> Adaptor:
+        return self.get()
