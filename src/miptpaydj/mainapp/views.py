@@ -36,13 +36,16 @@ def transactions(request):
     return render(request, 'transactions.html', {'transactions': transactions})
 
 
-def hello_world(request):
-    return render(request, 'index.html', {'greeting': 'Hello, world!'})
+def index(request):
+    return render(request, 'index.html')
 
 
 @login_required
 def profile(request):
     return render(request, 'profile.html')
+
+def home(request):
+    return render(request, 'home.html')
 
 
 def signup_view(request):
