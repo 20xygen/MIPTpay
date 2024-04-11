@@ -53,6 +53,8 @@ def index(request):
 def profile(request):
     return render(request, 'profile.html')
 
+
+@login_required
 def home(request):
     return render(request, 'home.html')
 
@@ -71,7 +73,7 @@ def signup_view(request):
         password = form.cleaned_data.get('password1')
         user = authenticate(username=username, password=password)
         login(request, user)
-        return redirect('profile')
+        return redirect('home')
     else:
         form = RegisterForm()
     return render(request, 'registration/register.html', {'form': form})
