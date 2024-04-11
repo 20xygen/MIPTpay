@@ -15,10 +15,10 @@ def banks(request):
 
 def accounts(request):
     src.TimeKeeper().update()
-    bank = src.DataOperator().get(1, "Bank")
-    bank.put(3, 100)
-    bank.get(13, 1000)
-    src.DataOperator().done_with(1, "Bank")
+    # bank = src.DataOperator().get(1, "Bank")
+    # bank.put(3, 100)
+    # bank.get(13, 1000)
+    # src.DataOperator().done_with(1, "Bank")
 
     accounts = AccountModel.objects.all()
     return render(request, 'accounts.html', {'accounts': accounts})

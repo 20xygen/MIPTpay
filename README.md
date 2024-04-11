@@ -25,6 +25,7 @@
 git init
 git clone https://gitlab.akhcheck.ru/denis.barilov/miptpay.git
 pip install django
+pip install python-dateutil
 $env:PYTHONPATH = ";C:\Users\<path to project folder>"
 cd miptpay/src/miptpaydj
 python3 manage.py migrate
@@ -37,3 +38,15 @@ python3 ../../tests/sampledata.py
 # закомментировать 5 строчку обратно
 python3 manage.py runserver    
 ```
+
+### Доступные страницы
+Необходимо перейти по [ссылке](http://127.0.0.1:8000/home/) (http://127.0.0.1:8000/home/). Вы окажетесь на стартовой странице. Если пользователь нее зарегистрирован, нужно пройти регистрацию. После заполнения полей, вы попадете на домашнюю страницу.Необходимо перейти по [ссылке](http://127.0.0.1:8000/home/) (http://127.0.0.1:8000/home/). Вы окажетесь на стартовой странице. Если пользователь нее зарегистрирован, нужно пройти регистрацию. После заполнения полей, вы попадете на домашнюю страницу.
+Существуют следующие страницы:
+/banks
+/plans
+/persons
+/clients
+/account
+/transactions
+/accounts/login
+/home

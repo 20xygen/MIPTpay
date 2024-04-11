@@ -62,8 +62,8 @@ class TimeKeeper:  # TODO: make singleton.
         print(dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second)
         print(datetime(dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second))
         delta = datetime.now() - datetime(dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second)
-        # delta = delta.days * 24 + delta.seconds // 3600
-        delta = delta.days * 24 * 60 + delta.seconds // 60
+        delta = delta.days * 24 + delta.seconds // 3600
+        # delta = delta.days * 24 * 60 + delta.seconds // 60
         print("Delta is", delta)
         for account_ in am.objects.all():
             account = src.DataOperator().get(account_.id, "Account")
