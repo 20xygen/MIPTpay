@@ -27,13 +27,13 @@ git clone https://gitlab.akhcheck.ru/denis.barilov/miptpay.git
 pip install django
 pip install python-dateutil
 $env:PYTHONPATH = ";C:\Users\<path to project folder>"
-cd miptpay/src/miptpaydj
+cd miptpay/src
 python3 manage.py migrate
 # Нужно перевести проект в режим заполнения
 # базы данных тестовой информацией.
-# Открыть файл miptpay/src/miptpaydj/miptpaydj/__init__.py
+# Открыть файл miptpay/src/__init__.py
 # Раскомментировать 5 строчку (django.setup())
-python3 ../../tests/sampledata.py
+python3 ../tests/sampledata.py
 # если скрипт выполнен успешно, данные подгружены в базу
 # закомментировать 5 строчку обратно
 python3 manage.py runserver    

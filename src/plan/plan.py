@@ -128,7 +128,7 @@ class DepositPlan(Plan):
         return self.__period
 
     @period.setter
-    def period(self, period: float):
+    def period(self, period: int):
         self.__period = period
 
     @property

@@ -1,5 +1,17 @@
 from inspect import currentframe as cf
+from datetime import datetime
 import src
+
+
+def encode(date: datetime) -> int:
+    date = str(date).replace("-", "").replace(":", "").replace(" ", "")
+    date = date.split(".")[0]
+    return int(date)
+
+
+def decode(date: int) -> datetime:
+    date = str(date)
+    return datetime(int(date[0:4]), int(date[4:6]), int(date[6:8]), int(date[8:10]), int(date[10:12]), int(date[12:14]))
 
 
 class Account:
@@ -261,7 +273,7 @@ class DepositAccount(Account):
             self.freeze_date = freeze_date
         else:
             self.plan = plan
-            self.freeze_date = 1234  # TODO: get real date
+            self.freeze_date = encode(datetime.now())
             self.id = src.DataOperator().put(self, False, bank)
             src.TimeKeeper().add(self.id)
             src.DataOperator().done_with(self.id, "Account")
@@ -302,7 +314,7 @@ class DepositAccount(Account):
         if plan_obj is not None and client_obj is not None:
             lim = plan_obj.transfer_limit if not client_obj.precarious else plan_obj.decreased_transfer_limit
             per = plan_obj.period if not src.DataOperator().get(self.owner, "Client").precarious else plan_obj.decreased_period
-            if 0 < amount <= self.money and self.__freeze_date >= src.TimeKeeper().get() + per and self.transfer + amount <= lim:
+            if 0 < amount <= self.money and (datetime.now() - decode(self.__freeze_date)).days - per >= 0 and self.transfer + amount <= lim:
                 ret = True
         src.DataOperator().done_with(self.plan, "Plan")
         src.DataOperator().done_with(self.owner, "Client")
