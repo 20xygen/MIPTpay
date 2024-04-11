@@ -36,7 +36,7 @@ class DataOperator:
             "Person": persons
         }
         container = type_to_container.get(type)
-        print(type, container)
+        # print(type, container)
         if id not in container.keys() or container[id][1] == 0:
             print("Need to load", id)
             if id not in container.keys():
@@ -45,8 +45,8 @@ class DataOperator:
             # print(dir(src))
             adapter = __import__("src.operators.adaptors").Adaptor()
             container[id][0] = adapter.multy_get(id, type)
-            if type == "Account":
-                print("When constructed", container[id][0].money)
+            # if type == "Account":
+            #     print("When constructed", container[id][0].money)
             return container[id][0]
         else:
             print("Already have", id)
@@ -163,9 +163,9 @@ class DataOperator:
                     model.name = container[id][0].name
                     model.surname = container[id][0].surname
                     model.address = container[id][0].address if container[id][0].address is not None else "NO_VALUE"
-                    print(container[id][0].passport)
+                    # print(container[id][0].passport)
                     model.passport = -1 if (container[id][0].passport is None or container[id][0].passport == "NO_VALUE") else int(container[id][0].passport)
-                    print(model.passport)
+                    # print(model.passport)
                     model.precarious = container[id][0].precarious
                     model.save()
                 elif type == "Bank":
@@ -174,13 +174,13 @@ class DataOperator:
                     model.save()
                 elif type == "Account":
                     model = models.AccountModel.objects.get(id=id)
-                    print(model.money)
+                    # print(model.money)
                     model.opened = container[id][0].opened
                     model.money = container[id][0].money
                     model.transfer = container[id][0].transfer
                     if isinstance(container[id][0], src.DepositAccount):
                         model.freeze_date = container[id][0].freeze_date
-                    print(model.money)
+                    # print(model.money)
                     model.save()
                 elif type == "Plan":
                     model = models.PlanModel.objects.get(id=id)

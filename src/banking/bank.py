@@ -117,7 +117,7 @@ class Bank:
 
     def open_account(self, owner: int, plan: int) -> Optional[int]:
         if not owner in self.__clients or not plan in self.__plans:
-            print(owner, self.__clients, plan, self.__plans)
+            # print(owner, self.__clients, plan, self.__plans)
             return None
         plan_obj = src.DataOperator().get(plan, "Plan")
         if plan_obj is None:
@@ -165,9 +165,9 @@ class Bank:
         if dep is None:
             src.DataOperator().done_with(account, "Account")
             return None
-        print(dep.money)
+        # print(dep.money)
         dep.put(amount)
-        print(dep.money)
+        # print(dep.money)
         src.DataOperator().done_with(account, "Account")
 
     def get(self, account: int, amount: float) -> bool:
@@ -217,14 +217,14 @@ class Bank:
         if not account in self.__accounts:
             return False
         dest = src.DataOperator().get(account, "Account")
-        print(dest.money)
+        # print(dest.money)
         if dest is None:
             # src.DataOperator().done_with(dest.id, "Account")
             return False
         trans = src.Transaction(None, account, 0, amount, None)
         # src.DataOperator().put(trans)
         if dest.put_offer(amount):
-            print("Possible transaction")
+            # print("Possible transaction")
             self.do_put(account, amount)
             trans.prove()
             src.DataOperator().done_with(trans.id, "Transaction")

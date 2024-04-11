@@ -160,7 +160,7 @@ class DebitAccount(Account):
         if ident is not None:
             self.owner = owner
             self.opened = opened
-            print("When constructing", money)
+            # print("When constructing", money)
             self.money = money
             # print("When constructing (self)", self.__money, self.money)
             self.transfer = transfer
@@ -178,7 +178,7 @@ class DebitAccount(Account):
         ret = False
         if plan_obj is not None and client_obj is not None:
             lim = plan_obj.transfer_limit if not client_obj.precarious else plan_obj.decreased_transfer_limit
-            print(f"Limit: {lim} and will be {self.transfer + amount}")
+            # print(f"Limit: {lim} and will be {self.transfer + amount}")
             if amount > 0 and self.transfer + amount <= lim:
                 ret = True
             else:

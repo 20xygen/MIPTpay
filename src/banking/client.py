@@ -89,7 +89,7 @@ class Client:
 
     def update(self, address: str, passport: str):
         src.available_from(cf(), "Bank", "ClientBuilder")
-        print("Actually updating")
+        # print("Actually updating")
         self.__address = address
         self.__passport = passport
         self.validate()
