@@ -260,15 +260,13 @@ class DataOperator:
 
 class SingleDO:
     """Singleton wrapper for DataOperator class"""
-    __single: int = 0
     __dataoperator: Optional[DataOperator] = None
 
     def __init__(self):
         pass
 
-    @staticmethod
-    def DO() -> DataOperator:
-        if SingleDO.__single == 0:
+    @classmethod
+    def DO(cls) -> DataOperator:
+        if SingleDO.__dataoperator is None:
             SingleDO.__dataoperator = DataOperator()
-            SingleDO.__single = 1
         return SingleDO.__dataoperator
