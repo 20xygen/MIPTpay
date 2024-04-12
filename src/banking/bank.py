@@ -217,14 +217,10 @@ class Bank:
         if not account in self.__accounts:
             return False
         dest = src.DataOperator().get(account, "Account")
-        # print(dest.money)
         if dest is None:
-            # src.DataOperator().done_with(dest.id, "Account")
             return False
         trans = src.Transaction(None, account, 0, amount, None)
-        # src.DataOperator().put(trans)
         if dest.put_offer(amount):
-            # print("Possible transaction")
             self.do_put(account, amount)
             trans.prove()
             src.DataOperator().done_with(trans.id, "Transaction")
@@ -274,7 +270,6 @@ class Bank:
         return ret
 
     def put_offer(self, account: int, amount: float) -> bool:
-        # print("WTF", account, amount)
         if not account in self.__accounts:
             return False
         account_obj = src.DataOperator().get(account, "Account")

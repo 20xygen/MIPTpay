@@ -7,19 +7,10 @@ class Plan:
 
     __id: int # PK
 
-    # def __init__(self, bank: int):
-    #     from src.operators.dataoperator import DataOperator
-    #     self.__id = DataOperator().put(self, False, bank)
-    #
-    # def __init__(self, ident: int, mock):
-    #     self.__id = ident
-
     def __init__(self, ident: int = None, bank: int = None):
         if ident is not None:
             self.__id = ident
         else:
-            # from src.operators.dataoperator import DataOperator
-            # self.__id = DataOperator().put(self, False, bank)
             pass
 
     @property
@@ -39,12 +30,6 @@ class DebitPlan(Plan):
     __transfer_limit: float
     __decreased_transfer_limit: float
 
-    # def __init__(self, ident: int, transfer_limit: float, decreased_transfer_limit: float):
-    #     src.available_from(cf())
-    #     super(ident, None)
-    #     self.__transfer_limit = transfer_limit
-    #     self.__decreased_transfer_limit = decreased_transfer_limit
-
     @property
     def transfer_limit(self):
         src.available_from(cf(), "Bank", "Account")
@@ -62,12 +47,6 @@ class DebitPlan(Plan):
     @decreased_transfer_limit.setter
     def decreased_transfer_limit(self, decreased_transfer_limit: float):
         self.__decreased_transfer_limit = decreased_transfer_limit
-
-    # def __init__(self, transfer_limit: float, decreased_transfer_limit: float, bank: int):
-    #     super(None, bank)
-    #     self.__transfer_limit = transfer_limit
-    #     self.__decreased_transfer_limit = decreased_transfer_limit
-    #     src.DataOperator().done_with(self.id, "Plan")
 
     def __init__(self, ident: int = None, transfer_limit: float = None, decreased_transfer_limit: float = None, bank: int = None):
         super().__init__(ident, bank)
@@ -93,16 +72,6 @@ class DepositPlan(Plan):
     __increased_commission: float
     __transfer_limit: float
     __decreased_transfer_limit: float
-
-    # def __init__(self, ident: int, period: int, decreased_period: int, commission: float, increased_commission: float, transfer_limit: float, decreased_transfer_limit: float):
-    #     src.available_from(cf())
-    #     super(ident, "MOCK")
-    #     self.__period = period
-    #     self.__decreased_period = decreased_period
-    #     self.__commission = commission
-    #     self.__increased_commission = increased_commission
-    #     self.__transfer_limit = transfer_limit
-    #     self.__decreased_transfer_limit = decreased_transfer_limit
 
     @property
     def transfer_limit(self):
@@ -158,18 +127,6 @@ class DepositPlan(Plan):
     def increased_commission(self, increased_commission: float):
         self.__increased_commission = increased_commission
 
-    # def __init__(self, period: int, decreased_period: int,
-    #              commission: float, increased_commission: float,
-    #              transfer_limit: float, decreased_transfer_limit: float, bank: int):
-    #     super(bank)
-    #     self.__period = period
-    #     self.__decreased_period = decreased_period
-    #     self.__commission = commission
-    #     self.__increased_commission = increased_commission
-    #     self.__transfer_limit = transfer_limit
-    #     self.__decreased_transfer_limit = decreased_transfer_limit
-    #     src.DataOperator().done_with(self.id, "Plan")        return self.__increased_commission
-
     def __init__(self, ident: int = None, period: int = None, decreased_period: int = None,
                  commission: float = None, increased_commission: float = None,
                  transfer_limit: float = None, decreased_transfer_limit: float = None, bank: int = None):
@@ -202,16 +159,6 @@ class CreditPlan(Plan):
     __increased_commission: float
     __transfer_limit: float
     __decreased_transfer_limit: float
-
-    # def __init__(self, ident: int, lower_limit: int, decreased_lower_limit: int, commission: float, increased_commission: float, transfer_limit: float, decreased_transfer_limit: float):
-    #     src.available_from(cf())
-    #     super(ident, "MOCK")
-    #     self.__lower_limit = lower_limit
-    #     self.__decreased_lower_limit = decreased_lower_limit
-    #     self.__commission = commission
-    #     self.__increased_commission = increased_commission
-    #     self.__transfer_limit = transfer_limit
-    #     self.__decreased_transfer_limit = decreased_transfer_limit
 
     @property
     def transfer_limit(self):
@@ -266,18 +213,6 @@ class CreditPlan(Plan):
     @increased_commission.setter
     def increased_commission(self, increased_commission: float):
         self.__increased_commission = increased_commission
-
-    # def __init__(self, lower_limit: float, decreased_lower_limit: float,
-    #              commission: float, increased_commission: float,
-    #              transfer_limit: float, decreased_transfer_limit: float, bank: int):
-    #     super(bank)
-    #     self.__lower_limit = lower_limit
-    #     self.__decreased_lower_limit = decreased_lower_limit
-    #     self.__commission = commission
-    #     self.__increased_commission = increased_commission
-    #     self.__transfer_limit = transfer_limit
-    #     self.__decreased_transfer_limit = decreased_transfer_limit
-    #     src.DataOperator().done_with(self.id, "Plan")
 
     def __init__(self, ident: int = None, lower_limit: float = None, decreased_lower_limit: float = None,
                  commission: float = None, increased_commission: float = None,

@@ -13,28 +13,6 @@ class Client:
     __passport: str
     __precarious: bool
 
-    # def __init__(self, name: str, surname: str, address: str, passport: str, bank: int, person: int):
-    #     self.__name = name
-    #     self.__surname = surname
-    #     self.__address = address if address != "NO_VALUE" else None
-    #     self.__passport = passport if passport != "NO_VALUE" else None
-    #     # if passport is None or address is None:
-    #     #     self.__precarious = True
-    #     if passport == "NO_VALUE" or address == "NO_VALUE":
-    #         self.__precarious = True
-    #     else:
-    #         self.__precarious = False
-    #     self.__id = src.DataOperator().put(self, False, bank, person)
-    #
-    # def __init__(self, ident: int, name: str, surname: str, address: str, passport: str, precarious: bool):
-    #     src.available_from(cf())
-    #     self.__id = ident
-    #     self.__name = name
-    #     self.__surname = surname
-    #     self.__passport = passport
-    #     self.__address = address
-    #     self.__precarious = precarious
-
     def __init__(self, ident: int = None, name: str = None, surname: str = None, address: str = None, passport: str = None, precarious: bool = None, bank: int = None, person: int = None):
         self.__name = name
         self.__surname = surname

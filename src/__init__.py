@@ -28,14 +28,7 @@ from src.admin.admin import Admin
 from src.operators.timekeeper import TimeKeeper
 from src.operators.dataoperator import DataOperator
 
-# from src.interface.user_interface import UserInterface
-
-# from src.miptpaydj import mainapp
-# from src.miptpaydj import miptpaydj
-
 from src.miptpaydj.mainapp.models import BankModel, PersonModel, ClientModel, PlanCategoryModel, PlanModel, AccountModel, TransactionModel, DiaryModel
-
-# from plan.plancategory import PlanCategory
 
 from django.contrib.auth.models import User
 

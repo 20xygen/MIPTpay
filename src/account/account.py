@@ -24,17 +24,6 @@ class Account:
     __money: float
     __transfer: float
 
-    # def __init__(self, owner, bank: int):
-    #     self.__owner = owner
-    #     self.__opened = True
-    #     self.__money = 0
-    #     self.__transfer = 0
-    #     self.__id = src.DataOperator().put(self, False, bank)
-    #     src.TimeKeeper().add(self.__id)
-
-    # def __init__(self):
-    #     pass
-
     def __init__(self, ident: int = None, owner: int = None, bank: int = None):
         if ident is not None:
             self.__owner = owner
@@ -47,8 +36,6 @@ class Account:
             self.__opened = True
             self.__money = 0
             self.__transfer = 0
-            # self.__id = src.DataOperator().put(self, False, bank)
-            # src.TimeKeeper().add(self.__id)
 
     def put(self, cash: float) -> int:
         src.available_from(cf(), "Bank")
@@ -143,16 +130,6 @@ class DebitAccount(Account):
 
     __plan: int
 
-    # def __init__(self, ident: int, owner: int, opened: bool, money: float, transfer: float, plan: int):
-    #     super()
-    #     src.available_from(cf())
-    #     self.__id = ident
-    #     self.__owner = owner
-    #     self.__opened = opened
-    #     self.__money = money
-    #     self.__transfer = transfer
-    #     self.__plan = plan
-
     @property
     def plan(self):
         return self.__plan
@@ -161,20 +138,12 @@ class DebitAccount(Account):
     def plan(self, plan: int):
         self.__plan = plan
 
-    # def __init__(self, owner: int, plan: int, bank: int):
-    #     super(owner, bank)
-    #     self.__plan = plan
-    #     src.DataOperator().done_with(self.id, "Account")
-
     def __init__(self, ident: int = None, owner: int = None, opened: bool = None, money: float = None, transfer: float = None, plan: int = None, bank: int = None):
         super().__init__(ident, owner, bank)
-        # src.available_from(cf())
         if ident is not None:
             self.owner = owner
             self.opened = opened
-            # print("When constructing", money)
             self.money = money
-            # print("When constructing (self)", self.__money, self.money)
             self.transfer = transfer
             self.plan = plan
         else:
@@ -190,7 +159,6 @@ class DebitAccount(Account):
         ret = False
         if plan_obj is not None and client_obj is not None:
             lim = plan_obj.transfer_limit if not client_obj.precarious else plan_obj.decreased_transfer_limit
-            # print(f"Limit: {lim} and will be {self.transfer + amount}")
             if amount > 0 and self.transfer + amount <= lim:
                 ret = True
             else:
@@ -226,17 +194,6 @@ class DepositAccount(Account):
     __plan: int
     __freeze_date: int
 
-    # def __init__(self, ident: int, owner: int, opened: bool, money: float, transfer: float, plan: int, freeze_date: int):
-    #     src.available_from(cf())
-    #     super()
-    #     self.__id = ident
-    #     self.__owner = owner
-    #     self.__opened = opened
-    #     self.__money = money
-    #     self.__transfer = transfer
-    #     self.__plan = plan
-    #     self.__freeze_date = freeze_date
-
     @property
     def plan(self):
         src.available_from(cf(), "Bank")
@@ -255,15 +212,8 @@ class DepositAccount(Account):
     def freeze_date(self, freeze_date: int):
         self.__freeze_date = freeze_date
 
-    # def __init__(self, owner: int, plan: int, bank: int):
-    #     super().__init__(owner, bank)
-    #     self.__plan = plan
-    #     self.__freeze_date = src.TimeKeeper().get()
-    #     src.DataOperator().done_with(self.id, "Account")
-
     def __init__(self, ident: int = None, owner: int = None, opened: bool = None, money: float = None, transfer: float = None, freeze_date: int = None, plan: int = None, bank: int = None):
         super().__init__(ident, owner, bank)
-        # src.available_from(cf())
         if ident is not None:
             self.owner = owner
             self.opened = opened
@@ -326,21 +276,6 @@ class CreditAccount(Account):
     There is a fee for use if the customer is in the red. """
 
     __plan: int
-
-    # def __init__(self, ident: int, owner: int, opened: bool, money: float, transfer: float, plan: int):
-    #     src.available_from(cf())
-    #     super()
-    #     self.__id = ident
-    #     self.__owner = owner
-    #     self.__opened = opened
-    #     self.__money = money
-    #     self.__transfer = transfer
-    #     self.__plan = plan
-
-    # def __init__(self, owner: int, plan: int, bank: int):
-    #     super().__init__(owner, bank)
-    #     self.__plan = plan
-    #     src.DataOperator().done_with(self.id, "Account")
 
     def __init__(self, ident: int = None, owner: int = None, opened: bool = None, money: float = None, transfer: float = None, plan: int = None, bank: int = None):
         super().__init__(ident, owner, bank)

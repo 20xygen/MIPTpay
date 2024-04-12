@@ -6,18 +6,6 @@ class Admin:
     """ Admin is an aggregator of the project's structural classes.
     Provides access to comprehensive information about the objects. """
 
-    # def info(self, object):
-    #   print(1)
-    #   real_names = [system_name.split("__")[1] for system_name in object.__dict__.keys()]
-    #   s = []
-    #   for real_name in real_names:
-    #     try:
-    #       val = str(getattr(object, real_name)())
-    #       s.append(f"{real_name}: {val}")
-    #     except:
-    #       continue
-    #   return '\n'.join(s)
-
     def account_info(self, account):
         account = src.DataOperator().get(account, "Account")
         ret = f"""id: {account.id}
