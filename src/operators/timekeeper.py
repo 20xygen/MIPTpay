@@ -60,15 +60,13 @@ class TimeKeeper:
 
 class SingleTK:
     """Singleton wrapper for TimeKeeper class"""
-    __single: int = 0
     __timekeeper: Optional[TimeKeeper] = None
 
     def __init__(self):
         pass
 
-    @staticmethod
-    def timekeeper() -> TimeKeeper:
-        if SingleTK.__single == 0:
+    @classmethod
+    def timekeeper(cls) -> TimeKeeper:
+        if SingleTK.__timekeeper is None:
             SingleTK.__timekeeper = TimeKeeper()
-            SingleTK.__single = 1
         return SingleTK.__timekeeper

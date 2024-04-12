@@ -94,17 +94,15 @@ class Admin:
 
 class SingleAdmin:
     """Singleton wrapper for Admin class"""
-    __single: int = 0
     __admin: Optional[Admin] = None
 
     def __init__(self):
         pass
 
-    @staticmethod
-    def admin() -> Admin:
-        if SingleAdmin.__single == 0:
+    @classmethod
+    def admin(cls) -> Admin:
+        if SingleAdmin.__admin is None:
             SingleAdmin.__admin = Admin()
-            SingleAdmin.__single = 1
         return SingleAdmin.__admin
 
 

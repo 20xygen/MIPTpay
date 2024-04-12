@@ -144,15 +144,13 @@ class Adaptor:
 
 class SingleAdaptor:
     """Singleton wrapper for Adopator class"""
-    __single: int = 0
     __adaptor: Optional[Adaptor] = None
 
     def __init__(self):
         pass
 
-    @staticmethod
-    def adaptor() -> Adaptor:
-        if SingleAdaptor.__single == 0:
+    @classmethod
+    def adaptor(cls) -> Adaptor:
+        if SingleAdaptor.__adaptor is None:
             SingleAdaptor.__adaptor = Adaptor()
-            SingleAdaptor.__single = 1
         return SingleAdaptor.__adaptor
