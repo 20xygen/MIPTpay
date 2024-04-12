@@ -9,24 +9,24 @@ class Adaptor:
         model.save()
         return model
 
-    def create_person(self, person: src.Person, user: src.User):
+    def create_person(self, person: src.Person, user):
         model = src.PersonModel(name=person.name, surname=person.surname, address=person.address, passport=int(person.passport.replace(" ", "")), user=user)
         model.save()
         return model
 
-    def fill_person(self, model: src.PersonModel, person: src.Person):
+    def fill_person(self, model, person: src.Person):
         model.name = person.name
         model.surname = person.surname
         model.address = person.address
         model.passport = int(person.passport.replace(" ", ""))
 
-    def create_client(self, client: src.Client, bank: src.BankModel, person: src.PersonModel):
+    def create_client(self, client: src.Client, bank, person):
         # print(bank.name)
         model = src.ClientModel(bank=bank, person=person, name=client.name, surname=client.surname, address=(client.address if client.address is not None else ""), passport=(int(client.passport) if client.passport is not None else 0), precarious=client.precarious)
         model.save()
         return model
 
-    def create_plan(self, plan: src.Plan, bank: src.BankModel):
+    def create_plan(self, plan: src.Plan, bank):
         name = bank.name
         model = src.PlanModel(name="TEMPORARY", bank=bank, commission=0, increased_commission=0, period=0, decreased_period=0, lower_limit=0, decreased_lower_limit=0, upper_limit=0, decreased_upper_limit=0, transfer_limit=0, decreased_transfer_limit=0)
         category: src.PlanCategoryModel
@@ -62,7 +62,7 @@ class Adaptor:
         model.save()
         return model
 
-    def create_account(self, account: src.Account, bank: src.BankModel, client: src.ClientModel, plan: src.PlanModel):
+    def create_account(self, account: src.Account, bank, client, plan):
         model = src.AccountModel(bank=bank, owner=client, opened=account.opened, money=account.money, transfer=account.transfer, plan=plan)
         if isinstance(account, src.DepositAccount):
             model.freeze_date = account.freeze_date
@@ -150,12 +150,9 @@ class SingleAdaptor:
     def __init__(self):
         pass
 
-    def get(self) -> Adaptor:
+    @staticmethod
+    def adaptor() -> Adaptor:
         if SingleAdaptor.__single == 0:
             SingleAdaptor.__adaptor = Adaptor()
             SingleAdaptor.__single = 1
         return SingleAdaptor.__adaptor
-
-    @property
-    def adaptor(self) -> Adaptor:
-        return self.get()

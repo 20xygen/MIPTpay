@@ -13,7 +13,7 @@ src.TransactionModel.objects.all().delete()
 
 # Date
 
-src.Adaptor().set_date()
+src.SingleAdaptor.adaptor().set_date()
 
 # Plan categories
 
@@ -65,15 +65,15 @@ mikali.refresh_from_db()
 artudi.refresh_from_db()
 
 denis = src.Person(ident=xygen.personmodel.id, name="Denis", surname="Barilov", address="barilov.di@phystech.edu", passport="1234 123456")
-src.Adaptor().fill_person(xygen.personmodel, denis)
+src.SingleAdaptor.adaptor().fill_person(xygen.personmodel, denis)
 denis_model = xygen.personmodel
 
 misha = src.Person(ident=mikali.personmodel.id, name="Mikhail", surname="Kalinin", address="kalinin.mi@phystech.edu", passport="1000 000000")
-src.Adaptor().fill_person(mikali.personmodel, misha)
+src.SingleAdaptor.adaptor().fill_person(mikali.personmodel, misha)
 misha_model = mikali.personmodel
 
 artem = src.Person(ident=artudi.personmodel.id, name="Artem", surname="Udovenko", address="udovenko.ai@phystech.edu", passport="7777 777777")
-src.Adaptor().fill_person(artudi.personmodel, artem)
+src.SingleAdaptor.adaptor().fill_person(artudi.personmodel, artem)
 artem_model = artudi.personmodel
 
 xygen.save()

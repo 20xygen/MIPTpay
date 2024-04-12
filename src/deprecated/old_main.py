@@ -1,5 +1,5 @@
 import src
-from src import (Bank, PlanFactory, TransferLimit, LowerLimit, Period, Commission, DataOperator, TimeKeeper,
+from src import (Bank, PlanFactory, TransferLimit, LowerLimit, Period, Commission, DataOperator, TimeKeeper, SingleTK,
                  Admin)
 from src.banking import crosspayment
 
@@ -20,11 +20,11 @@ p = DataOperator().plans()
 c = DataOperator().clients()
 a = DataOperator().accounts()
 t = DataOperator().transactions()
-ct = TimeKeeper().current_time()
+ct = SingleTK.timekeeper().current_time()
 
 
-TimeKeeper().get()
-TimeKeeper().increase()
+SingleTK.timekeeper().get()
+SingleTK.timekeeper().increase()
 print("Day 1 ------------------------\n")
 
 denis = sberbank.register("Denis", "Barilov", "Moscow", "12 34 567890")

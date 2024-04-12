@@ -9,40 +9,40 @@ import src
 
 
 def banks(request):
-    src.TimeKeeper().update()
+    src.SingleTK.timekeeper().update()
     banks = BankModel.objects.all()
     return render(request, 'banks.html', {'banks': banks})
 
 
 def accounts(request):
-    src.TimeKeeper().update()
+    src.SingleTK.timekeeper().update()
 
-    bank = src.SingleDO.DO().get(1, "Bank")
-    bank.put(3, 100)
-    src.SingleDO.DO().done_with(1, "Bank")
-
-    bank = src.SingleDO.DO().get(2, "Bank")
-    bank.get(6, 1000)
-    src.SingleDO.DO().done_with(2, "Bank")
+    # bank = src.SingleDO.DO().get(1, "Bank")
+    # bank.put(3, 100)
+    # src.SingleDO.DO().done_with(1, "Bank")
+    #
+    # bank = src.SingleDO.DO().get(2, "Bank")
+    # bank.get(6, 1000)
+    # src.SingleDO.DO().done_with(2, "Bank")
 
     accounts = AccountModel.objects.all()
     return render(request, 'accounts.html', {'accounts': accounts})
 
 
 def plans(request):
-    src.TimeKeeper().update()
+    src.SingleTK.timekeeper().update()
     plans = PlanModel.objects.all()
     return render(request, 'plans.html', {'plans': plans})
 
 
 def persons(request):
-    src.TimeKeeper().update()
+    src.SingleTK.timekeeper().update()
     persons = PersonModel.objects.all()
     return render(request, 'persons.html', {'persons': persons})
 
 
 def clients(request):
-    src.TimeKeeper().update()
+    src.SingleTK.timekeeper().update()
     # bank = src.SingleDO.DO().get(3, "Bank")
     # bank.update(2, "kalinin.mi@phystech.edu", "1000 000000")
     # src.SingleDO.DO().done_with(3, "Bank")
@@ -52,7 +52,7 @@ def clients(request):
 
 
 def transactions(request):
-    src.TimeKeeper().update()
+    src.SingleTK.timekeeper().update()
     transactions = TransactionModel.objects.all()
     return render(request, 'transactions.html', {'transactions': transactions})
 
