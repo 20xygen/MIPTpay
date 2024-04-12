@@ -8,6 +8,9 @@ from src.miptpaydj.mainapp.models import BankModel, AccountModel, PlanModel, Per
 import src
 
 
+def material_login(request):
+    return render(request, 'material_login.html', {})
+
 def banks(request):
     src.SingleTK.timekeeper().update()
     banks = BankModel.objects.all()
@@ -17,13 +20,13 @@ def banks(request):
 def accounts(request):
     src.SingleTK.timekeeper().update()
 
-    bank = src.SingleDO.DO().get(11, "Bank")
-    bank.put(29, 100)
-    src.SingleDO.DO().done_with(11, "Bank")
+    bank = src.SingleDO.DO().get(1, "Bank")
+    bank.put(3, 100)
+    src.SingleDO.DO().done_with(1, "Bank")
 
-    bank = src.SingleDO.DO().get(12, "Bank")
-    bank.get(36, 1000)
-    src.SingleDO.DO().done_with(12, "Bank")
+    bank = src.SingleDO.DO().get(2, "Bank")
+    bank.get(6, 1000)
+    src.SingleDO.DO().done_with(2, "Bank")
 
     accounts = AccountModel.objects.all()
     return render(request, 'accounts.html', {'accounts': accounts})
@@ -66,9 +69,24 @@ def profile(request):
     return render(request, 'profile.html')
 
 
-@login_required
+# @login_required
 def home(request):
     return render(request, 'home.html')
+
+
+# @login_required
+def put(request):
+    return render(request, 'material_put.html')
+
+
+# @login_required
+def get(request):
+    return render(request, 'material_get.html')
+
+
+# @login_required
+def transfer(request):
+    return render(request, 'material_transfer.html')
 
 
 def signup_view(request):
@@ -119,17 +137,17 @@ def get_from_account(request):
         form = PutForm(request.POST)
     return render(request, 'get_from_account.html', {'form': form})
 
-def transfer(request):
-    form = TransferForm(request.POST)
-    if form.is_valid():
-        bank_id = int(form.cleaned_data.get("bank_id"))
-        account_id1 = int(form.cleaned_data.get("account_id1"))
-        account_id2 = int(form.cleaned_data.get("account_id2"))
-        summ = int(form.cleaned_data.get("sum"))
-        bank = src.SingleDO.DO().get(bank_id, "Bank")
-        bank.transfer(account_id1, account_id2, summ)
-        src.SingleDO.DO().done_with(bank_id, "Bank")
-        return redirect('home')
-    else:
-        form = TransferForm(request.POST)
-    return render(request, 'transfer.html', {'form': form})
+# def transfer(request):
+#     form = TransferForm(request.POST)
+#     if form.is_valid():
+#         bank_id = int(form.cleaned_data.get("bank_id"))
+#         account_id1 = int(form.cleaned_data.get("account_id1"))
+#         account_id2 = int(form.cleaned_data.get("account_id2"))
+#         summ = int(form.cleaned_data.get("sum"))
+#         bank = src.SingleDO.DO().get(bank_id, "Bank")
+#         bank.transfer(account_id1, account_id2, summ)
+#         src.SingleDO.DO().done_with(bank_id, "Bank")
+#         return redirect('home')
+#     else:
+#         form = TransferForm(request.POST)
+#     return render(request, 'transfer.html', {'form': form})
