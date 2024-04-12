@@ -104,7 +104,7 @@ class Adaptor:
         return src.Client(model.id, model.name, model.surname, model.address, str(model.passport), model.precarious)
 
     def get_account(self, ident: int) -> src.Account:
-        model = src.miptpaydj.mainapp.models.AccountModel.objects.get(id=ident)
+        model = src.AccountModel.objects.get(id=ident)
         print("When getting", model.money)
         if model.plan.category.name == "Debit":
             obj = src.DebitAccount(model.id, model.owner.id, model.opened, model.money, model.transfer, model.plan.id, None)

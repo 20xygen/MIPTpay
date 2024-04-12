@@ -107,7 +107,7 @@ class Account:
             return True
         return False
 
-    def update(self):
+    def update(self, delta: int):
         src.available_from(cf(), "TimeKeeper")
         pass
 
@@ -182,7 +182,7 @@ class DebitAccount(Account):
         src.SingleDO.DO().done_with(self.owner, "Client")
         return ret
 
-    def update(self):
+    def update(self, delta: int):
         src.available_from(cf(), "TimeKeeper")
         pass
 
@@ -228,7 +228,7 @@ class DepositAccount(Account):
             src.SingleTK.timekeeper().add(self.id)
             src.SingleDO.DO().done_with(self.id, "Account")
 
-    def update(self):
+    def update(self, delta: int):
         src.available_from(cf(), "TimeKeeper")
         plan_obj = src.SingleDO.DO().get(self.__plan, "Plan")
         if plan_obj is None:
@@ -241,7 +241,7 @@ class DepositAccount(Account):
             return
         if client_obj.precarious:
             modifier += plan_obj.increased_commission
-        self.money *= modifier
+        self.money *= modifier ** delta
         src.SingleDO.DO().done_with(self.plan, "Plan")
         src.SingleDO.DO().done_with(self.owner, "Client")
 
@@ -302,7 +302,7 @@ class CreditAccount(Account):
     def plan(self, plan: int):
         self.__plan = plan
 
-    def update(self):
+    def update(self, delta: int):
         src.available_from(cf(), "Bank", "TimeKeeper")
         if self.money >= 0:
             return
@@ -315,7 +315,7 @@ class CreditAccount(Account):
         modifier = 1 - plan_obj.commission
         if client_obj.precarious:
             modifier += plan_obj.increased_commission
-        self.money *= modifier
+        self.money *= modifier ** delta
         src.SingleDO.DO().done_with(self.plan, "Plan")
         src.SingleDO.DO().done_with(self.owner, "Client")
 

@@ -40,12 +40,19 @@ class TimeKeeper:
         print(dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second)
         print(datetime(dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second))
         delta = datetime.now() - datetime(dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second)
-        delta = delta.days * 24 + delta.seconds // 3600
+        match src.TIME:
+            case "SECOND":
+                delta = delta.days * 24 * 3600 + delta.seconds
+            case "MINUTE":
+                delta = delta.days * 24 * 60 + delta.seconds // 60
+            case "HOUR":
+                delta = delta.days * 24 + delta.seconds // 3600
+            case "DAY":
+                delta = delta.days
         print("Delta is", delta)
         for account_ in am.objects.all():
             account = src.SingleDO.DO().get(account_.id, "Account")
-            for i in range(delta):
-                account.update()
+            account.update(delta)
             src.SingleDO.DO().done_with(account_.id, "Account")
         diary.value = datetime.now()
         diary.save()
