@@ -53,7 +53,7 @@ class DebitPlan(Plan):
         self.transfer_limit = transfer_limit
         self.decreased_transfer_limit = decreased_transfer_limit
         if ident is None:
-            from src.operators.dataoperator import DataOperator
+            from src.operators.dataoperator import DataOperator, SingleDO
             self.id = SingleDO.DO().put(self, False, bank)
 
             src.SingleDO.DO().done_with(self.id, "Plan")
@@ -138,7 +138,7 @@ class DepositPlan(Plan):
         self.__transfer_limit = transfer_limit
         self.__decreased_transfer_limit = decreased_transfer_limit
         if ident is None:
-            from src.operators.dataoperator import DataOperator
+            from src.operators.dataoperator import DataOperator, SingleDO
             self.id = SingleDO.DO().put(self, False, bank)
 
             src.SingleDO.DO().done_with(self.id, "Plan")
@@ -225,7 +225,7 @@ class CreditPlan(Plan):
         self.__transfer_limit = transfer_limit
         self.__decreased_transfer_limit = decreased_transfer_limit
         if ident is None:
-            from src.operators.dataoperator import DataOperator
+            from src.operators.dataoperator import DataOperator, SingleDO
             self.id = SingleDO.DO().put(self, False, bank)
 
             src.SingleDO.DO().done_with(self.id, "Plan")

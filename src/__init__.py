@@ -25,14 +25,13 @@ from src.banking.crosspayment import get_cpf
 from src.users.person import Person
 from src.admin.admin import Admin, SingleAdmin
 
-from src.operators.timekeeper import TimeKeeper
+from src.operators.timekeeper import TimeKeeper, SingleTK
 from src.operators.dataoperator import DataOperator, SingleDO
+from src.operators.adaptors import Adaptor, SingleAdaptor
 
 from src.miptpaydj.mainapp.models import BankModel, PersonModel, ClientModel, PlanCategoryModel, PlanModel, AccountModel, TransactionModel, DiaryModel
 
 from django.contrib.auth.models import User
-
-from src.operators.adaptors import Adaptor
 
 print("Assume, Adapter is imported.\n", Adaptor)
 
@@ -51,13 +50,13 @@ __all__ = ['available_from',
            'Bank',
            'CrossPaymentSystem', 'system',
            'get_cpf',
-           'TimeKeeper',
+           'TimeKeeper', 'SingleTK',
            'DataOperator', 'SingleDO',
+           'Adaptor', 'SingleAdaptor',
            'Person',
            'Admin', 'SingleAdmin',
            'BankModel', 'PersonModel', 'ClientModel', 'PlanCategoryModel', 'PlanModel', 'AccountModel', 'TransactionModel', 'DiaryModel',
            'User',
-           'Adaptor',
            'apps',
            'views',
            ]

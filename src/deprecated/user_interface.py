@@ -250,7 +250,7 @@ class UserInterface:  # TODO: Make singleton.
         elif answer == 5:
             self.operations()
         elif answer == 6:
-            src.TimeKeeper().increase()
+            src.SingleTK.timekeeper().increase()
             print(src.DataOperator().account_info())
         elif answer == 7:
             exit(0)

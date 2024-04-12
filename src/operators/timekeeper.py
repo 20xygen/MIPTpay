@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from datetime import datetime
 import src
 
@@ -7,7 +7,8 @@ from dateutil import parser
 current_time: int = 0
 update_queue: List[int] = []
 
-class TimeKeeper:  # TODO: make singleton.
+
+class TimeKeeper:
     """ A class that counts the days and
     catalyzes the updating of accounts according to their tariffs. """
 
@@ -48,3 +49,19 @@ class TimeKeeper:  # TODO: make singleton.
             src.SingleDO.DO().done_with(account_.id, "Account")
         diary.value = datetime.now()
         diary.save()
+
+
+class SingleTK:
+    """Singleton wrapper for TimeKeeper class"""
+    __single: int = 0
+    __timekeeper: Optional[TimeKeeper] = None
+
+    def __init__(self):
+        pass
+
+    @staticmethod
+    def timekeeper() -> TimeKeeper:
+        if SingleTK.__single == 0:
+            SingleTK.__timekeeper = TimeKeeper()
+            SingleTK.__single = 1
+        return SingleTK.__timekeeper

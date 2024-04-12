@@ -149,7 +149,7 @@ class DebitAccount(Account):
         else:
             self.plan = plan
             self.id = src.SingleDO.DO().put(self, False, bank)
-            src.TimeKeeper().add(self.id)
+            src.SingleTK.timekeeper().add(self.id)
             src.SingleDO.DO().done_with(self.id, "Account")
 
     def put_offer(self, amount: float) -> bool:
@@ -225,12 +225,14 @@ class DepositAccount(Account):
             self.plan = plan
             self.freeze_date = encode(datetime.now())
             self.id = src.SingleDO.DO().put(self, False, bank)
-            src.TimeKeeper().add(self.id)
+            src.SingleTK.timekeeper().add(self.id)
             src.SingleDO.DO().done_with(self.id, "Account")
 
     def update(self):
         src.available_from(cf(), "TimeKeeper")
         plan_obj = src.SingleDO.DO().get(self.__plan, "Plan")
+        if plan_obj is None:
+            return
         modifier = 1 + plan_obj.commission
         client_obj = src.SingleDO.DO().get(self.owner, "Client")
         if client_obj is None:
@@ -288,7 +290,7 @@ class CreditAccount(Account):
         else:
             self.plan = plan
             self.id = src.SingleDO.DO().put(self, False, bank)
-            src.TimeKeeper().add(self.id)
+            src.SingleTK.timekeeper().add(self.id)
             src.SingleDO.DO().done_with(self.id, "Account")
 
     @property

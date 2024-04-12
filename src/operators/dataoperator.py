@@ -40,7 +40,7 @@ class DataOperator:
             if id not in container.keys():
                 container[id] = [None, 0]
             container[id][1] = 1
-            adapter = __import__("src.operators.adaptors").Adaptor()
+            adapter = __import__("src.operators.adaptors").SingleAdaptor.adaptor()
             container[id][0] = adapter.multy_get(id, type)
             return container[id][0]
         else:
@@ -57,7 +57,7 @@ class DataOperator:
         global persons, persons_counter
         amount_in_use = 0 if done else 1
         print("Putting", type(obj), f"(available - {amount_in_use})", end='')
-        adapter = __import__("src.operators.adaptors").Adaptor()
+        adapter = __import__("src.operators.adaptors").SingleAdaptor.adaptor()
         if isinstance(obj, src.Client):
             bank = src.BankModel.objects.get(id=args[0])
             person = src.PersonModel.objects.get(id=args[1])
