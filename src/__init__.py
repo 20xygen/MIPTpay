@@ -4,6 +4,7 @@ SETUP_MODE = False
 # DAY for days, HOUR for hours, MINUTE for minutes, SECOND for seconds
 TIME = "HOUR"
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'src.miptpaydj.miptpaydj.settings')
+#django.setup()
 
 if SETUP_MODE:
     django.setup()
