@@ -76,3 +76,5 @@ python3 manage.py runserver
 ```cmd
 python manage.py createsuperuser 
 ```
+
+По вопросам запуска сервера можно обращаться в любое время: [Денис](https://t.me/TWNTxygen)
