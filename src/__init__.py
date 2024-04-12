@@ -2,7 +2,7 @@ import os
 import django
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'src.miptpaydj.miptpaydj.settings')
-# django.setup()
+#django.setup()
 
 from src.tools.accesstools import available_from
 

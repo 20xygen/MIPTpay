@@ -11,5 +11,8 @@ urlpatterns = [
     path('transactions/', views.transactions, name='transactions'),
     path('profile/', views.profile, name='profile'),
     path('register/', views.signup_view, name='register'),
-    path('home/', views.home, name='home')
+    path('home/', views.home, name='home'),
+    path('put_into_account/', views.put_into_account, name='put_into_account'),
+    path('get_from_account/', views.get_from_account, name='get_from_account'),
+    path('transfer/', views.transfer, name='transfer')
 ]
