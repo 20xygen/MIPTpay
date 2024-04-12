@@ -21,7 +21,7 @@ class Transaction:
             self.__status = status
         else:
             self.__status = 0
-            self.__id = src.DataOperator().put(self, False) # Transaction closes later
+            self.__id = src.SingleDO.DO().put(self, False) # Transaction closes later
 
 
     @property

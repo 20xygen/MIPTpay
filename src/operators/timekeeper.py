@@ -20,8 +20,8 @@ class TimeKeeper:  # TODO: make singleton.
 
     def increase(self):
         for account in update_queue:
-            src.DataOperator().get(account, "Account").update()
-            src.DataOperator().done_with(account, "Account")
+            src.SingleDO.DO().get(account, "Account").update()
+            src.SingleDO.DO().done_with(account, "Account")
         global current_time
         current_time += 1
 
@@ -42,9 +42,9 @@ class TimeKeeper:  # TODO: make singleton.
         delta = delta.days * 24 + delta.seconds // 3600
         print("Delta is", delta)
         for account_ in am.objects.all():
-            account = src.DataOperator().get(account_.id, "Account")
+            account = src.SingleDO.DO().get(account_.id, "Account")
             for i in range(delta):
                 account.update()
-            src.DataOperator().done_with(account_.id, "Account")
+            src.SingleDO.DO().done_with(account_.id, "Account")
         diary.value = datetime.now()
         diary.save()

@@ -23,10 +23,10 @@ from src.banking.crosspaymentsystem import CrossPaymentSystem, system
 from src.banking.crosspayment import get_cpf
 
 from src.users.person import Person
-from src.admin.admin import Admin
+from src.admin.admin import Admin, SingleAdmin
 
 from src.operators.timekeeper import TimeKeeper
-from src.operators.dataoperator import DataOperator
+from src.operators.dataoperator import DataOperator, SingleDO
 
 from src.miptpaydj.mainapp.models import BankModel, PersonModel, ClientModel, PlanCategoryModel, PlanModel, AccountModel, TransactionModel, DiaryModel
 
@@ -52,9 +52,9 @@ __all__ = ['available_from',
            'CrossPaymentSystem', 'system',
            'get_cpf',
            'TimeKeeper',
-           'DataOperator',
+           'DataOperator', 'SingleDO',
            'Person',
-           'Admin',
+           'Admin', 'SingleAdmin',
            'BankModel', 'PersonModel', 'ClientModel', 'PlanCategoryModel', 'PlanModel', 'AccountModel', 'TransactionModel', 'DiaryModel',
            'User',
            'Adaptor',

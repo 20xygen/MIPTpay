@@ -258,7 +258,7 @@ class DataOperator:
         print("\n")
 
 
-class SingleDataOperator:
+class SingleDO:
     """Singleton wrapper for DataOperator class"""
     __single: int = 0
     __dataoperator: Optional[DataOperator] = None
@@ -266,12 +266,9 @@ class SingleDataOperator:
     def __init__(self):
         pass
 
-    def get(self) -> DataOperator:
-        if SingleDataOperator.__single == 0:
-            SingleDataOperator.__dataoperator = DataOperator()
-            SingleDataOperator.__single = 1
-        return SingleDataOperator.__dataoperator
-
-    @property
-    def dataoperator(self) -> DataOperator:
-        return self.get()
+    @staticmethod
+    def DO() -> DataOperator:
+        if SingleDO.__single == 0:
+            SingleDO.__dataoperator = DataOperator()
+            SingleDO.__single = 1
+        return SingleDO.__dataoperator

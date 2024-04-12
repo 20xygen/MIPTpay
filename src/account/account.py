@@ -114,14 +114,14 @@ class Account:
     def info(self) -> str:
         src.available_from(cf(), "Bank", "DataOperator")
         st = str(self.id) + ("(open)" if self.opened else "(closed)")
-        owner_obj = src.DataOperator().get(self.owner, "Client")
+        owner_obj = src.SingleDO.DO().get(self.owner, "Client")
         ret = "Error in account::info()"
         if owner_obj is not None:
             ret = f"""{st}
             Owner: {owner_obj.name} {owner_obj.surname}
             {("Precarious" if owner_obj.precarious else "Not precarious") + f": {owner_obj.address} {owner_obj.passport}"}
             {str(self.money)}"""
-        src.DataOperator().done_with(owner_obj.id, "Client")
+        src.SingleDO.DO().done_with(owner_obj.id, "Client")
         return ret
 
 class DebitAccount(Account):
@@ -148,14 +148,14 @@ class DebitAccount(Account):
             self.plan = plan
         else:
             self.plan = plan
-            self.id = src.DataOperator().put(self, False, bank)
+            self.id = src.SingleDO.DO().put(self, False, bank)
             src.TimeKeeper().add(self.id)
-            src.DataOperator().done_with(self.id, "Account")
+            src.SingleDO.DO().done_with(self.id, "Account")
 
     def put_offer(self, amount: float) -> bool:
         src.available_from(cf(), "Bank")
-        plan_obj = src.DataOperator().get(self.plan, "Plan")
-        client_obj = src.DataOperator().get(self.owner, "Client")
+        plan_obj = src.SingleDO.DO().get(self.plan, "Plan")
+        client_obj = src.SingleDO.DO().get(self.owner, "Client")
         ret = False
         if plan_obj is not None and client_obj is not None:
             lim = plan_obj.transfer_limit if not client_obj.precarious else plan_obj.decreased_transfer_limit
@@ -163,14 +163,14 @@ class DebitAccount(Account):
                 ret = True
             else:
                 ret = False
-        src.DataOperator().done_with(self.plan, "Plan")
-        src.DataOperator().done_with(self.owner, "Client")
+        src.SingleDO.DO().done_with(self.plan, "Plan")
+        src.SingleDO.DO().done_with(self.owner, "Client")
         return ret
 
     def get_offer(self, amount: float) -> bool:
         src.available_from(cf(), "Bank")
-        plan_obj = src.DataOperator().get(self.plan, "Plan")
-        client_obj = src.DataOperator().get(self.owner, "Client")
+        plan_obj = src.SingleDO.DO().get(self.plan, "Plan")
+        client_obj = src.SingleDO.DO().get(self.owner, "Client")
         ret = False
         if plan_obj is not None and client_obj is not None:
             lim = plan_obj.transfer_limit if not client_obj.precarious else plan_obj.decreased_transfer_limit
@@ -178,8 +178,8 @@ class DebitAccount(Account):
                 ret = True
             else:
                 ret = False
-        src.DataOperator().done_with(self.plan, "Plan")
-        src.DataOperator().done_with(self.owner, "Client")
+        src.SingleDO.DO().done_with(self.plan, "Plan")
+        src.SingleDO.DO().done_with(self.owner, "Client")
         return ret
 
     def update(self):
@@ -224,50 +224,50 @@ class DepositAccount(Account):
         else:
             self.plan = plan
             self.freeze_date = encode(datetime.now())
-            self.id = src.DataOperator().put(self, False, bank)
+            self.id = src.SingleDO.DO().put(self, False, bank)
             src.TimeKeeper().add(self.id)
-            src.DataOperator().done_with(self.id, "Account")
+            src.SingleDO.DO().done_with(self.id, "Account")
 
     def update(self):
         src.available_from(cf(), "TimeKeeper")
-        plan_obj = src.DataOperator().get(self.__plan, "Plan")
+        plan_obj = src.SingleDO.DO().get(self.__plan, "Plan")
         modifier = 1 + plan_obj.commission
-        client_obj = src.DataOperator().get(self.owner, "Client")
+        client_obj = src.SingleDO.DO().get(self.owner, "Client")
         if client_obj is None:
-            src.DataOperator().done_with(self.plan, "Plan")
-            src.DataOperator().done_with(self.owner, "Client")
+            src.SingleDO.DO().done_with(self.plan, "Plan")
+            src.SingleDO.DO().done_with(self.owner, "Client")
             return
         if client_obj.precarious:
             modifier += plan_obj.increased_commission
         self.money *= modifier
-        src.DataOperator().done_with(self.plan, "Plan")
-        src.DataOperator().done_with(self.owner, "Client")
+        src.SingleDO.DO().done_with(self.plan, "Plan")
+        src.SingleDO.DO().done_with(self.owner, "Client")
 
     def put_offer(self, amount: float) -> bool:
         src.available_from(cf(), "Bank")
-        plan_obj = src.DataOperator().get(self.plan, "Plan")
-        client_obj = src.DataOperator().get(self.owner, "Client")
+        plan_obj = src.SingleDO.DO().get(self.plan, "Plan")
+        client_obj = src.SingleDO.DO().get(self.owner, "Client")
         ret = False
         if plan_obj is not None and client_obj is not None:
             lim = plan_obj.transfer_limit if not client_obj.precarious else plan_obj.decreased_transfer_limit
             if amount > 0 and self.transfer + amount <= lim:
                 ret = True
-        src.DataOperator().done_with(self.plan, "Plan")
-        src.DataOperator().done_with(self.owner, "Client")
+        src.SingleDO.DO().done_with(self.plan, "Plan")
+        src.SingleDO.DO().done_with(self.owner, "Client")
         return ret
 
     def get_offer(self, amount: float) -> bool:
         src.available_from(cf(), "Bank")
-        plan_obj = src.DataOperator().get(self.plan, "Plan")
-        client_obj = src.DataOperator().get(self.owner, "Client")
+        plan_obj = src.SingleDO.DO().get(self.plan, "Plan")
+        client_obj = src.SingleDO.DO().get(self.owner, "Client")
         ret = False
         if plan_obj is not None and client_obj is not None:
             lim = plan_obj.transfer_limit if not client_obj.precarious else plan_obj.decreased_transfer_limit
-            per = plan_obj.period if not src.DataOperator().get(self.owner, "Client").precarious else plan_obj.decreased_period
+            per = plan_obj.period if not src.SingleDO.DO().get(self.owner, "Client").precarious else plan_obj.decreased_period
             if 0 < amount <= self.money and (datetime.now() - decode(self.__freeze_date)).days - per >= 0 and self.transfer + amount <= lim:
                 ret = True
-        src.DataOperator().done_with(self.plan, "Plan")
-        src.DataOperator().done_with(self.owner, "Client")
+        src.SingleDO.DO().done_with(self.plan, "Plan")
+        src.SingleDO.DO().done_with(self.owner, "Client")
         return ret
 
 class CreditAccount(Account):
@@ -279,7 +279,6 @@ class CreditAccount(Account):
 
     def __init__(self, ident: int = None, owner: int = None, opened: bool = None, money: float = None, transfer: float = None, plan: int = None, bank: int = None):
         super().__init__(ident, owner, bank)
-        # src.available_from(cf())
         if ident is not None:
             self.owner = owner
             self.opened = opened
@@ -288,9 +287,9 @@ class CreditAccount(Account):
             self.plan = plan
         else:
             self.plan = plan
-            self.id = src.DataOperator().put(self, False, bank)
+            self.id = src.SingleDO.DO().put(self, False, bank)
             src.TimeKeeper().add(self.id)
-            src.DataOperator().done_with(self.id, "Account")
+            src.SingleDO.DO().done_with(self.id, "Account")
 
     @property
     def plan(self):
@@ -305,42 +304,42 @@ class CreditAccount(Account):
         src.available_from(cf(), "Bank", "TimeKeeper")
         if self.money >= 0:
             return
-        plan_obj = src.DataOperator().get(self.__plan, "Plan")
-        client_obj = src.DataOperator().get(self.owner, "Client")
+        plan_obj = src.SingleDO.DO().get(self.__plan, "Plan")
+        client_obj = src.SingleDO.DO().get(self.owner, "Client")
         if plan_obj is None or client_obj is None:
-            src.DataOperator().done_with(self.plan, "Plan")
-            src.DataOperator().done_with(self.owner, "Client")
+            src.SingleDO.DO().done_with(self.plan, "Plan")
+            src.SingleDO.DO().done_with(self.owner, "Client")
             return
         modifier = 1 - plan_obj.commission
         if client_obj.precarious:
             modifier += plan_obj.increased_commission
         self.money *= modifier
-        src.DataOperator().done_with(self.plan, "Plan")
-        src.DataOperator().done_with(self.owner, "Client")
+        src.SingleDO.DO().done_with(self.plan, "Plan")
+        src.SingleDO.DO().done_with(self.owner, "Client")
 
     def get_offer(self, amount: float) -> bool:
         src.available_from(cf(), "Bank")
-        plan_obj = src.DataOperator().get(self.__plan, "Plan")
-        client_obj = src.DataOperator().get(self.owner, "Client")
+        plan_obj = src.SingleDO.DO().get(self.__plan, "Plan")
+        client_obj = src.SingleDO.DO().get(self.owner, "Client")
         ret = False
         if plan_obj is not None and client_obj is not None:
             tra = plan_obj.transfer_limit if not client_obj.precarious else plan_obj.decreased_transfer_limit
             lim = plan_obj.lower_limit if not client_obj.precarious else plan_obj.decreased_lower_limit
             if self.money - amount >= lim and amount > 0 and self.transfer + amount <= tra:
                 ret= True
-        src.DataOperator().done_with(self.plan, "Plan")
-        src.DataOperator().done_with(self.owner, "Client")
+        src.SingleDO.DO().done_with(self.plan, "Plan")
+        src.SingleDO.DO().done_with(self.owner, "Client")
         return ret
 
     def put_offer(self, amount: float) -> bool:
         src.available_from(cf(), "Bank")
-        plan_obj = src.DataOperator().get(self.plan, "Plan")
-        client_obj = src.DataOperator().get(self.owner, "Client")
+        plan_obj = src.SingleDO.DO().get(self.plan, "Plan")
+        client_obj = src.SingleDO.DO().get(self.owner, "Client")
         ret = False
         if plan_obj is not None and client_obj is not None:
             lim = plan_obj.transfer_limit if not client_obj.precarious else plan_obj.decreased_transfer_limit
             if amount > 0 and self.transfer + amount <= lim:
                 ret = True
-        src.DataOperator().done_with(self.plan, "Plan")
-        src.DataOperator().done_with(self.owner, "Client")
+        src.SingleDO.DO().done_with(self.plan, "Plan")
+        src.SingleDO.DO().done_with(self.owner, "Client")
         return ret

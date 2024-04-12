@@ -15,10 +15,14 @@ def banks(request):
 
 def accounts(request):
     src.TimeKeeper().update()
-    # bank = src.DataOperator().get(1, "Bank")
-    # bank.put(3, 100)
-    # bank.get(13, 1000)
-    # src.DataOperator().done_with(1, "Bank")
+
+    bank = src.SingleDO.DO().get(1, "Bank")
+    bank.put(3, 100)
+    src.SingleDO.DO().done_with(1, "Bank")
+
+    bank = src.SingleDO.DO().get(2, "Bank")
+    bank.get(6, 1000)
+    src.SingleDO.DO().done_with(2, "Bank")
 
     accounts = AccountModel.objects.all()
     return render(request, 'accounts.html', {'accounts': accounts})
@@ -38,9 +42,9 @@ def persons(request):
 
 def clients(request):
     src.TimeKeeper().update()
-    # bank = src.DataOperator().get(3, "Bank")
+    # bank = src.SingleDO.DO().get(3, "Bank")
     # bank.update(2, "kalinin.mi@phystech.edu", "1000 000000")
-    # src.DataOperator().done_with(3, "Bank")
+    # src.SingleDO.DO().done_with(3, "Bank")
 
     clients = ClientModel.objects.all()
     return render(request, 'clients.html', {'clients': clients})

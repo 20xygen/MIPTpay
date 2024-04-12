@@ -26,7 +26,7 @@ class Client:
             self.__passport = passport if passport != "NO_VALUE" else None
             if passport == "NO_VALUE" or address == "NO_VALUE":
                 self.__precarious = True
-            self.__id = src.DataOperator().put(self, False, bank, person)
+            self.__id = src.SingleDO.DO().put(self, False, bank, person)
 
     @property
     def precarious(self):
