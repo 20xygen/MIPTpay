@@ -8,9 +8,6 @@ from src.miptpaydj.mainapp.models import BankModel, AccountModel, PlanModel, Per
 import src
 
 
-def material_login(request):
-    return render(request, 'material_login.html', {})
-
 def banks(request):
     src.SingleTK.timekeeper().update()
     banks = BankModel.objects.all()
