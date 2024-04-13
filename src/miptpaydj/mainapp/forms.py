@@ -8,17 +8,21 @@ class RegisterForm(UserCreationForm):
     surname = forms.CharField(max_length=100, help_text='Surname')
     address = forms.CharField(max_length=150, help_text='Address')
     passport = forms.IntegerField(help_text='Passport')
+
     class Meta(UserCreationForm.Meta):
         model = User
         fields = ('username', 'password1', 'password2', 'name', 'surname', 'address', 'passport')
 
+
 class PutForm(forms.Form):
     bank_id = forms.CharField(max_length=100, help_text='Bank ID')
     account_id = forms.CharField(max_length=100, help_text='Account ID')
-    sum = forms.CharField(max_length=150, help_text='Sum')
+    amount = forms.CharField(max_length=150, help_text='Amount')
+
 
 class TransferForm(forms.Form):
-    bank_id = forms.CharField(max_length=100, help_text='Bank ID')
-    account_id1 = forms.CharField(max_length=100, help_text='Account ID1')
-    account_id2 = forms.CharField(max_length=100, help_text='Account ID2')
-    sum = forms.CharField(max_length=150, help_text='Sum')
+    departure_bank = forms.CharField(max_length=100, help_text='Bank ID1')
+    departure_account = forms.CharField(max_length=100, help_text='Account ID1')
+    destination_bank = forms.CharField(max_length=100, help_text='Bank ID2')
+    destination_account = forms.CharField(max_length=100, help_text='Account ID2')
+    amount = forms.CharField(max_length=150, help_text='Amount')

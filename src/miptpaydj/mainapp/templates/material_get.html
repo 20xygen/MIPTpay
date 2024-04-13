@@ -13,26 +13,28 @@
 {% block enable9 %}{% endblock %}
 {% block content %}
 
-<form class="outer-container">
+<form class="outer-container" method="post">
+    {% csrf_token %}
     <div class="form-container">
         <div class="container-input">
             <label for="bank">Bank ID</label>
-            <input id="bank" type="text" placeholder="1" />
+            <input type="text" id="bank" name="bank_id" placeholder="1" />
         </div>
         <div class="container-input">
             <label for="account">Account ID</label>
-            <input id="account" type="text" placeholder="1" />
+            <input type="text" id="account" name="account_id" placeholder="1" />
         </div>
     </div>
     <div class="form-container">
         <div class="container-input">
             <label for="amount">Amount of money</label>
-            <input id="amount" type="text" placeholder="1000" />
+            <input type="text" id="amount" name="amount" placeholder="1000" />
         </div>
         <button class="container-button" type="submit">
             Get money
         </button>
     </div>
+    {{ form.errors }}
 </form>
 
 {% endblock %}
