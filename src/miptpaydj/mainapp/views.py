@@ -17,13 +17,13 @@ def banks(request):
 def accounts(request):
     src.SingleTK.timekeeper().update()
 
-    bank = src.SingleDO.DO().get(1, "Bank")
-    bank.put(3, 100)
-    src.SingleDO.DO().done_with(1, "Bank")
-
-    bank = src.SingleDO.DO().get(2, "Bank")
-    bank.get(6, 1000)
-    src.SingleDO.DO().done_with(2, "Bank")
+    # bank = src.SingleDO.DO().get(1, "Bank")
+    # bank.put(3, 100)
+    # src.SingleDO.DO().done_with(1, "Bank")
+    #
+    # bank = src.SingleDO.DO().get(2, "Bank")
+    # bank.get(6, 1000)
+    # src.SingleDO.DO().done_with(2, "Bank")
 
     accounts = AccountModel.objects.all()
     return render(request, 'accounts.html', {'accounts': accounts})

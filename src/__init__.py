@@ -1,11 +1,18 @@
 import os
 import django
-SETUP_MODE = False
-# DAY for days, HOUR for hours, MINUTE for minutes, SECOND for seconds
-TIME = "HOUR"
+import toml
+
+import miptpay.tests.sampledata
+
+TIME: str
+with open("pyproject.toml", "r") as f:
+    data = toml.load(f)
+    print(data)
+    TIME = data["constant"]["time"]
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'src.miptpaydj.miptpaydj.settings')
 
-if SETUP_MODE:
+if miptpay.tests.sampledata.SETUP_MODE:
     django.setup()
 
 from src.miptpaydj.mainapp.models import BankModel, PersonModel, ClientModel, PlanCategoryModel, PlanModel, AccountModel, TransactionModel, DiaryModel
@@ -41,8 +48,6 @@ from src.operators.adaptors import Adaptor, SingleAdaptor
 
 
 from django.contrib.auth.models import User
-
-print("Assume, Adapter is imported.\n", Adaptor)
 
 __all__ = ['available_from',
            'PlanProperty', 'Commission', 'Period', 'LowerLimit', 'UpperLimit', 'TransferLimit',

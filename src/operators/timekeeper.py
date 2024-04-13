@@ -31,6 +31,7 @@ class TimeKeeper:
         return current_time
 
     def update(self):
+        print("\nUpdating accounts...\n")
         dm = __import__("src.miptpaydj.mainapp.models").DiaryModel
         am = __import__("src.miptpaydj.mainapp.models").AccountModel
         diary = dm.objects.get(parameter="Date")
