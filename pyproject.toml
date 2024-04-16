@@ -15,7 +15,10 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-
+django = "5.0.4"
+toml = "0.10.2"
+dateutils = "2.9.0.post0"
+datetime = "5.1"
 
 [project.urls]
 home = "http://127.0.0.1:8000/home/"
