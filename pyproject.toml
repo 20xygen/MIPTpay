@@ -39,3 +39,6 @@ time = "HOUR"
 [tool.poetry.scripts]
 setup = "miptpay.tests.sampledata:main"
 
+[pytest]
+pythonpath = "."
+
