@@ -21,7 +21,6 @@ poetry install
      Все необходимые модули подгрузятся в вашу среду.
 4) запуск сервера Django
 ```commandline
-export PYTHONPATH=$PYTHONPATH:~/path/to/your/directory
 python3 src/miptpaydj/manage.py makemigrations
 python3 src/miptpaydj/manage.py migrate
 poetry run setup
