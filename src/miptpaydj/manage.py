@@ -6,8 +6,6 @@ import sys
 
 def main():
     """Run administrative tasks."""
-    path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    os.environ.setdefault("PYTHONPATH", path + os.pathsep + os.environ.get('PYTHONPATH', ''))
     print(f"\nWith PYTHONPATH = {os.environ.get('PYTHONPATH')}\n")
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'miptpaydj.settings')
     try:

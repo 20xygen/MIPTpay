@@ -26,35 +26,9 @@
 ### How2
 
 Для запуска проекта необходимо склонировать этот репозиторий и установить соответствующие библиотеки.
-Примерный список команд для Windows:
-
-```commandline
-git init
-git clone https://gitlab.akhcheck.ru/denis.barilov/miptpay.git
-pip install django
-pip install python-dateutil
-$env:PYTHONPATH = ";C:\Users\<path to project folder>"
-```
-
-Иногда путь слетает (это можно понять по ошибке поиска пакета src), и его нужно прокладывать заново.
-
-```cmd
-cd miptpay\src\miptpaydj
-python manage.py migrate
-```
-
-Нужно перевести проект в режим заполнения базы данных тестовой информацией.
-Для этого открой-те [файл главного пакета](src/__init__.py) и поменяйте значение SETUP_MODE на True.
-
-```cmd
-python ..\..\tests\sampledata.py
-```
-
-После завершения работы скрипта можно перевести программу обратно в режим запуска сервера. Верните SETUP_MODE = False.
-
-```cmd
-python manage.py runserver    
-```
+Перед началом перейдите в новую пупку, в которой ходите собирать проект.\
+[How2 для Windows](docs/How2/Windows.md)\
+[How2 для Linux/macOS](docs/How2/Linux_macOS.md)
 
 ### Доступные страницы
 
