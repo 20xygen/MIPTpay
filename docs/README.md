@@ -1,5 +1,7 @@
 ### Паттерны
+
 Система реализована с использованием различных паттернов проектирования. В их числе:
+
 1.	[Builder](https://en.wikipedia.org/wiki/Builder_pattern) (При создании объекта клиента)
 2.	[Factory Method](https://en.wikipedia.org/wiki/Factory_method_pattern) (При создании объекта счета)
 3.	[Abstract Factory](https://en.wikipedia.org/wiki/Abstract_factory_pattern) (При создании объекта плана)
@@ -7,6 +9,7 @@
 5.	[Facade](https://en.wikipedia.org/wiki/Facade_pattern) (для упрощения взаимодействия между клиентом и банком)
 
 ### Реализация
+
 ![.](UML-diagram_Class_architecture.jpeg)
 _На диаграме отображены лишь основные классы_
 
@@ -23,3 +26,7 @@ _На диаграме отображены лишь основные класс
 - DO, Admin и Timekeeper переведены на singleton
 - Модели и соответствующие классы связаны [адаптером](../src/operators/adaptors.py)
 - [Timekeeper](../src/operators/timekeeper.py) переведен на реальные дату и время
+
+#### Настройка временных интервалов
+
+Предусмотрено несколько вариантов интервалов начисления процентов. Выбрать нужный режим можно в [toml файле](../pyproject.toml).
