@@ -72,15 +72,15 @@ def main():
     mikali.refresh_from_db()
     artudi.refresh_from_db()
 
-    denis = src.Person(ident=xygen.personmodel.id, name="Denis", surname="Barilov", address="barilov.di@phystech.edu", passport="1234 123456")
+    denis = src.Person(ident=xygen.personmodel.id, name="Denis", surname="Barilov", address="barilov.di@phystech.edu", passport="1234123456")
     src.SingleAdaptor.adaptor().fill_person(xygen.personmodel, denis)
     denis_model = xygen.personmodel
 
-    misha = src.Person(ident=mikali.personmodel.id, name="Mikhail", surname="Kalinin", address="kalinin.mi@phystech.edu", passport="1000 000000")
+    misha = src.Person(ident=mikali.personmodel.id, name="Mikhail", surname="Kalinin", address="kalinin.mi@phystech.edu", passport="1000000000")
     src.SingleAdaptor.adaptor().fill_person(mikali.personmodel, misha)
     misha_model = mikali.personmodel
 
-    artem = src.Person(ident=artudi.personmodel.id, name="Artem", surname="Udovenko", address="udovenko.ai@phystech.edu", passport="7777 777777")
+    artem = src.Person(ident=artudi.personmodel.id, name="Artem", surname="Udovenko", address="udovenko.ai@phystech.edu", passport="7777777777")
     src.SingleAdaptor.adaptor().fill_person(artudi.personmodel, artem)
     artem_model = artudi.personmodel
 
