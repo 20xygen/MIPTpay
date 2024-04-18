@@ -136,6 +136,35 @@ def main():
 
     artem_sber_credit_id = sber.open_account(artem_sber_id, sber_credit.id)
 
+    # Fill money
+
+    sber.put(denis_sber_debit_id, 8000)
+    sber.put(denis_sber_deposit_id, 9500)
+    sber.put(denis_sber_credit_id, 10000)
+
+    sber.put(misha_sber_debit_id, 5000)
+    sber.put(misha_sber_deposit_id, 6500)
+
+    sber.put(artem_sber_debit_id, 7000)
+    sber.put(artem_sber_deposit_id, 7500)
+    sber.put(artem_sber_credit_id, 7000)
+
+    tink.put(denis_tink_debit_id, 4000)
+    tink.put(denis_tink_deposit_id, 3500)
+    tink.put(denis_tink_credit_id, 5000)
+
+    tink.put(misha_tink_debit_id, 5500)
+    tink.put(misha_tink_credit_id, 6000)
+
+    # Banks saving
+
+    src.SingleDO.DO().done_with(sber.id, "Bank")
+    src.SingleDO.DO().done_with(tink.id, "Bank")
+
+    src.SingleDO.DO().print_online()
+
+
+
 
 if __name__ == "__main__":
     main()

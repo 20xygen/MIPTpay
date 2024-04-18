@@ -197,7 +197,7 @@ class DataOperator:
                     model.save()
             return True
 
-    def print_online(self):
+    def print_online(self, undefined: bool = False):
         print("Online objects:\n")
         for ident, bank in banks.items():
             if bank[1] > 0:
@@ -236,26 +236,27 @@ class DataOperator:
         for ident, transaction in transactions.items():
             if transaction[1] == 0:
                 print('\t', "Transaction", ident, transaction[1])
-        print("\nWTF objects:\n")
-        for ident, bank in banks.items():
-            if bank[1] < 0:
-                print('\t', "Bank", ident, bank[1], bank[0].name)
-        for ident, plan in plans.items():
-            if plan[1] < 0:
-                print('\t', "Plan", ident, plan[1])
-        for ident, client in clients.items():
-            if client[1] < 0:
-                print('\t', "Client", ident, client[1], client[0].name)
-        for ident, account in accounts.items():
-            if account[1] < 0:
-                print('\t', "Account", ident, account[1])
-        for ident, person in persons.items():
-            if person[1] < 0:
-                print('\t', "Person", ident, person[1], person[0].name)
-        for ident, transaction in transactions.items():
-            if transaction[1] < 0:
-                print('\t', "Transaction", ident, transaction[1])
-        print("\n")
+        if undefined:
+            print("\nWTF objects:\n")
+            for ident, bank in banks.items():
+                if bank[1] < 0:
+                    print('\t', "Bank", ident, bank[1], bank[0].name)
+            for ident, plan in plans.items():
+                if plan[1] < 0:
+                    print('\t', "Plan", ident, plan[1])
+            for ident, client in clients.items():
+                if client[1] < 0:
+                    print('\t', "Client", ident, client[1], client[0].name)
+            for ident, account in accounts.items():
+                if account[1] < 0:
+                    print('\t', "Account", ident, account[1])
+            for ident, person in persons.items():
+                if person[1] < 0:
+                    print('\t', "Person", ident, person[1], person[0].name)
+            for ident, transaction in transactions.items():
+                if transaction[1] < 0:
+                    print('\t', "Transaction", ident, transaction[1])
+            print("\n")
 
 
 class SingleDO:
