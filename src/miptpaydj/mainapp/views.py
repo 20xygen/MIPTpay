@@ -17,14 +17,6 @@ def banks(request):
 def accounts(request):
     src.SingleTK.timekeeper().update()
 
-    # bank = src.SingleDO.DO().get(1, "Bank")
-    # bank.put(3, 100)
-    # src.SingleDO.DO().done_with(1, "Bank")
-    #
-    # bank = src.SingleDO.DO().get(2, "Bank")
-    # bank.get(6, 1000)
-    # src.SingleDO.DO().done_with(2, "Bank")
-
     accounts = AccountModel.objects.all()
     return render(request, 'accounts.html', {'accounts': accounts})
 
@@ -43,9 +35,6 @@ def persons(request):
 
 def clients(request):
     src.SingleTK.timekeeper().update()
-    # bank = src.SingleDO.DO().get(3, "Bank")
-    # bank.update(2, "kalinin.mi@phystech.edu", "1000 000000")
-    # src.SingleDO.DO().done_with(3, "Bank")
 
     clients = ClientModel.objects.all()
     return render(request, 'clients.html', {'clients': clients})
@@ -112,7 +101,14 @@ def transfer(request):
         destination_bank = int(form.cleaned_data.get("destination_bank"))
         destination_account = int(form.cleaned_data.get("destination_account"))
         amount = int(form.cleaned_data.get("amount"))
-        # TODO: LOGIC HERE
+
+        if departure_bank == destination_bank:
+            bank = src.SingleDO.DO().get(departure_bank, "Bank")
+            bank.transfer(departure_account, destination_account, amount)
+            src.SingleDO.DO().done_with(departure_bank, "Bank")
+        else:
+            src.SingleSPF.CPF().transfer(departure_bank, departure_account, destination_bank, destination_account, amount)
+
         return redirect('home')
     else:
         form = TransferForm(request.POST)

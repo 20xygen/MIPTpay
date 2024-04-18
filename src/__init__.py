@@ -37,7 +37,7 @@ from src.transaction.transaction import Transaction
 
 from src.banking.bank import Bank
 from src.banking.crosspaymentsystem import CrossPaymentSystem, system
-from src.banking.crosspayment import get_cpf
+from src.banking.crosspayment import SingleSPF
 
 from src.users.person import Person
 from src.admin.admin import Admin, SingleAdmin

@@ -156,8 +156,8 @@ class Bank:
         if dep is None:
             src.SingleDO.DO().done_with(account, "Account")
             return None
-        src.SingleDO.DO().done_with(account, "Account")
         dep.get(amount)
+        src.SingleDO.DO().done_with(account, "Account")
 
     def do_put(self, account: int, amount: float):
         src.available_from(cf(), "CrossPaymentSystem")
@@ -165,9 +165,9 @@ class Bank:
         if dep is None:
             src.SingleDO.DO().done_with(account, "Account")
             return None
-        # print(dep.money)
+        print(dep.money)
         dep.put(amount)
-        # print(dep.money)
+        print(dep.money)
         src.SingleDO.DO().done_with(account, "Account")
 
     def get(self, account: int, amount: float) -> bool:
