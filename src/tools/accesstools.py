@@ -1,7 +1,7 @@
 similar_names = [["Account", "DebitAccount", "DepositAccount", "CreditAccount"],
                  ["Plan", "DebitPlan", "DepositPlan", "CreditPlan"]]
 
-gods = ["DataOperator", "Admin"]
+gods = ["DataOperator", "Admin", "Adaptor"]
 
 
 """ A module that represents a tool for creating strict privacy of certain methods. """

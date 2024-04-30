@@ -44,7 +44,7 @@ class UserInterface:  # TODO: Make singleton.
         elif answer == 2:
             login = str(input("Введите ваш логин:"))
             password = str(input("Введите ваш пароль:"))
-            self.__user.login(login, password)
+            self.__user.log_in(login, password)
             self.main_menu()
 
     def open_plan(self):
@@ -250,7 +250,7 @@ class UserInterface:  # TODO: Make singleton.
         elif answer == 5:
             self.operations()
         elif answer == 6:
-            src.TimeKeeper().increase()
+            src.SingleTK.timekeeper().increase()
             print(src.DataOperator().account_info())
         elif answer == 7:
             exit(0)
