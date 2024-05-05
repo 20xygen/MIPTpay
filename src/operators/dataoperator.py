@@ -216,14 +216,16 @@ class DataOperator:
                 elif type == "Conversation":
                     model = models.ConversationModel.objects.get(id=id)
                     model.status = container[id][0].status
-                    # assume, senders list does not change
+                    model.senders.clear()
+                    for sender in container[id][0].senders:
+                        model.senders.add(models.PersonModel.objects.get(id=sender))
                     model.save()
                 elif type == "Message":
                     model = models.MessageModel.objects.get(id=id)
                     model.text = container[id][0].text
                     model.status = container[id][0].status
-                    # assume, sender does not change
-                    # assume, conversation does not change
+                    model.conversation = models.ConversationModel.objects.get(id=container[id][0].conversation)
+                    model.sender = models.PersonModel.objects.get(id=container[id][0].sender)
                     model.save()
             return True
 

@@ -9,10 +9,11 @@ class Message:
     __status: bool
 
 
-    def __init__(self, ident: int = None, conversation: int = None, sender: int = None, text: str = None, status: bool = None):
+    def __init__(self, ident: int = None, conversation: int = None, sender: int = None, text: str = '', status: bool = None):
         self.__conversation = conversation
         self.__sender = sender
         self.__messages = []
+        self.__text = text
         if ident is not None:
             self.__id = ident
             self.__status = status

@@ -43,6 +43,7 @@ from src.users.person import Person
 from src.admin.admin import Admin, SingleAdmin
 
 from src.messenger.message import Message
+from src.messenger.messagebuilder import MessageBuilder, SingleMB
 from src.messenger.conversation import Conversation
 
 from src.operators.timekeeper import TimeKeeper, SingleTK
@@ -68,6 +69,9 @@ __all__ = ['available_from',
            'Adaptor', 'SingleAdaptor',
            'Person',
            'Admin', 'SingleAdmin',
+           'Message',
+           'MessageBuilder', 'SingleMB',
+           'Conversation',
            'BankModel', 'PersonModel', 'ConversationModel', 'MessageModel', 'ClientModel', 'PlanCategoryModel', 'PlanModel', 'AccountModel', 'TransactionModel', 'DiaryModel',
            'User',
            'apps',

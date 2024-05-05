@@ -18,6 +18,8 @@ def main():
     src.PlanModel.objects.all().delete()
     src.AccountModel.objects.all().delete()
     src.TransactionModel.objects.all().delete()
+    src.ConversationModel.objects.all().delete()
+    src.MessageModel.objects.all().delete()
 
     # Date
 
@@ -155,6 +157,39 @@ def main():
 
     tink.put(misha_tink_debit_id, 5500)
     tink.put(misha_tink_credit_id, 6000)
+
+    # Conversations
+
+    denis_misha = src.Conversation(None, [denis.id, misha.id])
+
+    denis_artem = src.Conversation(None, [denis.id, artem.id])
+
+    # Messages
+
+    src.SingleMB.MB().reset(denis_misha.id, denis.id)
+    src.SingleMB.MB().fill("Hello there")
+    message1 = src.SingleMB.MB().get()
+    src.SingleDO.DO().done_with(message1.id, "Message")
+
+    src.SingleMB.MB().reset(denis_misha.id, misha.id)
+    src.SingleMB.MB().fill("Hi, Denis")
+    message2 = src.SingleMB.MB().get()
+    src.SingleDO.DO().done_with(message2.id, "Message")
+
+    src.SingleMB.MB().reset(denis_misha.id, denis.id)
+    src.SingleMB.MB().fill("Lol, it works!")
+    message3 = src.SingleMB.MB().get()
+    src.SingleDO.DO().done_with(message3.id, "Message")
+
+    src.SingleMB.MB().reset(denis_misha.id, artem.id)
+    src.SingleMB.MB().fill("Obed?")
+    message4 = src.SingleMB.MB().get()
+    src.SingleDO.DO().done_with(message4.id, "Message")
+
+    src.SingleMB.MB().reset(denis_misha.id, denis.id)
+    src.SingleMB.MB().fill("Ushe bil")
+    message5 = src.SingleMB.MB().get()
+    src.SingleDO.DO().done_with(message5.id, "Message")
 
     # Banks saving
 

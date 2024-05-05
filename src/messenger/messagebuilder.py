@@ -17,7 +17,7 @@ class MessageBuilder:
         return buff
 
 
-class SingleMessageBuilder:
+class SingleMB:
     """Singleton wrapper for MessageBuilder class"""
     __builder: Optional[MessageBuilder] = None
 
@@ -26,6 +26,6 @@ class SingleMessageBuilder:
 
     @classmethod
     def MB(cls) -> MessageBuilder:
-        if SingleMessageBuilder.__builder is None:
-            SingleMessageBuilder.__builder = MessageBuilder()
-        return SingleMessageBuilder.__builder
+        if SingleMB.__builder is None:
+            SingleMB.__builder = MessageBuilder()
+        return SingleMB.__builder

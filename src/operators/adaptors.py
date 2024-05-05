@@ -1,6 +1,6 @@
 import src
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 
 
 class Adaptor:
@@ -20,15 +20,18 @@ class Adaptor:
         model.address = person.address
         model.passport = int(person.passport.replace(" ", ""))
 
-    def create_conversation(self, conversation: src.Conversation, sender1: src.PersonModel, sender2: src.PersonModel):
+    def create_conversation(self, conversation: src.Conversation):
         model = src.ConversationModel(status=conversation.status)
-        model.senders.add(sender1)
-        model.senders.add(sender2)
+        model.save()
+        model.senders.add(src.PersonModel.objects.get(id=conversation.senders[0]))
+        model.senders.add(src.PersonModel.objects.get(id=conversation.senders[1]))
         model.save()
         return model
 
-    def create_message(self, message: src.Message, conversation: src.ConversationModel, sender: src.PersonModel):
-        model = src.MessageModel(conversation=conversation, sender=sender, text=message.text, status=message.status)
+    def create_message(self, message: src.Message):
+        model = src.MessageModel(text=message.text, status=message.status)
+        model.conversation = src.ConversationModel.objects.get(id=message.conversation)
+        model.sender = src.PersonModel.objects.get(id=message.sender)
         model.save()
         return model
 

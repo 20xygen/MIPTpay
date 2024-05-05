@@ -48,7 +48,7 @@ class ConversationModel(models.Model):
         verbose_name_plural = 'Диалоги'
 
     def __str__(self):
-        return 'Диалог между' + str(self.sender1) + ' и ' + str(self.sender2)
+        return 'Некий диалог'
 
 
 class MessageModel(models.Model):
