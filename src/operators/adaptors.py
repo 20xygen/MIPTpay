@@ -20,6 +20,18 @@ class Adaptor:
         model.address = person.address
         model.passport = int(person.passport.replace(" ", ""))
 
+    def create_conversation(self, conversation: src.Conversation, sender1: src.PersonModel, sender2: src.PersonModel):
+        model = src.ConversationModel(status=conversation.status)
+        model.senders.add(sender1)
+        model.senders.add(sender2)
+        model.save()
+        return model
+
+    def create_message(self, message: src.Message, conversation: src.ConversationModel, sender: src.PersonModel):
+        model = src.MessageModel(conversation=conversation, sender=sender, text=message.text, status=message.status)
+        model.save()
+        return model
+
     def create_client(self, client: src.Client, bank, person):
         # print(bank.name)
         model = src.ClientModel(bank=bank, person=person, name=client.name, surname=client.surname, address=(client.address if client.address is not None else ""), passport=(int(client.passport) if client.passport is not None else 0), precarious=client.precarious)
@@ -117,12 +129,22 @@ class Adaptor:
 
     def get_transaction(self, ident: int):
         model = src.TransactionModel.objects.get(id=ident)
-        return src.Transaction(model.id, model.departure.id, model.destinations.id, model.amount, model.status)
+        return src.Transaction(model.id, model.departure.id, model.destination.id, model.amount, model.status)
 
     def get_person(self, ident: int):
         model = src.PersonModel.objects.get(id=ident)
         clients = [it.id for it in src.ClientModel.objects.filter(person=model)]
         return src.Person(model.id, model.name, model.surname, model.address, model.passport, clients)
+
+    def get_conversation(self, ident: int):
+        model = src.ConversationModel.objects.get(id=ident)
+        messages = [it.id for it in src.MessageModel.objects.filter(conversation=model)]
+        senders = [it.id for it in model.senders]
+        return src.Conversation(model.id, senders, messages, model.status)
+
+    def get_message(self, ident: int):
+        model = src.MessageModel.objects.get(id=ident)
+        return src.Message(model.id, model.conversation.id, model.sender.id, model.text, model.status)
 
     def multy_get(self, ident: int, cls: str):
         if cls == "Bank":

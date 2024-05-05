@@ -20,6 +20,10 @@ transactions_counter = 0
 persons: Dict[int, List[Union[src.Person, int]]] = {}
 persons_counter = 0
 
+conversations: Dict[int, List[Union[src.Conversation, int]]] = {}
+
+messages: Dict[int, List[Union[src.Message, int]]] = {}
+
 
 class DataOperator:
     """ The class of interaction of logic with the database.
@@ -32,7 +36,9 @@ class DataOperator:
             "Account": accounts,
             "Plan": plans,
             "Transaction": transactions,
-            "Person": persons
+            "Person": persons,
+            "Conversation": conversations,
+            "Message": messages,
         }
         container = type_to_container.get(type)
         if id not in container.keys() or container[id][1] == 0:
@@ -91,6 +97,16 @@ class DataOperator:
             return model.id
         if isinstance(obj, src.Person):
             raise MemoryError("Putting Person is deprecated")
+        if isinstance(obj, src.Conversation):
+            model = adapter.create_conversation(obj)
+            conversations[model.id] = [obj, amount_in_use]
+            print(f" (set id = {model.id})")
+            return model.id
+        if isinstance(obj, src.Message):
+            model = adapter.create_message(obj)
+            messages[model.id] = [obj, amount_in_use]
+            print(f" (set id = {model.id})")
+            return model.id
 
     def get_bank_by_name(self, name: str):
         for ident, bank in banks.items():
@@ -133,7 +149,9 @@ class DataOperator:
             "Account": accounts,
             "Plan": plans,
             "Transaction": transactions,
-            "Person": persons
+            "Person": persons,
+            "Conversation": conversations,
+            "Message": messages,
         }
         container = type_to_container.get(type, {})
         models = __import__("src.miptpaydj.mainapp.models")
@@ -195,7 +213,20 @@ class DataOperator:
                     model.address = container[id][0].address
                     model.passport = -1 if (container[id][0].name is None or container[id][0].name == "NO_VALUE") else int(container[id][0].name)
                     model.save()
+                elif type == "Conversation":
+                    model = models.ConversationModel.objects.get(id=id)
+                    model.status = container[id][0].status
+                    # assume, senders list does not change
+                    model.save()
+                elif type == "Message":
+                    model = models.MessageModel.objects.get(id=id)
+                    model.text = container[id][0].text
+                    model.status = container[id][0].status
+                    # assume, sender does not change
+                    # assume, conversation does not change
+                    model.save()
             return True
+
 
     def print_online(self, undefined: bool = False):
         print("Online objects:\n")
@@ -217,6 +248,12 @@ class DataOperator:
         for ident, transaction in transactions.items():
             if transaction[1] > 0:
                 print('\t', "Transaction", ident, transaction[1])
+        for ident, conversation in conversations.items():
+            if conversation[1] > 0:
+                print('\t', "Conversation", ident, conversation[1])
+        for ident, message in messages.items():
+            if message[1] > 0:
+                print('\t', "Conversation", ident, message[1])
         print("\nOffline objects:\n")
         for ident, bank in banks.items():
             if bank[1] == 0:
@@ -236,6 +273,12 @@ class DataOperator:
         for ident, transaction in transactions.items():
             if transaction[1] == 0:
                 print('\t', "Transaction", ident, transaction[1])
+        for ident, conversation in conversations.items():
+            if conversation[1] == 0:
+                print('\t', "Conversation", ident, conversation[1])
+        for ident, message in messages.items():
+            if message[1] == 0:
+                print('\t', "Conversation", ident, message[1])
         if undefined:
             print("\nWTF objects:\n")
             for ident, bank in banks.items():
@@ -256,6 +299,12 @@ class DataOperator:
             for ident, transaction in transactions.items():
                 if transaction[1] < 0:
                     print('\t', "Transaction", ident, transaction[1])
+            for ident, conversation in conversations.items():
+                if conversation[1] < 0:
+                    print('\t', "Conversation", ident, conversation[1])
+            for ident, message in messages.items():
+                if message[1] < 0:
+                    print('\t', "Conversation", ident, message[1])
             print("\n")
 
 

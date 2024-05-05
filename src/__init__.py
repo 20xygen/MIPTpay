@@ -15,7 +15,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'src.miptpaydj.miptpaydj.setting
 if miptpay.tests.sampledata.SETUP_MODE:
     django.setup()
 
-from src.miptpaydj.mainapp.models import BankModel, PersonModel, ClientModel, PlanCategoryModel, PlanModel, AccountModel, TransactionModel, DiaryModel
+from src.miptpaydj.mainapp.models import BankModel, PersonModel, ConversationModel, MessageModel, ClientModel, PlanCategoryModel, PlanModel, AccountModel, TransactionModel, DiaryModel
 
 from src.miptpaydj.mainapp import apps
 
@@ -42,6 +42,9 @@ from src.banking.crosspayment import SingleSPF
 from src.users.person import Person
 from src.admin.admin import Admin, SingleAdmin
 
+from src.messenger.message import Message
+from src.messenger.conversation import Conversation
+
 from src.operators.timekeeper import TimeKeeper, SingleTK
 from src.operators.dataoperator import DataOperator, SingleDO
 from src.operators.adaptors import Adaptor, SingleAdaptor
@@ -65,7 +68,7 @@ __all__ = ['available_from',
            'Adaptor', 'SingleAdaptor',
            'Person',
            'Admin', 'SingleAdmin',
-           'BankModel', 'PersonModel', 'ClientModel', 'PlanCategoryModel', 'PlanModel', 'AccountModel', 'TransactionModel', 'DiaryModel',
+           'BankModel', 'PersonModel', 'ConversationModel', 'MessageModel', 'ClientModel', 'PlanCategoryModel', 'PlanModel', 'AccountModel', 'TransactionModel', 'DiaryModel',
            'User',
            'apps',
            'views',
