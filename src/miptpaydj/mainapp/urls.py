@@ -11,5 +11,9 @@ urlpatterns = [
     path('transactions/', views.transactions, name='transactions'),
     path('profile/', views.profile, name='profile'),
     path('register/', views.signup_view, name='register'),
-    path('home/', views.home, name='home')
+    path('home/', views.home, name='home'),
+    # path('transfer/', views.transfer, name='transfer'),
+    path('put/', views.put, name='material_put'),
+    path('get/', views.get, name='material_get'),
+    path('transfer/', views.transfer, name='material_transfer')
 ]
