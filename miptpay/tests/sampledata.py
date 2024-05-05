@@ -181,13 +181,13 @@ def main():
     message3 = src.SingleMB.MB().get()
     src.SingleDO.DO().done_with(message3.id, "Message")
 
-    src.SingleMB.MB().reset(denis_misha.id, artem.id)
-    src.SingleMB.MB().fill("Obed?")
+    src.SingleMB.MB().reset(denis_artem.id, artem.id)
+    src.SingleMB.MB().fill("Lunch?")
     message4 = src.SingleMB.MB().get()
     src.SingleDO.DO().done_with(message4.id, "Message")
 
-    src.SingleMB.MB().reset(denis_misha.id, denis.id)
-    src.SingleMB.MB().fill("Ushe bil")
+    src.SingleMB.MB().reset(denis_artem.id, denis.id)
+    src.SingleMB.MB().fill("Already was")
     message5 = src.SingleMB.MB().get()
     src.SingleDO.DO().done_with(message5.id, "Message")
 

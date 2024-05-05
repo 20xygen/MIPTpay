@@ -48,7 +48,10 @@ class ConversationModel(models.Model):
         verbose_name_plural = 'Диалоги'
 
     def __str__(self):
-        return 'Некий диалог'
+        if self.id and len(self.senders.all()) >= 2:
+            return 'Диалог между ' + self.senders.all()[0].name + ' и ' + self.senders.all()[1].name
+        else:
+            return 'Некий диалог'
 
 
 class MessageModel(models.Model):
@@ -63,7 +66,7 @@ class MessageModel(models.Model):
         verbose_name_plural = 'Сообщения'
 
     def __str__(self):
-        return 'Сообщение от' + str(self.sender)
+        return 'Сообщение от ' + str(self.sender)
 
 
 class ClientModel(models.Model):

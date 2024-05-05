@@ -3,20 +3,33 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 from src.miptpaydj.mainapp.forms import RegisterForm, PutForm, TransferForm
-from src.miptpaydj.mainapp.models import BankModel, AccountModel, PlanModel, PersonModel, ClientModel, TransactionModel
+from src.miptpaydj.mainapp.models import BankModel, AccountModel, PlanModel, PersonModel, ConversationModel, MessageModel, ClientModel, TransactionModel
 
 import src
 
 
 def banks(request):
     src.SingleTK.timekeeper().update()
+
+    banks = BankModel.objects.all()
     return render(request, 'banks.html', {'banks': banks})
 
 def chats(request):
     src.SingleTK.timekeeper().update()
-    banks = BankModel.objects.all()
-    return render(request, 'chats.html')
 
+    me = PersonModel.objects.get(name="Denis")
+    conversations = ConversationModel.objects.filter(senders__id=me.id)
+    other = conversations[1].senders.all()[1] if conversations[1].senders.all()[0] == me else conversations[1].senders.all()[0]
+    messages = reversed(MessageModel.objects.filter(conversation=conversations[1]))
+
+    discussions = []
+    for conv in conversations:
+        sender = conv.senders.all()[1] if conv.senders.all()[0] == me else conv.senders.all()[0]
+        last = MessageModel.objects.filter(conversation=conv)[0]
+        discussions.append([sender, last, False])
+    discussions[1][2] = True
+
+    return render(request, 'chats.html', {'messages': messages, 'me': me, 'discussions': discussions, 'other': other})
 
 def accounts(request):
     src.SingleTK.timekeeper().update()

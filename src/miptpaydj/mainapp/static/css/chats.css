@@ -47,7 +47,7 @@
 
 .chats-menu .chats-items .chats-item:hover {
   cursor: pointer;
-  background-color: #4f6ebd;
+  background-color: #4723D9;
   color: #cfe5ff;
 }
 
@@ -59,7 +59,7 @@
   height: 700px;
   box-shadow: 0px 8px 10px rgba(0,0,0,0.20);
   overflow: hidden;
-  background-color: #87a3ec;
+  background-color: #fff;
   display: inline-block;
 }
 
@@ -146,9 +146,9 @@
 
 
 .chats-discussions .chats-message-active {
-  width: 98.5%;
+  width: 100%;
   height: 90px;
-  background-color: #FFF;
+  background-color: #e3effd;
   border-bottom: solid 1px #E0E0E0;
 }
 
@@ -316,7 +316,7 @@
 
 .chats-chat .chats-footer-chat .chats-send {
   color:#fff;
-  background-color: #4f6ebd;
+  background-color: #4723D9;
   position: absolute;
   right: 50px;
   padding: 12px 12px 12px 12px;
