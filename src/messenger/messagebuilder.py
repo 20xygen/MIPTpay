@@ -18,7 +18,7 @@ class MessageBuilder:
 
 
 class SingleMessageBuilder:
-    """Singleton wrapper for Adopator class"""
+    """Singleton wrapper for MessageBuilder class"""
     __builder: Optional[MessageBuilder] = None
 
     def __init__(self):
