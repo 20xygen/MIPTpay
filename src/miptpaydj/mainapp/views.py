@@ -10,8 +10,12 @@ import src
 
 def banks(request):
     src.SingleTK.timekeeper().update()
-    banks = BankModel.objects.all()
     return render(request, 'banks.html', {'banks': banks})
+
+def chats(request):
+    src.SingleTK.timekeeper().update()
+    banks = BankModel.objects.all()
+    return render(request, 'chats.html')
 
 
 def accounts(request):
