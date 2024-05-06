@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
-from src.miptpaydj.mainapp.forms import MessageSendForm, RegisterForm, PutForm, TransferForm
+from src.miptpaydj.mainapp.forms import MessengerForm, RegisterForm, PutForm, TransferForm
 from src.miptpaydj.mainapp.models import BankModel, AccountModel, PlanModel, PersonModel, ConversationModel, MessageModel, ClientModel, TransactionModel
 
 import src
@@ -17,7 +17,7 @@ def banks(request):
 def chats(request):
     src.SingleTK.timekeeper().update()
 
-    me = PersonModel.objects.get(name="Denis")
+    me = PersonModel.objects.get(name="Artem")
 
     conversations = ConversationModel.objects.filter(senders__id=me.id)
 
@@ -27,13 +27,20 @@ def chats(request):
         print(current)
         other = conversations[current].senders.all()[1] if conversations[current].senders.all()[0] == me else conversations[current].senders.all()[0]
         messages = reversed(MessageModel.objects.filter(conversation=conversations[current]))
+    else:
+        current = None
+        other = None
+        messages = []
 
-        form = MessageSendForm(request.POST)
-        if form.is_valid():
-            print("Form is valid")
-            print(form.cleaned_data.get('text'))
-            text = str(form.cleaned_data.get('text'))
+    form = MessengerForm(request.POST)
+    if current is not None and form.is_valid():
+        print("Form is valid")
+        text = str(form.cleaned_data.get('text'))
+        print(text)
+        chat = str(form.cleaned_data.get('chat'))
+        print(chat)
 
+        if len(text) > 0:
             src.SingleMB.MB().reset(conversations[current].id, me.id)
             src.SingleMB.MB().fill(text)
             message = src.SingleMB.MB().get()
@@ -41,16 +48,33 @@ def chats(request):
 
             response = redirect(f'/chats/?conversation={current}')
             return response
-    else:
-        current = None
-        other = None
-        messages = []
+        elif len(chat) > 0:
+            print("Trying to change chat")
+            new_other = PersonModel.objects.get(name=chat)
+            if new_other is not None:
+                new_conversation = None
+                for c in range(len(conversations)):
+                    if new_other in conversations[c].senders.all():
+                        new_conversation = c
+                        break
+                if new_conversation is not None:
+                    response = redirect(f'/chats/?conversation={new_conversation}')
+                else:
+                    src.Conversation(None, [me.id, new_other.id])
+                    response = redirect('/chats/?conversation=0')
+            else:
+                response = redirect(f'/chats/?conversation={current}')
+            return response
 
     discussions = []
     for c in range(len(conversations)):
         conv = conversations[c]
         sender = conv.senders.all()[1] if conv.senders.all()[0] == me else conv.senders.all()[0]
-        last = MessageModel.objects.filter(conversation=conv)[0]
+        all_messages = MessageModel.objects.filter(conversation=conv)
+        if len(all_messages) > 0:
+            last = all_messages[0]
+        else:
+            last = None
         discussions.append([sender, last, False, c])
 
     if current is not None:

@@ -13,11 +13,12 @@ class RegisterForm(UserCreationForm):
         model = User
         fields = ('username', 'password1', 'password2', 'name', 'surname', 'address', 'passport')
 
-class MessageSendForm(forms.Form):
-    text = forms.CharField(max_length=500, help_text='Text')
+class MessengerForm(forms.Form):
+    text = forms.CharField(max_length=500, help_text='Text', required=False)
+    chat = forms.CharField(max_length=50, help_text='Chat', required=False)
 
     class Meta:
-        fields = ["text"]
+        fields = ["text", "chat"]
 
 
 class PutForm(forms.Form):
