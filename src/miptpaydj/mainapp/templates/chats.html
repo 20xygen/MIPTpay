@@ -25,8 +25,8 @@
         </div>
       </div>
 
-      {% for sender, last, is_active in discussions %}
-        <div class="chats-discussion {% if is_active %}chats-message-active{% else %}{% endif %}">
+      {% for sender, last, is_active, number in discussions %}
+        <div href="/chats/?conversation={{ number }}" class="chats-discussion {% if is_active %}chats-message-active{% else %}{% endif %}">
           <div class="chats-photo" style="background-image: url(https://sun9-38.userapi.com/impg/06YaBsA5s8i3dh7aLhPsEY1TeaS_qQ9JmkzWkw/qjKdUtuB3rY.jpg?size=800x800&quality=95&sign=e1f4b0faffe37006fb2b2e5450792926&type=album);"></div>
           <div class="chats-desc-contact">
             <p class="chats-name">{{ sender.name }}</p>
@@ -39,7 +39,7 @@
     <section class="chats-chat">
       <div class="chats-header-chat">
         <i class="chats-icon fa fa-user-o" aria-hidden="true"></i>
-        <p class="chats-name">{{ other.name }}</p>
+        <p class="chats-name">{% if other %}{{ other.name }}{% else %}Choose chat{% endif %}</p>
         <i class="chats-icon clickable fa fa-ellipsis-h right" aria-hidden="true"></i>
       </div>
       <div class="chats-messages-chat">
@@ -57,16 +57,17 @@
           {% endif %}
         {% endfor %}
       </div>
-      <div class="chats-footer-chat">
+      <form method="post" class="chats-footer-chat">
+        {% csrf_token %}
         <div class="chats-search-wrapper">
           <div class="chats-sender">
-            <input type="text" placeholder="Type..."></input>
+            <input type="text" name="text" placeholder="Type..."/>
             <button type="submit">
               <i class='bx bx-paper-plane scaled-sender-button'></i>
             </button>
           </div>
         </div>
-      </div>
+      </form>
 
     </section>
   </div>

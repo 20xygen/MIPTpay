@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
-from src.miptpaydj.mainapp.forms import RegisterForm, PutForm, TransferForm
+from src.miptpaydj.mainapp.forms import MessageSendForm, RegisterForm, PutForm, TransferForm
 from src.miptpaydj.mainapp.models import BankModel, AccountModel, PlanModel, PersonModel, ConversationModel, MessageModel, ClientModel, TransactionModel
 
 import src
@@ -18,16 +18,43 @@ def chats(request):
     src.SingleTK.timekeeper().update()
 
     me = PersonModel.objects.get(name="Denis")
+
     conversations = ConversationModel.objects.filter(senders__id=me.id)
-    other = conversations[1].senders.all()[1] if conversations[1].senders.all()[0] == me else conversations[1].senders.all()[0]
-    messages = reversed(MessageModel.objects.filter(conversation=conversations[1]))
+
+    param = request.GET.get('conversation')
+    if param and str(param).isdigit() and 0 <= int(str(param)) < len(conversations):
+        current = int(str(param))
+        print(current)
+        other = conversations[current].senders.all()[1] if conversations[current].senders.all()[0] == me else conversations[current].senders.all()[0]
+        messages = reversed(MessageModel.objects.filter(conversation=conversations[current]))
+
+        form = MessageSendForm(request.POST)
+        if form.is_valid():
+            print("Form is valid")
+            print(form.cleaned_data.get('text'))
+            text = str(form.cleaned_data.get('text'))
+
+            src.SingleMB.MB().reset(conversations[current].id, me.id)
+            src.SingleMB.MB().fill(text)
+            message = src.SingleMB.MB().get()
+            src.SingleDO.DO().done_with(message.id, "Message")
+
+            response = redirect(f'/chats/?conversation={current}')
+            return response
+    else:
+        current = None
+        other = None
+        messages = []
 
     discussions = []
-    for conv in conversations:
+    for c in range(len(conversations)):
+        conv = conversations[c]
         sender = conv.senders.all()[1] if conv.senders.all()[0] == me else conv.senders.all()[0]
         last = MessageModel.objects.filter(conversation=conv)[0]
-        discussions.append([sender, last, False])
-    discussions[1][2] = True
+        discussions.append([sender, last, False, c])
+
+    if current is not None:
+        discussions[current][2] = True
 
     return render(request, 'chats.html', {'messages': messages, 'me': me, 'discussions': discussions, 'other': other})
 
