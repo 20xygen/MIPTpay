@@ -13,6 +13,12 @@ class RegisterForm(UserCreationForm):
         model = User
         fields = ('username', 'password1', 'password2', 'name', 'surname', 'address', 'passport')
 
+# class MessageSendForm(forms.Form):
+#     text = forms.CharField(max_length=500, help_text='Text')
+#
+#     class Meta(forms.Form.Meta):
+#         fields = ('text')
+
 
 class PutForm(forms.Form):
     bank_id = forms.CharField(max_length=100, help_text='Bank ID')

@@ -8,13 +8,13 @@
   padding:0;
   background-color: #FFF;
   box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
-  height: 700px;
+  height: 100%;
 }
 
 /* ===== MENU ===== */
 .chats-menu {
   float: left;
-  height: 700px;
+  height: 100%;
   width: 70px;
   background: #4768b5;
   background: -webkit-linear-gradient(#4768b5, #35488e);
@@ -56,7 +56,7 @@
 .chats-discussions {
     flex: 1;
   width: 35%;
-  height: 700px;
+  height: 100%;
   box-shadow: 0px 8px 10px rgba(0,0,0,0.20);
   overflow: hidden;
   background-color: #fff;
@@ -67,82 +67,56 @@
   width: 100%;
   height: 90px;
   background-color: #FAFAFA;
-  border-bottom: solid 1px #E0E0E0;
+  /*border-bottom: solid 1px #E0E0E0;*/
   display:flex;
   align-items: center;
   cursor: pointer;
 }
 
-.chats-discussions .chats-search {
-  display:flex;
-  align-items: center;
-  justify-content: center;
-  color: #E0E0E0;
-}
-
-.chats-discussions .chats-search .chats-searchbar {
-  height: 40px;
-  background-color: #FFF;
-  width: 70%;
-  padding: 0 20px;
-  border-radius: 50px;
-  border: 1px solid #EEEEEE;
-  display:flex;
-  align-items: center;
-  cursor: pointer;
-}
-
-.chats-discussions .chats-search .chats-searchbar input {
-  margin-left: 15px;
-  height:38px;
-  width:100%;
-  border:none;
-  font-family: 'Montserrat', sans-serif;;
-}
-
-.chats-discussions .chats-search .chats-searchbar *::-webkit-input-placeholder {
-    color: #E0E0E0;
-}
-.chats-discussions .chats-search .chats-searchbar input *:-moz-placeholder {
-    color: #E0E0E0;
-}
-.chats-discussions .chats-search .chats-searchbar input *::-moz-placeholder {
-    color: #E0E0E0;
-}
-.chats-discussions .chats-search .chats-searchbar input *:-ms-input-placeholder {
-    color: #E0E0E0;
-}
 
 
+.chats-searchbar input{
+  position: relative;
+  background-color: transparent;
+  width: 100%;
+  display: flex;
+  outline: none;
+  border: none;
+}
 
-.chats-discussions .chats-search .chats-searchbar {
+.chats-search-wrapper {
+  position: relative;
   display: flex;
   align-items: center;
+  width: 100%;
+  height: 90px;
+  padding: 10px;
 }
 
-.chats-discussions .chats-search .chats-searchbar input {
+.chats-searchbar {
+  position: relative;
+  width: 100%;
+  display: flex;
   height: 40px;
-  background-color: #FFF;
-  width: 70%;
-  padding: 0 20px;
   border-radius: 50px;
-  border: 1px solid #EEEEEE;
-  margin-right: 10px; /* Отступ между полем ввода и кнопкой */
+  border: 1px solid #eaeaea;
+  margin-left: 17px;
+  margin-right: 17px;
 }
 
-.chats-discussions .chats-search .chats-searchbar button {
+.chats-searchbar button {
+  margin-top: 1px;
+  margin-right: 1px;
+  width: 40px;
   background-color: transparent;
+  outline: none;
   border: none;
-  cursor: pointer;
 }
 
-.chats-discussions .chats-search .chats-searchbar button i {
-  font-size: 16px;
-  padding: 10px; /* Размер и отступы кнопки */
+.scaled-button {
+  color: #35488e;
+  transform: scale(1.4);
 }
-
-
-
 
 
 .chats-discussions .chats-message-active {
@@ -297,15 +271,14 @@
 }
 
 .chats-footer-chat {
-  width: calc(65% - 66px);
+  width: 47%;
   height: 80px;
   display:flex;
   align-items: center;
-  position:absolute;
+  position: absolute;
   bottom: 0;
-  background-color: transparent;
+  background-color: #fff;
   border-top: 2px solid #EEE;
-
 }
 
 .chats-chat .chats-footer-chat .chats-icon {
@@ -368,16 +341,47 @@
 }
 
 .chats-wrapper {
-    display: flex; /* чтобы контейнер и его содержимое выстроились в строку */
+  height: calc(100vh - 90px);
+  display: flex; /* чтобы контейнер и его содержимое выстроились в строку */
 }
 
 .chats-discussions,
 .chats-chat {
-    flex: 1; /* чтобы обе секции занимали равное пространство в контейнере */
+  display: inline-block; /* или float: left; */
+  width: 50%; /* или другое значение, в зависимости от вашего дизайна */
 }
 
-.chats-discussions,
-.chats-chat {
-    display: inline-block; /* или float: left; */
-    width: 50%; /* или другое значение, в зависимости от вашего дизайна */
+
+.chats-sender {
+  position: relative;
+  width: 100%;
+  display: flex;
+  height: 40px;
+  border-radius: 50px;
+  border: 1px solid #eaeaea;
+  margin-left: 17px;
+  margin-right: 17px;
+  background-color: #fff;
+}
+
+.chats-sender button {
+  margin-right: 5px;
+  width: 40px;
+  background-color: transparent;
+  outline: none;
+  border: none;
+}
+
+.scaled-sender-button {
+  color: #35488e;
+  transform: scale(1.5);
+}
+
+.chats-sender input{
+  position: relative;
+  background-color: transparent;
+  width: 100%;
+  display: flex;
+  outline: none;
+  border: none;
 }

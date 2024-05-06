@@ -16,10 +16,12 @@
 
   <div class="chats-wrapper">
     <section class="chats-discussions">
-      <div class="chats-discussion chats-search">
+      <div class="chats-search-wrapper">
         <div class="chats-searchbar">
           <input type="text" placeholder="Search..."></input>
-          <button type="submit"><i class="fa fa-search" style="color: blue;" aria-hidden="true"></i></button>
+          <button type="submit">
+            <i class='bx bx-search scaled-button'></i>
+          </button>
         </div>
       </div>
 
@@ -56,10 +58,16 @@
         {% endfor %}
       </div>
       <div class="chats-footer-chat">
-        <i class="chats-icon fa fa-smile-o clickable" style="font-size:25pt;" aria-hidden="true"></i>
-        <input type="text" class="chats-write-message" placeholder="Type your message here"></input>
-        <i class="chats-icon send fa fa-paper-plane-o clickable" aria-hidden="true"></i>
+        <div class="chats-search-wrapper">
+          <div class="chats-sender">
+            <input type="text" placeholder="Type..."></input>
+            <button type="submit">
+              <i class='bx bx-paper-plane scaled-sender-button'></i>
+            </button>
+          </div>
+        </div>
       </div>
+
     </section>
   </div>
 {% endblock %}
