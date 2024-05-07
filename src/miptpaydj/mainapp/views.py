@@ -7,7 +7,6 @@ from src.miptpaydj.mainapp.models import BankModel, AccountModel, PlanModel, Per
 
 import src
 
-
 def banks(request):
     src.SingleTK.timekeeper().update()
 
@@ -84,8 +83,10 @@ def chats(request):
 
 def accounts(request):
     src.SingleTK.timekeeper().update()
-
     accounts = AccountModel.objects.all()
+    current_user = request.user
+    current_person = PersonModel.objects.get(user=current_user)
+    accounts = [(account, src.Account.display_date(account.freeze_date)) for account in accounts if account.owner.person == current_person]
     return render(request, 'accounts.html', {'accounts': accounts})
 
 

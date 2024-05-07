@@ -124,6 +124,14 @@ class Account:
         src.SingleDO.DO().done_with(owner_obj.id, "Client")
         return ret
 
+    @staticmethod
+    def display_date(date: int):
+        if date:
+            date = str(date)
+            date = date[0:4] + '/' + date[4:6] + '/' + date[6:8]
+            return date
+        return '-'
+
 class DebitAccount(Account):
     """ Debit account – a regular account: money can be withdrawn at any time,
     you can not go into the negative. There are no commissions. """
