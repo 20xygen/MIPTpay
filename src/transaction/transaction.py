@@ -21,6 +21,7 @@ class Transaction:
             self.__status = status
         else:
             self.__status = 0
+            print("Saving transaction", self, self.__departure, self.__destination, self.__amount, self.__status)
             self.__id = src.SingleDO.DO().put(self, False) # Transaction closes later
 
 

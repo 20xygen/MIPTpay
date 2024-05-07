@@ -6,11 +6,15 @@ from typing import Optional, List
 class Adaptor:
     def create_bank(self, bank: src.Bank):
         model = src.BankModel(name=bank.name)
+        if model is None:
+            return None
         model.save()
         return model
 
     def create_person(self, person: src.Person, user):
         model = src.PersonModel(name=person.name, surname=person.surname, address=person.address, passport=int(person.passport.replace(" ", "")), user=user)
+        if model is None:
+            return None
         model.save()
         return model
 
@@ -22,6 +26,8 @@ class Adaptor:
 
     def create_conversation(self, conversation: src.Conversation):
         model = src.ConversationModel(status=conversation.status)
+        if model is None:
+            return None
         model.save()
         model.senders.add(src.PersonModel.objects.get(id=conversation.senders[0]))
         model.senders.add(src.PersonModel.objects.get(id=conversation.senders[1]))
@@ -30,6 +36,8 @@ class Adaptor:
 
     def create_message(self, message: src.Message):
         model = src.MessageModel(text=message.text, status=message.status)
+        if model is None:
+            return None
         model.conversation = src.ConversationModel.objects.get(id=message.conversation)
         model.sender = src.PersonModel.objects.get(id=message.sender)
         model.save()
@@ -38,12 +46,16 @@ class Adaptor:
     def create_client(self, client: src.Client, bank, person):
         # print(bank.name)
         model = src.ClientModel(bank=bank, person=person, name=client.name, surname=client.surname, address=(client.address if client.address is not None else ""), passport=(int(client.passport) if client.passport is not None else 0), precarious=client.precarious)
+        if model is None:
+            return None
         model.save()
         return model
 
     def create_plan(self, plan: src.Plan, bank):
         name = bank.name
         model = src.PlanModel(name="TEMPORARY", bank=bank, commission=0, increased_commission=0, period=0, decreased_period=0, lower_limit=0, decreased_lower_limit=0, upper_limit=0, decreased_upper_limit=0, transfer_limit=0, decreased_transfer_limit=0)
+        if model is None:
+            return None
         category: src.PlanCategoryModel
         if isinstance(plan, src.DebitPlan):
             category = src.PlanCategoryModel.objects.get(name='Debit')
@@ -79,6 +91,8 @@ class Adaptor:
 
     def create_account(self, account: src.Account, bank, client, plan):
         model = src.AccountModel(bank=bank, owner=client, opened=account.opened, money=account.money, transfer=account.transfer, plan=plan)
+        if model is None:
+            return None
         if isinstance(account, src.DepositAccount):
             model.freeze_date = account.freeze_date
         else:
@@ -87,7 +101,11 @@ class Adaptor:
         return model
 
     def create_transaction(self, transaction: src.Transaction):
+        print(1, transaction, transaction.amount, transaction.departure)
         model = src.TransactionModel(departure=transaction.departure, destination=transaction.destination, amount=transaction.amount, status=transaction.status)
+        if model is None:
+            return None
+        print(2, model, model.amount, model.departure)
         model.save()
         return model
 
@@ -97,15 +115,23 @@ class Adaptor:
         model.save()
         return model
 
-    def get_bank(self, ident: int) -> src.Bank:
-        model = src.BankModel.objects.get(id=ident)
+    def get_bank(self, ident: int) -> Optional[src.Bank]:
+        model = src.BankModel.objects.filter(id=ident)
+        if len(model) > 0:
+            model = model[0]
+        else:
+            return None
         clients = [it.id for it in src.ClientModel.objects.filter(bank=model)]
         accounts = [it.id for it in src.AccountModel.objects.filter(bank=model)]
         plans = [it.id for it in src.PlanModel.objects.filter(bank=model)]
         return src.Bank(model.id, model.name, clients, accounts, plans)
 
-    def get_plan(self, ident: int) -> src.Plan:
-        model = src.PlanModel.objects.get(id=ident)
+    def get_plan(self, ident: int) -> Optional[src.Plan]:
+        model = src.PlanModel.objects.filter(id=ident)
+        if len(model) > 0:
+            model = model[0]
+        else:
+            return None
         category = model.category
         if category.name == "Debit":
             return src.DebitPlan(ident, model.transfer_limit, model.decreased_transfer_limit, None)
@@ -114,12 +140,20 @@ class Adaptor:
         elif category.name == "Credit":
             return src.CreditPlan(model.id, model.lower_limit, model.decreased_lower_limit, model.commission, model.increased_commission, model.transfer_limit, model.decreased_transfer_limit, None)
 
-    def get_client(self, ident: int) -> src.Client:
-        model = src.ClientModel.objects.get(id=ident)
+    def get_client(self, ident: int) -> Optional[src.Client]:
+        model = src.ClientModel.objects.filter(id=ident)
+        if len(model) > 0:
+            model = model[0]
+        else:
+            return None
         return src.Client(model.id, model.name, model.surname, model.address, str(model.passport), model.precarious)
 
-    def get_account(self, ident: int) -> src.Account:
-        model = src.AccountModel.objects.get(id=ident)
+    def get_account(self, ident: int) -> Optional[src.Account]:
+        model = src.AccountModel.objects.filter(id=ident)
+        if len(model) > 0:
+            model = model[0]
+        else:
+            return None
         print("When getting", model.money)
         if model.plan.category.name == "Debit":
             obj = src.DebitAccount(model.id, model.owner.id, model.opened, model.money, model.transfer, model.plan.id, None)
@@ -130,23 +164,39 @@ class Adaptor:
         elif model.plan.category.name == "Credit":
             return src.CreditAccount(model.id, model.owner.id, model.opened, model.money, model.transfer, model.plan.id, None)
 
-    def get_transaction(self, ident: int):
-        model = src.TransactionModel.objects.get(id=ident)
+    def get_transaction(self, ident: int) -> Optional[src.Transaction]:
+        model = src.TransactionModel.objects.filter(id=ident)
+        if len(model) > 0:
+            model = model[0]
+        else:
+            return None
         return src.Transaction(model.id, model.departure.id, model.destination.id, model.amount, model.status)
 
-    def get_person(self, ident: int):
-        model = src.PersonModel.objects.get(id=ident)
+    def get_person(self, ident: int) -> Optional[src.Person]:
+        model = src.PersonModel.objects.filter(id=ident)
+        if len(model) > 0:
+            model = model[0]
+        else:
+            return None
         clients = [it.id for it in src.ClientModel.objects.filter(person=model)]
         return src.Person(model.id, model.name, model.surname, model.address, model.passport, clients)
 
-    def get_conversation(self, ident: int):
-        model = src.ConversationModel.objects.get(id=ident)
+    def get_conversation(self, ident: int) -> Optional[src.Conversation]:
+        model = src.ConversationModel.objects.filter(id=ident)
+        if len(model) > 0:
+            model = model[0]
+        else:
+            return None
         messages = [it.id for it in src.MessageModel.objects.filter(conversation=model)]
         senders = [it.id for it in model.senders]
         return src.Conversation(model.id, senders, messages, model.status)
 
-    def get_message(self, ident: int):
-        model = src.MessageModel.objects.get(id=ident)
+    def get_message(self, ident: int) -> Optional[src.Message]:
+        model = src.MessageModel.objects.filter(id=ident)
+        if len(model) > 0:
+            model = model[0]
+        else:
+            return None
         return src.Message(model.id, model.conversation.id, model.sender.id, model.text, model.status)
 
     def multy_get(self, ident: int, cls: str):

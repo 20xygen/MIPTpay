@@ -134,10 +134,13 @@ def put(request):
     if form.is_valid():
         bank_id = int(form.cleaned_data.get("bank_id"))
         account_id = int(form.cleaned_data.get("account_id"))
-        amount = int(form.cleaned_data.get("amount"))
+        amount = float(form.cleaned_data.get("amount"))
+
         bank = src.SingleDO.DO().get(bank_id, "Bank")
-        bank.put(account_id, amount)
+        if bank is not None:
+            bank.put(account_id, amount)
         src.SingleDO.DO().done_with(bank_id, "Bank")
+
         return redirect('home')
     else:
         form = PutForm(request.POST)
@@ -150,9 +153,11 @@ def get(request):
     if form.is_valid():
         bank_id = int(form.cleaned_data.get("bank_id"))
         account_id = int(form.cleaned_data.get("account_id"))
-        amount = int(form.cleaned_data.get("amount"))
+        amount = float(form.cleaned_data.get("amount"))
+
         bank = src.SingleDO.DO().get(bank_id, "Bank")
-        bank.get(account_id, amount)
+        if bank is not None:
+            bank.get(account_id, amount)
         src.SingleDO.DO().done_with(bank_id, "Bank")
         return redirect('home')
     else:
@@ -168,11 +173,12 @@ def transfer(request):
         departure_account = int(form.cleaned_data.get("departure_account"))
         destination_bank = int(form.cleaned_data.get("destination_bank"))
         destination_account = int(form.cleaned_data.get("destination_account"))
-        amount = int(form.cleaned_data.get("amount"))
+        amount = float(form.cleaned_data.get("amount"))
 
         if departure_bank == destination_bank:
             bank = src.SingleDO.DO().get(departure_bank, "Bank")
-            bank.transfer(departure_account, destination_account, amount)
+            if bank is not None:
+                bank.transfer(departure_account, destination_account, amount)
             src.SingleDO.DO().done_with(departure_bank, "Bank")
         else:
             src.SingleSPF.CPF().transfer(departure_bank, departure_account, destination_bank, destination_account, amount)
