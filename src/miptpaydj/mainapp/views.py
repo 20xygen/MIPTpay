@@ -93,6 +93,11 @@ def accounts(request):
 def plans(request):
     src.SingleTK.timekeeper().update()
     plans = PlanModel.objects.all()
+    plans = [(plan,
+              src.Plan.display_commission(plan.commission, plan.increased_commission),
+              src.Plan.display_period(plan.period, plan.decreased_period),
+              src.Plan.display_limit(plan.lower_limit, plan.decreased_lower_limit))
+             for plan in plans]
     return render(request, 'plans.html', {'plans': plans})
 
 
