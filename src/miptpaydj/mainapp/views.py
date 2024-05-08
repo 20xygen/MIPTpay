@@ -2,20 +2,33 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
-from src.miptpaydj.mainapp.forms import MessengerForm, RegisterForm, PutForm, TransferForm
+from src.miptpaydj.mainapp.forms import MessengerForm, RegisterForm, PutForm, TransferForm, UpdateProfileForm
 from src.miptpaydj.mainapp.models import BankModel, AccountModel, PlanModel, PersonModel, ConversationModel, MessageModel, ClientModel, TransactionModel
 
 import src
 
+
+@login_required
 def banks(request):
     src.SingleTK.timekeeper().update()
-
     banks = BankModel.objects.all()
-    return render(request, 'banks.html', {'banks': banks})
+    plans = PlanModel.objects.all()
+    plans = [(plan,
+              src.Plan.display_commission(plan.commission, plan.increased_commission),
+              src.Plan.display_period(plan.period, plan.decreased_period),
+              src.Plan.display_limit(plan.lower_limit, plan.decreased_lower_limit))
+             for plan in plans]
+    return render(request, 'banks.html', {'banks': banks, 'is_staff': request.user.is_staff, 'plans': plans})
 
+
+@login_required
 def chats(request):
     src.SingleTK.timekeeper().update()
-
+    current_user = request.user
+    current_person = PersonModel.objects.get(user=current_user)
+    if current_person.name is None:
+        current_person.name = current_user.username
+        current_person.save()
     me = PersonModel.objects.get(name="Artem")
 
     conversations = ConversationModel.objects.filter(senders__id=me.id)
@@ -49,8 +62,9 @@ def chats(request):
             return response
         elif len(chat) > 0:
             print("Trying to change chat")
-            new_other = PersonModel.objects.get(name=chat)
-            if new_other is not None:
+            new_other = PersonModel.objects.filter(name=chat)
+            if new_other is not None and len(new_other) > 0:
+                new_other = new_other[0]
                 new_conversation = None
                 for c in range(len(conversations)):
                     if new_other in conversations[c].senders.all():
@@ -79,17 +93,19 @@ def chats(request):
     if current is not None:
         discussions[current][2] = True
 
-    return render(request, 'chats.html', {'messages': messages, 'me': me, 'discussions': discussions, 'other': other})
+    return render(request, 'chats.html', {'messages': messages, 'me': me, 'discussions': discussions, 'other': other, 'is_staff': request.user.is_staff})
 
+@login_required
 def accounts(request):
     src.SingleTK.timekeeper().update()
     accounts = AccountModel.objects.all()
     current_user = request.user
     current_person = PersonModel.objects.get(user=current_user)
-    accounts = [(account, src.Account.display_date(account.freeze_date)) for account in accounts if account.owner.person == current_person]
-    return render(request, 'accounts.html', {'accounts': accounts})
+    accounts = [(account, src.Account.display_date(account.freeze_date)) for account in accounts if account.owner.person == current_person or request.user.is_staff]
+    return render(request, 'accounts.html', {'accounts': accounts, 'is_staff': request.user.is_staff})
 
 
+@login_required
 def plans(request):
     src.SingleTK.timekeeper().update()
     plans = PlanModel.objects.all()
@@ -98,26 +114,29 @@ def plans(request):
               src.Plan.display_period(plan.period, plan.decreased_period),
               src.Plan.display_limit(plan.lower_limit, plan.decreased_lower_limit))
              for plan in plans]
-    return render(request, 'plans.html', {'plans': plans})
+    return render(request, 'plans.html', {'plans': plans, 'is_staff': request.user.is_staff})
 
 
+@login_required
 def persons(request):
     src.SingleTK.timekeeper().update()
     persons = PersonModel.objects.all()
-    return render(request, 'persons.html', {'persons': persons})
+    return render(request, 'persons.html', {'persons': persons, 'is_staff': request.user.is_staff})
 
 
+@login_required
 def clients(request):
     src.SingleTK.timekeeper().update()
 
     clients = ClientModel.objects.all()
-    return render(request, 'clients.html', {'clients': clients})
+    return render(request, 'clients.html', {'clients': clients, 'is_staff': request.user.is_staff})
 
 
+@login_required
 def transactions(request):
     src.SingleTK.timekeeper().update()
     transactions = TransactionModel.objects.all()
-    return render(request, 'transactions.html', {'transactions': transactions})
+    return render(request, 'transactions.html', {'transactions': transactions, 'is_staff': request.user.is_staff})
 
 
 def index(request):
@@ -129,12 +148,23 @@ def profile(request):
     return render(request, 'profile.html')
 
 
-# @login_required
+@login_required
 def home(request):
-    return render(request, 'home.html')
+    current_user = request.user
+    current_person = PersonModel.objects.get(user=current_user)
+    form = UpdateProfileForm(request.POST)
+    if form.is_valid():
+        current_user = request.user
+        current_person = PersonModel.objects.get(user=current_user)
+        current_person.name = str(form.cleaned_data.get("name"))
+        current_person.surname = str(form.cleaned_data.get("surname"))
+        current_person.address = str(form.cleaned_data.get("address"))
+        current_person.passport = str(form.cleaned_data.get("passport"))
+        current_person.save()
+    return render(request, 'home.html', {'current_person': current_person, 'is_staff': request.user.is_staff})
 
 
-# @login_required
+@login_required
 def put(request):
     form = PutForm(request.POST)
     if form.is_valid():
@@ -150,10 +180,10 @@ def put(request):
         return redirect('home')
     else:
         form = PutForm(request.POST)
-    return render(request, 'material_put.html', {'form': form})
+    return render(request, 'material_put.html', {'form': form, 'is_staff': request.user.is_staff})
 
 
-# @login_required
+@login_required
 def get(request):
     form = PutForm(request.POST)
     if form.is_valid():
@@ -168,10 +198,10 @@ def get(request):
         return redirect('home')
     else:
         form = PutForm(request.POST)
-    return render(request, 'material_get.html', {'form': form})
+    return render(request, 'material_get.html', {'form': form, 'is_staff': request.user.is_staff})
 
 
-# @login_required
+@login_required
 def transfer(request):
     form = TransferForm(request.POST)
     if form.is_valid():
@@ -192,7 +222,7 @@ def transfer(request):
         return redirect('home')
     else:
         form = TransferForm(request.POST)
-    return render(request, 'material_transfer.html', {'form': form})
+    return render(request, 'material_transfer.html', {'form': form, 'is_staff': request.user.is_staff})
 
 
 def signup_view(request):
@@ -212,4 +242,4 @@ def signup_view(request):
         return redirect('home')
     else:
         form = RegisterForm(request.POST)
-    return render(request, 'registration/register.html', {'form': form})
+    return render(request, 'registration/register.html', {'form': form, 'is_staff': request.user.is_staff})

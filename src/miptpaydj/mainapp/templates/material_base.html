@@ -26,6 +26,7 @@
                     <span class="nav_logo-name">MIPTpay</span>
                 </a>
                     <div class="nav_list">
+                        {% if not is_staff %}
                         <a href="/put/" class="nav_link {% block enable1 %}{% endblock %}">
                             <i class='bx bx-right-down-arrow-circle nav_icon'></i>
                             <span class="nav_name">Put</span>
@@ -34,6 +35,7 @@
                             <i class='bx bx-right-top-arrow-circle nav_icon'></i>
                             <span class="nav_name">Get</span>
                         </a>
+                        {% endif %}
                         <a href="/transfer/" class="nav_link {% block enable3 %}{% endblock %}">
                             <i class='bx bx-transfer nav_icon'></i>
                             <span class="nav_name">Transfer</span>
@@ -49,23 +51,27 @@
                         <a href="/banks/" class="nav_link {% block enable5 %}{% endblock %}">
                             <i class='bx bxs-bank nav_icon'></i>
                             <span class="nav_name">Banks</span>
-                        </a>
-                        <a href="/plans/" class="nav_link {% block enable6 %}{% endblock %}">
-                            <i class='bx bx-list-ul nav_icon'></i>
-                            <span class="nav_name">Plans</span>
-                        </a>
+<!--                        </a>-->
+<!--                        <a href="/plans/" class="nav_link {% block enable6 %}{% endblock %}">-->
+<!--                            <i class='bx bx-list-ul nav_icon'></i>-->
+<!--                            <span class="nav_name">Plans</span>-->
+<!--                        </a>-->
+                        {% if is_staff %}
                         <a href="/clients/" class="nav_link {% block enable7 %}{% endblock %}">
                             <i class='bx bx-user-circle nav_icon'></i>
                             <span class="nav_name">Clients</span>
                         </a>
+                        {% endif %}
                         <a href="/account/" class="nav_link {% block enable8 %}{% endblock %}">
                             <i class='bx bx-credit-card-alt nav_icon'></i>
                             <span class="nav_name">Accounts</span>
                         </a>
+                        {% if is_staff %}
                         <a href="/transactions/" class="nav_link {% block enable9 %}{% endblock %}">
                             <i class='bx bx-receipt nav_icon'></i>
                             <span class="nav_name">Transactions</span>
                         </a>
+                        {% endif %}
                     </div>
                 </div>
                 <a href="/accounts/logout?next=/home" class="nav_link"> <i class='bx bx-log-out nav_icon'></i> <span

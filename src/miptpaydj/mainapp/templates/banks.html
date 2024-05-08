@@ -29,4 +29,32 @@
             {% endfor %}
         </tbody>
     </table>
+    <table class="table-bottom">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Bank</th>
+                <th>Category</th>
+                <th>Commission</th>
+                <th>Period</th>
+                <th>Lower limit</th>
+                <th>Transfer limit</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for plan, commission, period, limit in plans %}
+            <tr>
+                <td>{{ plan.id }}</td>
+                <td>{{ plan.name }}</td>
+                <td>{{ plan.bank.name }}</td>
+                <td>{{ plan.category.name }}</td>
+                <td>{{ commission }}</td>
+                <td>{{ period }}</td>
+                <td>{{ limit }}</td>
+                <td>{{ plan.transfer_limit }} / {{ plan.decreased_transfer_limit }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}

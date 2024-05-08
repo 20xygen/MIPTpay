@@ -15,6 +15,14 @@ header {
     font-weight: lighter;
 }
 
+/*.inline-header {*/
+/*    background-color: #3d14dd; !* изменение цвета шапки *!*/
+/*    color: #000000;*/
+/*    font-size: smaller;*/
+/*    padding: 10px 150px; !* изменение отступов слева и справа *!*/
+/*    font-weight: lighter;*/
+/*}*/
+
 nav ul {
     list-style-type: none;
     margin: 0;
@@ -70,4 +78,8 @@ table tr:hover {
 .table {
     margin-left: 103px;
     padding-right: 100px;
+}
+
+.table-bottom {
+    margin-top: 35px;
 }
