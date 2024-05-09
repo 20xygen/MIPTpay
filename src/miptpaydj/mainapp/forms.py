@@ -10,6 +10,42 @@ class CreateBankForm(forms.Form):
         fields = ['bank']
 
 
+class DebitForm(forms.Form):
+    transfer_limit = forms.CharField(label='Transfer Limit', max_length=100)
+    decreased_transfer_limit = forms.CharField(label='Decreased Transfer Limit', max_length=100)
+    bank = forms.CharField(label='Name', max_length=100)
+
+    class Meta(UserCreationForm.Meta):
+        fields = ['transfer_limit', 'decreased_transfer_limit', 'bank']
+
+
+class CreditForm(forms.Form):
+    transfer_limit = forms.CharField(label='Credit Limit', max_length=100)
+    decreased_transfer_limit = forms.CharField(label='Decreased Credit Limit', max_length=100)
+    lower_limit = forms.CharField(label='Lower Limit', max_length=100)
+    decreased_lower_limit = forms.CharField(label='Decreased Lower Limit', max_length=100)
+    commission = forms.CharField(label='Commission', max_length=100)
+    decreased_commission = forms.CharField(label='Decreased Commission', max_length=100)
+    bank = forms.CharField(label='Name', max_length=100)
+
+    class Meta(UserCreationForm.Meta):
+        fields = ['transfer_limit', 'decreased_transfer_limit', 'lower_limit', 'decreased_lower_limit', 'commission', 'decreased_commission', 'bank']
+
+
+class DepositForm(forms.Form):
+    transfer_limit = forms.CharField(label='Credit Limit', max_length=100)
+    decreased_transfer_limit = forms.CharField(label='Decreased Credit Limit', max_length=100)
+    period = forms.CharField(label='Lower Limit', max_length=100)
+    decreased_period = forms.CharField(label='Decreased Lower Limit', max_length=100)
+    commission = forms.CharField(label='Commission', max_length=100)
+    decreased_commission = forms.CharField(label='Decreased Commission', max_length=100)
+    bank = forms.CharField(label='Name', max_length=100)
+
+    class Meta(UserCreationForm.Meta):
+        fields = ['transfer_limit', 'decreased_transfer_limit', 'period', 'decreased_period', 'commission',
+                  'decreased_commission', 'bank']
+
+
 class CreateClientForm(forms.Form):
     bank = forms.CharField(max_length=100, help_text='Bank ID')
 
@@ -24,6 +60,7 @@ class CreateAccountForm(forms.Form):
 
     class Meta(UserCreationForm.Meta):
         fields = ['bank', 'plan', 'client']
+
 
 class UpdateProfileForm(forms.Form):
     name = forms.CharField(max_length=100, help_text='Name')

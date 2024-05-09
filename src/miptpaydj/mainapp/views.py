@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
-from src.miptpaydj.mainapp.forms import MessengerForm, RegisterForm, PutForm, TransferForm, UpdateProfileForm, CreateClientForm, CreateAccountForm, CreateBankForm
+from src.miptpaydj.mainapp.forms import MessengerForm, RegisterForm, PutForm, TransferForm, UpdateProfileForm, CreateClientForm, CreateAccountForm, CreateBankForm, DebitForm, CreditForm, DepositForm
 from src.miptpaydj.mainapp.models import BankModel, AccountModel, PlanModel, PersonModel, ConversationModel, MessageModel, ClientModel, TransactionModel
 
 import src
@@ -18,12 +18,74 @@ def banks(request):
               src.Plan.display_period(plan.period, plan.decreased_period),
               src.Plan.display_limit(plan.lower_limit, plan.decreased_lower_limit))
              for plan in plans]
-    form = CreateBankForm(request.POST)
-    if form.is_valid():
-        bank = str(form.cleaned_data['bank'])
+    form0 = CreateBankForm(request.POST)
+    if form0.is_valid():
+        bank = str(form0.cleaned_data['bank'])
         src.Bank(None, bank)
         return redirect('/banks/')
     return render(request, 'banks.html', {'banks': banks, 'is_staff': request.user.is_staff, 'plans': plans})
+
+
+@login_required
+def create_plan(request):
+    type = request.GET.get('type')
+    if type == '0':
+        form = DebitForm(request.POST)
+        if form.is_valid():
+            bank_id = int(form.cleaned_data.get('bank'))
+            bank = src.SingleDO.DO().get(bank_id, "Bank")
+            if bank is not None:
+                debit = src.PlanFactory.create_debit_plan(src.TransferLimit(int(form.cleaned_data.get('transfer_limit')), int(form.cleaned_data.get('decreased_transfer_limit'))), bank_id)
+                bank.add_plan(debit.id)
+                src.SingleDO.DO().done_with(bank_id, "Bank")
+                return redirect(f'/banks/')
+    elif type == '1':
+        form = CreditForm(request.POST)
+        if form.is_valid():
+            bank_id = int(form.cleaned_data.get('bank'))
+            bank = src.SingleDO.DO().get(bank_id, "Bank")
+            if bank is not None:
+                credit = src.PlanFactory.create_credit_plan(
+                    src.TransferLimit(
+                        int(form.cleaned_data.get('transfer_limit')),
+                        int(form.cleaned_data.get('decreased_transfer_limit'))
+                    ),
+                    src.LowerLimit(
+                        int(form.cleaned_data.get('lower_limit')),
+                        int(form.cleaned_data.get('decreased_lower_limit'))
+                    ),
+                    src.Commission(
+                        float(form.cleaned_data.get('commission')),
+                        float(form.cleaned_data.get('decreased_commission'))
+                    ),
+                    bank_id)
+                bank.add_plan(credit.id)
+                src.SingleDO.DO().done_with(bank_id, "Bank")
+                return redirect(f'/banks/')
+    else:
+        form = DepositForm(request.POST)
+        if form.is_valid():
+            bank_id = int(form.cleaned_data.get('bank'))
+            bank = src.SingleDO.DO().get(bank_id, "Bank")
+            if bank is not None:
+                deposit = src.PlanFactory.create_deposit_plan(
+                    src.TransferLimit(
+                        int(form.cleaned_data.get('transfer_limit')),
+                        int(form.cleaned_data.get('decreased_transfer_limit'))
+                    ),
+                    src.Period(
+                        int(form.cleaned_data.get('period')),
+                        int(form.cleaned_data.get('decreased_period'))
+                    ),
+                    src.Commission(
+                        float(form.cleaned_data.get('commission')),
+                        float(form.cleaned_data.get('decreased_commission'))
+                    ),
+                    bank_id)
+                bank.add_plan(deposit.id)
+                src.SingleDO.DO().done_with(bank_id, "Bank")
+                return redirect(f'/banks/')
+    return render(request, 'create_plan.html', {'type': type})
 
 
 @login_required
@@ -129,6 +191,7 @@ def plans(request):
               src.Plan.display_period(plan.period, plan.decreased_period),
               src.Plan.display_limit(plan.lower_limit, plan.decreased_lower_limit))
              for plan in plans]
+
     return render(request, 'plans.html', {'plans': plans, 'is_staff': request.user.is_staff})
 
 

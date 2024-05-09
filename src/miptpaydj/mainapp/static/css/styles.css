@@ -83,3 +83,7 @@ table tr:hover {
 .table-bottom {
     margin-top: 35px;
 }
+
+.link {
+    text-decoration: none;
+}

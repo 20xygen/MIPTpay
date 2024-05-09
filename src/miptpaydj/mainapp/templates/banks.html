@@ -70,5 +70,10 @@
             {% endfor %}
         </tbody>
     </table>
+    {% if is_staff %}
+    <button class="container-button" style="margin-top: 35px;"><a style="color: inherit;text-decoration: none;" href="/create_plan/?type=0">Create debit plan</a></button>
+    <button class="container-button"><a style="color: inherit;text-decoration: none;" href="/create_plan/?type=1">Create credit plan</a></button>
+    <button class="container-button"><a style="color: inherit;text-decoration: none;" href="/create_plan/?type=2">Create deposit plan</a></button>
+    {% endif %}
 
 {% endblock %}

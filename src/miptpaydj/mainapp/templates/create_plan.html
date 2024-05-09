@@ -1,0 +1,148 @@
+{% extends 'material_base.html' %}
+{% block title %}Create plan{% endblock %}
+{% block header %}Create plan{% endblock %}
+{% block enable_logo %}{% endblock %}
+{% block enable1 %}{% endblock %}
+{% block enable2 %}{% endblock %}
+{% block enable3 %}{% endblock %}
+{% block enable_chats %}{% endblock %}
+{% block enable4 %}{% endblock %}
+{% block enable5 %}{% endblock %}
+{% block enable6 %}active{% endblock %}
+{% block enable7 %}{% endblock %}
+{% block enable8 %}{% endblock %}
+{% block enable9 %}{% endblock %}
+{% block content %}
+    {% if type == '0' %}
+    <form class="outer-container" method="post">
+        {% csrf_token %}
+        <div class="form-container">
+            <div class="container-input">
+                <label for="1">Transfer limit</label>
+                <input type="text" id="1" name="transfer_limit" placeholder="2000" />
+            </div>
+        </div>
+        <div class="form-container">
+            <div class="container-input">
+                <label for="2">Decreased transfer limit</label>
+                <input type="text" id="2" name="decreased_transfer_limit" placeholder="1000" />
+            </div>
+        </div>
+        <div class="form-container">
+            <div class="container-input">
+                <label for="3">Bank ID</label>
+                <input type="text" id="3" name="bank" placeholder="11" />
+            </div>
+        </div>
+        <div class="form-container">
+            <button class="container-button" type="submit">
+                Create debit plan
+            </button>
+        </div>
+    </form>
+    {% elif type == '1' %}
+    <form class="outer-container" method="post">
+        {% csrf_token %}
+        <div class="form-container">
+            <div class="container-input">
+                <label for="4">Transfer limit</label>
+                <input type="text" id="4" name="transfer_limit" placeholder="2000" />
+            </div>
+        </div>
+        <div class="form-container">
+            <div class="container-input">
+                <label for="5">Decreased transfer limit</label>
+                <input type="text" id="5" name="decreased_transfer_limit" placeholder="1000" />
+            </div>
+        </div>
+        <div class="form-container">
+            <div class="container-input">
+                <label for="6">Lower limit</label>
+                <input type="text" id="6" name="lower_limit" placeholder="11" />
+            </div>
+        </div>
+        <div class="form-container">
+            <div class="container-input">
+                <label for="7">Decreased lower limit</label>
+                <input type="text" id="7" name="decreased_lower_limit" placeholder="11" />
+            </div>
+        </div>
+        <div class="form-container">
+            <div class="container-input">
+                <label for="8">Commission</label>
+                <input type="text" id="8" name="commission" placeholder="0.11" />
+            </div>
+        </div>
+        <div class="form-container">
+            <div class="container-input">
+                <label for="9">Decreased commission</label>
+                <input type="text" id="9" name="decreased_commission" placeholder="11" />
+            </div>
+        </div>
+        <div class="form-container">
+            <div class="container-input">
+                <label for="10">Bank ID</label>
+                <input type="text" id="10" name="bank" placeholder="11" />
+            </div>
+        </div>
+        <div class="form-container">
+            <button class="container-button" type="submit">
+                Create credit plan
+            </button>
+        </div>
+    </form>
+    {% else %}
+    <form class="outer-container" method="post">
+        {% csrf_token %}
+        <div class="form-container">
+            <div class="container-input">
+                <label for="11">Transfer limit</label>
+                <input type="text" id="11" name="transfer_limit" placeholder="2000" />
+            </div>
+        </div>
+        <div class="form-container">
+            <div class="container-input">
+                <label for="12">Decreased transfer limit</label>
+                <input type="text" id="12" name="decreased_transfer_limit" placeholder="1000" />
+            </div>
+        </div>
+        <div class="form-container">
+            <div class="container-input">
+                <label for="13">Period</label>
+                <input type="text" id="13" name="period" placeholder="11" />
+            </div>
+        </div>
+        <div class="form-container">
+            <div class="container-input">
+                <label for="14">Decreased period</label>
+                <input type="text" id="14" name="decreased_period" placeholder="11" />
+            </div>
+        </div>
+        <div class="form-container">
+            <div class="container-input">
+                <label for="15">Commission</label>
+                <input type="text" id="15" name="commission" placeholder="0.11" />
+            </div>
+        </div>
+        <div class="form-container">
+            <div class="container-input">
+                <label for="16">Decreased commission</label>
+                <input type="text" id="16" name="decreased_commission" placeholder="11" />
+            </div>
+        </div>
+        <div class="form-container">
+            <div class="container-input">
+                <label for="17">Bank ID</label>
+                <input type="text" id="17" name="bank" placeholder="11" />
+            </div>
+        </div>
+        <div class="form-container">
+            <button class="container-button" type="submit">
+                Create deposit plan
+            </button>
+        </div>
+    </form>
+    {% endif %}
+
+
+{% endblock %}
