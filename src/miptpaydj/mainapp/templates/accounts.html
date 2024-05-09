@@ -39,4 +39,28 @@
             {% endfor %}
         </tbody>
     </table>
+    {% if not is_staff %}
+    <form class="outer-container" method="post">
+        {% csrf_token %}
+        <div class="form-container">
+            <div class="container-input">
+                <label for="1">Bank ID</label>
+                <input type="text" id="1" name="bank" placeholder="11" />
+            </div>
+            <div class="container-input">
+                <label for="2">Plan ID</label>
+                <input type="text" id="2" name="plan" placeholder="11" />
+            </div>
+            <div class="container-input">
+                <label for="3">Client ID</label>
+                <input type="text" id="3" name="client" placeholder="11" />
+            </div>
+        </div>
+        <div class="form-container">
+            <button class="container-button" type="submit">
+                Create account
+            </button>
+        </div>
+    </form>
+    {% endif %}
 {% endblock %}

@@ -3,6 +3,28 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
 
+class CreateBankForm(forms.Form):
+    bank = forms.CharField(label='Name', max_length=100)
+
+    class Meta(UserCreationForm.Meta):
+        fields = ['bank']
+
+
+class CreateClientForm(forms.Form):
+    bank = forms.CharField(max_length=100, help_text='Bank ID')
+
+    class Meta(UserCreationForm.Meta):
+        fields = ['bank']
+
+
+class CreateAccountForm(forms.Form):
+    bank = forms.CharField(max_length=100, help_text='Bank ID')
+    plan = forms.CharField(max_length=100, help_text='Plan ID')
+    client = forms.CharField(max_length=100, help_text='Client ID')
+
+    class Meta(UserCreationForm.Meta):
+        fields = ['bank', 'plan', 'client']
+
 class UpdateProfileForm(forms.Form):
     name = forms.CharField(max_length=100, help_text='Name')
     surname = forms.CharField(max_length=100, help_text='Surname')

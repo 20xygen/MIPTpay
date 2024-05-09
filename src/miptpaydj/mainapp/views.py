@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
-from src.miptpaydj.mainapp.forms import MessengerForm, RegisterForm, PutForm, TransferForm, UpdateProfileForm
+from src.miptpaydj.mainapp.forms import MessengerForm, RegisterForm, PutForm, TransferForm, UpdateProfileForm, CreateClientForm, CreateAccountForm, CreateBankForm
 from src.miptpaydj.mainapp.models import BankModel, AccountModel, PlanModel, PersonModel, ConversationModel, MessageModel, ClientModel, TransactionModel
 
 import src
@@ -18,6 +18,11 @@ def banks(request):
               src.Plan.display_period(plan.period, plan.decreased_period),
               src.Plan.display_limit(plan.lower_limit, plan.decreased_lower_limit))
              for plan in plans]
+    form = CreateBankForm(request.POST)
+    if form.is_valid():
+        bank = str(form.cleaned_data['bank'])
+        src.Bank(None, bank)
+        return redirect('/banks/')
     return render(request, 'banks.html', {'banks': banks, 'is_staff': request.user.is_staff, 'plans': plans})
 
 
@@ -102,6 +107,16 @@ def accounts(request):
     current_user = request.user
     current_person = PersonModel.objects.get(user=current_user)
     accounts = [(account, src.Account.display_date(account.freeze_date)) for account in accounts if account.owner.person == current_person or request.user.is_staff]
+    form = CreateAccountForm(request.POST)
+    if form.is_valid():
+        bank_id = int(form.cleaned_data.get('bank'))
+        plan_id = int(form.cleaned_data.get('plan'))
+        client_id = int(form.cleaned_data.get('client'))
+        bank = src.SingleDO.DO().get(bank_id, "Bank")
+        if bank is not None:
+            bank.open_account(client_id, plan_id)
+            src.SingleDO.DO().done_with(bank_id, "Bank")
+            return redirect(f'/account/')
     return render(request, 'accounts.html', {'accounts': accounts, 'is_staff': request.user.is_staff})
 
 
@@ -127,8 +142,20 @@ def persons(request):
 @login_required
 def clients(request):
     src.SingleTK.timekeeper().update()
-
     clients = ClientModel.objects.all()
+    current_user = request.user
+    current_person = PersonModel.objects.get(user=current_user)
+    clients = [client for client in clients if client.person == current_person or request.user.is_staff]
+    form = CreateClientForm(request.POST)
+    if form.is_valid():
+        print("Valid form")
+        bank_id = int(form.cleaned_data.get('bank'))
+        bank = src.SingleDO.DO().get(bank_id, "Bank")
+        if bank is not None:
+            i = bank.register(current_person.name, current_person.surname, "NO_VALUE", "NO_VALUE", current_person.id)
+            print("Client's ID is", i)
+            src.SingleDO.DO().done_with(bank_id, "Bank")
+            return redirect(f'/clients/')
     return render(request, 'clients.html', {'clients': clients, 'is_staff': request.user.is_staff})
 
 

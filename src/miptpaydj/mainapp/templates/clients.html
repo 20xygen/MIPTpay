@@ -41,4 +41,20 @@
             {% endfor %}
         </tbody>
     </table>
+    {% if not is_staff %}
+    <form class="outer-container" method="post">
+        {% csrf_token %}
+        <div class="form-container">
+            <div class="container-input">
+                <label for="4">Bank ID</label>
+                <input type="text" id="4" name="bank" placeholder="11" />
+            </div>
+        </div>
+        <div class="form-container">
+            <button class="container-button" type="submit">
+                Create client
+            </button>
+        </div>
+    </form>
+    {% endif %}
 {% endblock %}

@@ -1,6 +1,6 @@
 {% extends 'material_base.html' %}
-{% block title %}Banks{% endblock %}
-{% block header %}Banks{% endblock %}
+{% block title %}Banks & Plans{% endblock %}
+{% block header %}Banks & Plans{% endblock %}
 {% block enable_logo %}{% endblock %}
 {% block enable1 %}{% endblock %}
 {% block enable2 %}{% endblock %}
@@ -29,6 +29,19 @@
             {% endfor %}
         </tbody>
     </table>
+    {% if is_staff %}
+    <form class="outer-container" method="post">
+        {% csrf_token %}
+        <div class="form-container">
+            <div class="container-input">
+                <input type="text" name="bank" placeholder="MIPT Bank" />
+            </div>
+            <button class="container-button" type="submit">
+                Create bank
+            </button>
+        </div>
+    </form>
+    {% endif %}
     <table class="table-bottom">
         <thead>
             <tr>
@@ -57,4 +70,5 @@
             {% endfor %}
         </tbody>
     </table>
+
 {% endblock %}
