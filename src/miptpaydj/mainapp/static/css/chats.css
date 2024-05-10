@@ -71,6 +71,7 @@
   display:flex;
   align-items: center;
   cursor: pointer;
+  text-decoration: none;
 }
 
 
@@ -210,14 +211,24 @@
   color:#515151;
 }
 
-.chats-chat .chats-header-chat .chats-right {
-  position: absolute;
-  right: 40px;
-}
-
 .chats-chat .chats-messages-chat {
   padding: 25px 35px;
 }
+
+.chats-messages-chat {
+  height: 480px;
+  overflow-y: scroll;
+}
+
+/* хром, сафари */
+.chats-messages-chat::-webkit-scrollbar { width: 0; }
+
+/* ie 10+ */
+.chats-messages-chat { -ms-overflow-style: none; }
+
+/* фф (свойство больше не работает, других способов тоже нет)*/
+/*.chats-messages-chat { overflow: -moz-scrollbars-none; }*/
+
 
 .chats-chat .chats-messages-chat .chats-message {
   display:flex;

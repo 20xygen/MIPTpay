@@ -42,7 +42,7 @@
     {% if not is_staff %}
     <form class="outer-container" method="post">
         {% csrf_token %}
-        <div class="form-container">
+        <div class="form-container" style="margin-top: 10px">
             <div class="container-input">
                 <label for="1">Bank ID</label>
                 <input type="text" id="1" name="bank" placeholder="11" />
@@ -56,7 +56,7 @@
                 <input type="text" id="3" name="client" placeholder="11" />
             </div>
         </div>
-        <div class="form-container">
+        <div class="form-container" style="margin-top: 20px">
             <button class="container-button" type="submit">
                 Create account
             </button>

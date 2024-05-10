@@ -38,25 +38,25 @@
         <div class="form-container">
             <div class="container-input">
                 <label for="1">Name</label>
-                <input type="text" id="1" name="name" placeholder="name" />
+                <input type="text" id="1" name="name" placeholder="{{ current_person.name }}" />
             </div>
         </div>
         <div class="form-container">
             <div class="container-input">
                 <label for="2">Surname</label>
-                <input type="text" id="2" name="surname" placeholder="surname" />
+                <input type="text" id="2" name="surname" placeholder="{{ current_person.surname }}" />
             </div>
         </div>
         <div class="form-container">
             <div class="container-input">
                 <label for="3">Address</label>
-                <input type="text" id="3" name="address" placeholder="smth@smth.smth" />
+                <input type="text" id="3" name="address" placeholder="{% if current_person.address is not None %}{{ current_person.address }}{% else %}example@email.com{% endif %}" />
             </div>
         </div>
         <div class="form-container">
             <div class="container-input">
                 <label for="4">Passport</label>
-                <input type="text" id="4" name="passport" placeholder="1234567890" />
+                <input type="text" id="4" name="passport" placeholder="{% if current_person.passport is not None %}{{ current_person.passport }}{% else %}1234567890{% endif %}" />
             </div>
         </div>
         <div class="form-container">
