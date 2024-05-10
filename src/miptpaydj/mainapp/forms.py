@@ -63,10 +63,10 @@ class CreateAccountForm(forms.Form):
 
 
 class UpdateProfileForm(forms.Form):
-    name = forms.CharField(max_length=100, help_text='Name')
-    surname = forms.CharField(max_length=100, help_text='Surname')
-    address = forms.CharField(max_length=150, help_text='Address')
-    passport = forms.IntegerField(help_text='Passport')
+    name = forms.CharField(max_length=100, help_text='Name', required=False)
+    surname = forms.CharField(max_length=100, help_text='Surname', required=False)
+    address = forms.CharField(max_length=150, help_text='Address', required=False)
+    passport = forms.IntegerField(help_text='Passport', required=False)
 
     class Meta(UserCreationForm.Meta):
         fields = ['name', 'surname', 'address', 'passport']

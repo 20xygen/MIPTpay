@@ -96,9 +96,11 @@ def chats(request):
     if current_person.name is None:
         current_person.name = current_user.username
         current_person.save()
-    me = PersonModel.objects.get(name="Artem")
+    me = current_person
+    print(me.name)
 
     conversations = ConversationModel.objects.filter(senders__id=me.id)
+    print(*conversations)
 
     param = request.GET.get('conversation')
     if param and str(param).isdigit() and 0 <= int(str(param)) < len(conversations):
@@ -112,14 +114,15 @@ def chats(request):
         messages = []
 
     form = MessengerForm(request.POST)
-    if current is not None and form.is_valid():
+    print(form)
+    if form.is_valid():
         print("Form is valid")
         text = str(form.cleaned_data.get('text'))
         print(text)
         chat = str(form.cleaned_data.get('chat'))
         print(chat)
 
-        if len(text) > 0:
+        if current is not None and len(text) > 0:
             src.SingleMB.MB().reset(conversations[current].id, me.id)
             src.SingleMB.MB().fill(text)
             message = src.SingleMB.MB().get()
@@ -198,6 +201,11 @@ def plans(request):
 @login_required
 def persons(request):
     src.SingleTK.timekeeper().update()
+    current_user = request.user
+    current_person = PersonModel.objects.get(user=current_user)
+    if current_person.name is None:
+        current_person.name = current_user.username
+        current_person.save()
     persons = PersonModel.objects.all()
     return render(request, 'persons.html', {'persons': persons, 'is_staff': request.user.is_staff})
 
@@ -244,12 +252,16 @@ def home(request):
     current_person = PersonModel.objects.get(user=current_user)
     form = UpdateProfileForm(request.POST)
     if form.is_valid():
-        current_user = request.user
+        # current_user = request.user
         current_person = PersonModel.objects.get(user=current_user)
-        current_person.name = str(form.cleaned_data.get("name"))
-        current_person.surname = str(form.cleaned_data.get("surname"))
-        current_person.address = str(form.cleaned_data.get("address"))
-        current_person.passport = str(form.cleaned_data.get("passport"))
+        if form.cleaned_data.get("name") is not None and len(form.cleaned_data.get("name")) > 0:
+            current_person.name = str(form.cleaned_data.get("name"))
+        if form.cleaned_data.get("surname") is not None and len(form.cleaned_data.get("surname")) > 0:
+            current_person.surname = str(form.cleaned_data.get("surname"))
+        if form.cleaned_data.get("address") is not None and len(form.cleaned_data.get("address")) > 0:
+            current_person.address = str(form.cleaned_data.get("address"))
+        if form.cleaned_data.get("passport") is not None:
+            current_person.passport = str(form.cleaned_data.get("passport"))
         current_person.save()
     return render(request, 'home.html', {'current_person': current_person, 'is_staff': request.user.is_staff})
 
