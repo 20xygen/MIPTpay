@@ -6,6 +6,27 @@ from src.miptpaydj.mainapp.forms import MessengerForm, RegisterForm, PutForm, Tr
 from src.miptpaydj.mainapp.models import BankModel, AccountModel, PlanModel, PersonModel, ConversationModel, MessageModel, ClientModel, TransactionModel
 
 import src
+import re
+
+def is_float_regex(value):
+    return bool(re.match(r'^[-+]?[0-9]*\.?[0-9]+$', value))
+
+
+def valid_money(value):
+    return str(value).replace('.', '', 1).isdigit() and 1 <= len(str(value).split(".")[0]) <= 12 and (True if len(str(value).split('.')) < 2 else len(str(value).split(".")[1]) <= 2)
+
+def valid_text(value):
+    return 0 < len(str(value)) <= 50
+
+
+def valid_digit(value):
+    return str(value).isdigit() and int(value) >= 0
+
+def valid_text_large(value):
+    return 0 < len(str(value)) <= 500
+
+def valid_commission(value):
+    return str(value).replace('.', '', 1).isdigit() and 1 <= len(str(value).split(".")[0]) <= 2 and (True if len(str(value).split('.')) < 2 else len(str(value).split(".")[1]) <= 6)
 
 
 @login_required
@@ -18,9 +39,9 @@ def banks(request):
               src.Plan.display_period(plan.period, plan.decreased_period),
               src.Plan.display_limit(plan.lower_limit, plan.decreased_lower_limit))
              for plan in plans]
-    form0 = CreateBankForm(request.POST)
-    if form0.is_valid():
-        bank = str(form0.cleaned_data['bank'])
+    form = CreateBankForm(request.POST)
+    if form.is_valid():
+        bank = str(form.cleaned_data['bank'])
         src.Bank(None, bank)
         return redirect('/banks/')
     return render(request, 'banks.html', {'banks': banks, 'is_staff': request.user.is_staff, 'plans': plans})
@@ -31,28 +52,43 @@ def create_plan(request):
     type = request.GET.get('type')
     if type == '0':
         form = DebitForm(request.POST)
-        if form.is_valid():
+        if form.is_valid() and valid_digit(form.cleaned_data.get('bank')):
             bank_id = int(form.cleaned_data.get('bank'))
             bank = src.SingleDO.DO().get(bank_id, "Bank")
-            if bank is not None:
-                debit = src.PlanFactory.create_debit_plan(src.TransferLimit(int(form.cleaned_data.get('transfer_limit')), int(form.cleaned_data.get('decreased_transfer_limit'))), bank_id)
+            if bank is not None \
+                    and valid_money(form.cleaned_data.get('transfer_limit')) \
+                    and valid_money(form.cleaned_data.get('decreased_transfer_limit')):
+                debit = src.PlanFactory.create_debit_plan(src.TransferLimit(float(form.cleaned_data.get('transfer_limit')), float(form.cleaned_data.get('decreased_transfer_limit'))), bank_id)
                 bank.add_plan(debit.id)
                 src.SingleDO.DO().done_with(bank_id, "Bank")
                 return redirect(f'/banks/')
+            src.SingleDO.DO().done_with(bank_id, "Bank")
     elif type == '1':
         form = CreditForm(request.POST)
         if form.is_valid():
             bank_id = int(form.cleaned_data.get('bank'))
             bank = src.SingleDO.DO().get(bank_id, "Bank")
-            if bank is not None:
+            # print(valid_money(float(form.cleaned_data.get('transfer_limit'))),
+            #         valid_money(float(form.cleaned_data.get('decreased_transfer_limit'))),
+            #         valid_money(float(form.cleaned_data.get('lower_limit'))),
+            #         valid_money(float(form.cleaned_data.get('decreased_lower_limit'))),
+            #         valid_commission(float(form.cleaned_data.get('commission'))),
+            #         valid_commission(float(form.cleaned_data.get('decreased_commission'))))
+            if bank is not None \
+                    and valid_money(form.cleaned_data.get('transfer_limit')) \
+                    and valid_money(form.cleaned_data.get('decreased_transfer_limit')) \
+                    and valid_money(form.cleaned_data.get('lower_limit')) \
+                    and valid_money(form.cleaned_data.get('decreased_lower_limit')) \
+                    and valid_commission(form.cleaned_data.get('commission')) \
+                    and valid_commission(form.cleaned_data.get('decreased_commission')):
                 credit = src.PlanFactory.create_credit_plan(
                     src.TransferLimit(
-                        int(form.cleaned_data.get('transfer_limit')),
-                        int(form.cleaned_data.get('decreased_transfer_limit'))
+                        float(form.cleaned_data.get('transfer_limit')),
+                        float(form.cleaned_data.get('decreased_transfer_limit'))
                     ),
                     src.LowerLimit(
-                        int(form.cleaned_data.get('lower_limit')),
-                        int(form.cleaned_data.get('decreased_lower_limit'))
+                        float(form.cleaned_data.get('lower_limit')),
+                        float(form.cleaned_data.get('decreased_lower_limit'))
                     ),
                     src.Commission(
                         float(form.cleaned_data.get('commission')),
@@ -62,16 +98,30 @@ def create_plan(request):
                 bank.add_plan(credit.id)
                 src.SingleDO.DO().done_with(bank_id, "Bank")
                 return redirect(f'/banks/')
+            src.SingleDO.DO().done_with(bank_id, "Bank")
     else:
         form = DepositForm(request.POST)
+        print("Non valid form")
         if form.is_valid():
             bank_id = int(form.cleaned_data.get('bank'))
             bank = src.SingleDO.DO().get(bank_id, "Bank")
-            if bank is not None:
+            # print(valid_money(float(form.cleaned_data.get('transfer_limit'))),
+            #         valid_money(float(form.cleaned_data.get('decreased_transfer_limit'))),
+            #         valid_digit(int(form.cleaned_data.get('period'))),
+            #         valid_digit(int(form.cleaned_data.get('decreased_period'))),
+            #         valid_commission(float(form.cleaned_data.get('commission'))),
+            #         valid_commission(float(form.cleaned_data.get('decreased_commission'))))
+            if bank is not None \
+                    and valid_money(form.cleaned_data.get('transfer_limit')) \
+                    and valid_money(form.cleaned_data.get('decreased_transfer_limit')) \
+                    and valid_digit(form.cleaned_data.get('period')) \
+                    and valid_digit(form.cleaned_data.get('decreased_period')) \
+                    and valid_commission(form.cleaned_data.get('commission')) \
+                    and valid_commission(form.cleaned_data.get('decreased_commission')):
                 deposit = src.PlanFactory.create_deposit_plan(
                     src.TransferLimit(
-                        int(form.cleaned_data.get('transfer_limit')),
-                        int(form.cleaned_data.get('decreased_transfer_limit'))
+                        float(form.cleaned_data.get('transfer_limit')),
+                        float(form.cleaned_data.get('decreased_transfer_limit'))
                     ),
                     src.Period(
                         int(form.cleaned_data.get('period')),
@@ -85,6 +135,7 @@ def create_plan(request):
                 bank.add_plan(deposit.id)
                 src.SingleDO.DO().done_with(bank_id, "Bank")
                 return redirect(f'/banks/')
+            src.SingleDO.DO().done_with(bank_id, "Bank")
     return render(request, 'create_plan.html', {'type': type})
 
 
@@ -103,10 +154,11 @@ def chats(request):
     print(*conversations)
 
     param = request.GET.get('conversation')
-    if param and str(param).isdigit() and 0 <= int(str(param)) < len(conversations):
+    if param and valid_digit(param) and 0 <= int(str(param)) < len(conversations):
         current = int(str(param))
         print(current)
         other = conversations[current].senders.all()[1] if conversations[current].senders.all()[0] == me else conversations[current].senders.all()[0]
+        print(*MessageModel.objects.filter(conversation=conversations[current]))
         messages = reversed(MessageModel.objects.filter(conversation=conversations[current]))
     else:
         current = None
@@ -122,7 +174,7 @@ def chats(request):
         chat = str(form.cleaned_data.get('chat'))
         print(chat)
 
-        if current is not None and len(text) > 0:
+        if current is not None and len(text) > 0 and valid_text_large(text):
             src.SingleMB.MB().reset(conversations[current].id, me.id)
             src.SingleMB.MB().fill(text)
             message = src.SingleMB.MB().get()
@@ -130,7 +182,7 @@ def chats(request):
 
             response = redirect(f'/chats/?conversation={current}')
             return response
-        elif len(chat) > 0:
+        elif valid_text(chat):
             print("Trying to change chat")
             new_other = PersonModel.objects.filter(name=chat)
             if new_other is not None and len(new_other) > 0:
@@ -173,7 +225,7 @@ def accounts(request):
     current_person = PersonModel.objects.get(user=current_user)
     accounts = [(account, src.Account.display_date(account.freeze_date)) for account in accounts if account.owner.person == current_person or request.user.is_staff]
     form = CreateAccountForm(request.POST)
-    if form.is_valid():
+    if form.is_valid() and valid_digit(form.cleaned_data.get('bank')) and valid_digit(form.cleaned_data.get('plan')) and valid_digit(form.cleaned_data.get('client')):
         bank_id = int(form.cleaned_data.get('bank'))
         plan_id = int(form.cleaned_data.get('plan'))
         client_id = int(form.cleaned_data.get('client'))
@@ -218,7 +270,7 @@ def clients(request):
     current_person = PersonModel.objects.get(user=current_user)
     clients = [client for client in clients if client.person == current_person or request.user.is_staff]
     form = CreateClientForm(request.POST)
-    if form.is_valid():
+    if form.is_valid() and valid_digit(form.cleaned_data.get('bank')):
         print("Valid form")
         bank_id = int(form.cleaned_data.get('bank'))
         bank = src.SingleDO.DO().get(bank_id, "Bank")
@@ -269,7 +321,7 @@ def home(request):
 @login_required
 def put(request):
     form = PutForm(request.POST)
-    if form.is_valid():
+    if form.is_valid() and valid_digit(form.cleaned_data.get('bank')) and valid_digit(form.cleaned_data.get('account_id')) and valid_money(form.cleaned_data.get("amount")):
         bank_id = int(form.cleaned_data.get("bank_id"))
         account_id = int(form.cleaned_data.get("account_id"))
         amount = float(form.cleaned_data.get("amount"))
@@ -288,7 +340,7 @@ def put(request):
 @login_required
 def get(request):
     form = PutForm(request.POST)
-    if form.is_valid():
+    if form.is_valid() and valid_digit(form.cleaned_data.get('bank')) and valid_digit(form.cleaned_data.get('account_id')) and valid_money(form.cleaned_data.get("amount")):
         bank_id = int(form.cleaned_data.get("bank_id"))
         account_id = int(form.cleaned_data.get("account_id"))
         amount = float(form.cleaned_data.get("amount"))
@@ -306,7 +358,7 @@ def get(request):
 @login_required
 def transfer(request):
     form = TransferForm(request.POST)
-    if form.is_valid():
+    if form.is_valid() and valid_digit(form.cleaned_data.get('departure_bank')) and valid_digit(form.cleaned_data.get('departure_account')) and valid_digit(form.cleaned_data.get('destination_bank')) and valid_digit(form.cleaned_data.get('destination_account')) and valid_money(form.cleaned_data.get("amount")):
         departure_bank = int(form.cleaned_data.get("departure_bank"))
         departure_account = int(form.cleaned_data.get("departure_account"))
         destination_bank = int(form.cleaned_data.get("destination_bank"))

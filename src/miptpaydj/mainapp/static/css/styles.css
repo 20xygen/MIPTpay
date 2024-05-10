@@ -87,3 +87,19 @@ table tr:hover {
 .link {
     text-decoration: none;
 }
+
+.submit-button {
+    width: 100%;
+    height: 48px;
+    border-radius: 20px;
+	border: 1px solid #3d14dd;
+	background-color:#3d14dd !important;
+	color: #FFFFFF;
+	font-size: 12px;
+	font-weight: bold;
+	padding: 12px 25px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+	letter-spacing: 1px;
+	transition: transform 80ms ease-in;
+}
