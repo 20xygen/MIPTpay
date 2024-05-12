@@ -3,49 +3,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-<<<<<<< Updated upstream
-    <link rel="stylesheet" href="{% static 'css/register.css' %}">
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <title>Register</title>
-</head>
-<body>
-    <div class="registration-form">
-        <form method="post">
-            {% csrf_token %}
-            <div class="form-icon">
-                <span><i class="icon icon-user"></i></span>
-            </div>
-            <div class="form-group">
-                <input type="text" class="form-control item" name="username" placeholder="Username">
-            </div>
-            <div class="form-group">
-                <input type="password" class="form-control item" name="password1" placeholder="Password (min 8 chars, min one number)">
-            </div>
-            <div class="form-group">
-                <input type="password" class="form-control item" name="password2" placeholder="Password (Same password)">
-            </div>
-            <div class="form-group">
-                <input type="text" class="form-control item" name="name" placeholder="Name">
-            </div>
-            <div class="form-group">
-                <input type="text" class="form-control item" name="surname" placeholder="Surname">
-            </div>
-            <div class="form-group">
-                <input type="text" class="form-control item" name="address" placeholder="Address">
-            </div>
-            <div class="form-group">
-                <input type="text" class="form-control item" name="passport" placeholder="Passport (Example: 1234567890)">
-            </div>
-            <div class="form-group">
-                <input type="submit" class="submit-button" value="Sign Up">
-            </div>
-        </form>
-    </div>
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
-=======
     <link rel="stylesheet" href="{% static 'css/material_login.css' %}">
     <title>Register</title>
 </head>
@@ -55,7 +12,6 @@
 		<form method="post">
 			{% csrf_token %}
 			<h1>Create Account</h1>
-			<span>or use your email for registration</span>
 			<input type="text" name="username" placeholder="Username" />
 			<input type="email" name="address" placeholder="Email" />
 			<input type="text" name="name" placeholder="Name" />
@@ -76,6 +32,5 @@
 		</div>
 	</div>
 </div>
->>>>>>> Stashed changes
 </body>
 </html>
