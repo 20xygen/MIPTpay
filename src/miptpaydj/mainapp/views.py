@@ -166,7 +166,7 @@ def chats(request):
         messages = []
 
     form = MessengerForm(request.POST)
-    print(form)
+    # print(form)
     if form.is_valid():
         print("Form is valid")
         text = str(form.cleaned_data.get('text'))
