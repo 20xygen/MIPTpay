@@ -34,16 +34,31 @@
 
 Сервер запускается на [localhost](http://127.0.0.1:8000/). В данный момент реализованы следующие страницы:
 
-- /home
-- /accounts/login
-- /register
-- /banks
-- /plans
-- /persons
-- /clients
-- /account
-- /transactions
-- /admin
+1) Пользователям:
+   - [/](http://127.0.0.1:8000/)
+   - [/accounts/login](http://127.0.0.1:8000/accounts/login)
+   - [/register](http://127.0.0.1:8000/register)
+   - [/home](http://127.0.0.1:8000/home)
+   - [/put](http://127.0.0.1:8000/put)
+   - [/get](http://127.0.0.1:8000/get)
+   - [/transfer](http://127.0.0.1:8000/transfer)
+   - [/chats](http://127.0.0.1:8000/chats/?conversation=0)
+   - [/persons](http://127.0.0.1:8000/persons)
+   - [/banks](http://127.0.0.1:8000/banks)
+   - [/clients](http://127.0.0.1:8000/clients)
+   - [/account](http://127.0.0.1:8000/account)
+2) Администраторам:
+   - [/](http://127.0.0.1:8000/)
+   - [/accounts/login](http://127.0.0.1:8000/accounts/login)
+   - [/register](http://127.0.0.1:8000/register)
+   - [/admin](http://127.0.0.1:8000/admin)
+   - [/home](http://127.0.0.1:8000/home)
+   - [/chats](http://127.0.0.1:8000/chats/?conversation=0)
+   - [/persons](http://127.0.0.1:8000/persons)
+   - [/banks](http://127.0.0.1:8000/banks)
+   - [/clients](http://127.0.0.1:8000/clients)
+   - [/account](http://127.0.0.1:8000/account)
+   - [/transactions](http://127.0.0.1:8000/transactions)
 
 Для просмотра панели администратора необходимо зарегистрировать супер-пользователя.
 
