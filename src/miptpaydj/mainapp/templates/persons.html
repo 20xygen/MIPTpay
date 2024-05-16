@@ -5,6 +5,7 @@
 {% block enable1 %}{% endblock %}
 {% block enable2 %}{% endblock %}
 {% block enable3 %}{% endblock %}
+{% block enable_chats %}{% endblock %}
 {% block enable4 %}active{% endblock %}
 {% block enable5 %}{% endblock %}
 {% block enable6 %}{% endblock %}
@@ -18,8 +19,6 @@
                 <th>ID</th>
                 <th>Name</th>
                 <th>Surname</th>
-                <th>Address</th>
-                <th>Passport</th>
             </tr>
         </thead>
         <tbody>
@@ -28,8 +27,6 @@
                 <td>{{ person.id }}</td>
                 <td>{{ person.name }}</td>
                 <td>{{ person.surname }}</td>
-                <td>{{ person.address }}</td>
-                <td>{{ person.passport }}</td>
             </tr>
             {% endfor %}
         </tbody>

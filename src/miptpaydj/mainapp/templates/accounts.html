@@ -5,6 +5,7 @@
 {% block enable1 %}{% endblock %}
 {% block enable2 %}{% endblock %}
 {% block enable3 %}{% endblock %}
+{% block enable_chats %}{% endblock %}
 {% block enable4 %}{% endblock %}
 {% block enable5 %}{% endblock %}
 {% block enable6 %}{% endblock %}
@@ -17,7 +18,6 @@
             <tr>
                 <th>ID</th>
                 <th>Bank</th>
-                <th>Owner</th>
                 <th>Opened</th>
                 <th>Money</th>
                 <th>Transfer</th>
@@ -26,18 +26,41 @@
             </tr>
         </thead>
         <tbody>
-            {% for account in accounts %}
+            {% for account, freeze_date in accounts %}
             <tr>
                 <td>{{ account.id }}</td>
-                <td>{{ account.bank.name }}</td>
-                <td>{{ account.owner.name }} {{ account.owner.curname }}</td>
+                <td>{{ account.bank.name }} ({{account.bank.id}})</td>
                 <td>{{ account.opened }}</td>
                 <td>{{ account.money }}</td>
                 <td>{{ account.transfer }}</td>
                 <td>{{ account.plan.name }}</td>
-                <td>{{ account.freeze_date }}</td>
+                <td>{{ freeze_date }}</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+    {% if not is_staff %}
+    <form class="outer-container" method="post">
+        {% csrf_token %}
+        <div class="form-container" style="margin-top: 10px">
+            <div class="container-input">
+                <label for="1">Bank ID</label>
+                <input type="text" id="1" name="bank" placeholder="11" />
+            </div>
+            <div class="container-input">
+                <label for="2">Plan ID</label>
+                <input type="text" id="2" name="plan" placeholder="11" />
+            </div>
+            <div class="container-input">
+                <label for="3">Client ID</label>
+                <input type="text" id="3" name="client" placeholder="11" />
+            </div>
+        </div>
+        <div class="form-container" style="margin-top: 20px">
+            <button class="container-button" type="submit">
+                Create account
+            </button>
+        </div>
+    </form>
+    {% endif %}
 {% endblock %}

@@ -1,10 +1,11 @@
 {% extends 'material_base.html' %}
-{% block title %}Banks{% endblock %}
-{% block header %}Banks{% endblock %}
+{% block title %}Banks & Plans{% endblock %}
+{% block header %}Banks & Plans{% endblock %}
 {% block enable_logo %}{% endblock %}
 {% block enable1 %}{% endblock %}
 {% block enable2 %}{% endblock %}
 {% block enable3 %}{% endblock %}
+{% block enable_chats %}{% endblock %}
 {% block enable4 %}{% endblock %}
 {% block enable5 %}active{% endblock %}
 {% block enable6 %}{% endblock %}
@@ -28,4 +29,51 @@
             {% endfor %}
         </tbody>
     </table>
+    {% if is_staff %}
+    <form class="outer-container" method="post" style="margin-top: 20px">
+        {% csrf_token %}
+        <div class="form-container">
+            <div class="container-input">
+                <input type="text" name="bank" placeholder="MIPT Bank" />
+            </div>
+            <button class="container-button" type="submit">
+                Create bank
+            </button>
+        </div>
+    </form>
+    {% endif %}
+    <table class="table-bottom">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Bank</th>
+                <th>Category</th>
+                <th>Commission</th>
+                <th>Period</th>
+                <th>Lower limit</th>
+                <th>Transfer limit</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for plan, commission, period, limit in plans %}
+            <tr>
+                <td>{{ plan.id }}</td>
+                <td>{{ plan.name }}</td>
+                <td>{{ plan.bank.name }}</td>
+                <td>{{ plan.category.name }}</td>
+                <td>{{ commission }}</td>
+                <td>{{ period }}</td>
+                <td>{{ limit }}</td>
+                <td>{{ plan.transfer_limit }} / {{ plan.decreased_transfer_limit }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% if is_staff %}
+    <button class="container-button" style="margin-top: 35px; margin-right: 20px"><a style="color: inherit;text-decoration: none;" href="/create_plan/?type=0">Create debit plan</a></button>
+    <button class="container-button" style="margin-right: 20px"><a style="color: inherit;text-decoration: none;" href="/create_plan/?type=1">Create credit plan</a></button>
+    <button class="container-button"><a style="color: inherit;text-decoration: none;" href="/create_plan/?type=2">Create deposit plan</a></button>
+    {% endif %}
+
 {% endblock %}

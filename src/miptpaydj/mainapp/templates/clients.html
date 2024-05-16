@@ -5,6 +5,7 @@
 {% block enable1 %}{% endblock %}
 {% block enable2 %}{% endblock %}
 {% block enable3 %}{% endblock %}
+{% block enable_chats %}{% endblock %}
 {% block enable4 %}{% endblock %}
 {% block enable5 %}{% endblock %}
 {% block enable6 %}{% endblock %}
@@ -40,4 +41,20 @@
             {% endfor %}
         </tbody>
     </table>
+    {% if not is_staff %}
+    <form class="outer-container" method="post">
+        {% csrf_token %}
+        <div class="form-container" style="margin-top: 10px">
+            <div class="container-input">
+                <label for="4">Bank ID</label>
+                <input type="text" id="4" name="bank" placeholder="11" />
+            </div>
+        </div>
+        <div class="form-container" style="margin-top: 20px">
+            <button class="container-button" type="submit">
+                Create client
+            </button>
+        </div>
+    </form>
+    {% endif %}
 {% endblock %}

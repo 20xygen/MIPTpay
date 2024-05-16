@@ -5,6 +5,7 @@
 {% block enable1 %}{% endblock %}
 {% block enable2 %}{% endblock %}
 {% block enable3 %}{% endblock %}
+{% block enable_chats %}{% endblock %}
 {% block enable4 %}{% endblock %}
 {% block enable5 %}{% endblock %}
 {% block enable6 %}{% endblock %}
@@ -12,7 +13,56 @@
 {% block enable8 %}{% endblock %}
 {% block enable9 %}{% endblock %}
 {% block content %}
-
-
-
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Address</th>
+                <th>Passport</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ current_person.id }}</td>
+                <td>{{ current_person.name }}</td>
+                <td>{{ current_person.surname }}</td>
+                <td>{{ current_person.address }}</td>
+                <td>{{ current_person.passport }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <form class="outer-container" method="post">
+        {% csrf_token %}
+        <div class="form-container">
+            <div class="container-input">
+                <label for="1">Name</label>
+                <input type="text" id="1" name="name" placeholder="{{ current_person.name }}" />
+            </div>
+        </div>
+        <div class="form-container">
+            <div class="container-input">
+                <label for="2">Surname</label>
+                <input type="text" id="2" name="surname" placeholder="{{ current_person.surname }}" />
+            </div>
+        </div>
+        <div class="form-container">
+            <div class="container-input">
+                <label for="3">Address</label>
+                <input type="text" id="3" name="address" placeholder="{% if current_person.address is not None %}{{ current_person.address }}{% else %}example@email.com{% endif %}" />
+            </div>
+        </div>
+        <div class="form-container">
+            <div class="container-input">
+                <label for="4">Passport</label>
+                <input type="text" id="4" name="passport" placeholder="{% if current_person.passport is not None %}{{ current_person.passport }}{% else %}1234567890{% endif %}" />
+            </div>
+        </div>
+        <div class="form-container">
+            <button class="container-button" type="submit">
+                Submit changes
+            </button>
+        </div>
+    </form>
 {% endblock %}

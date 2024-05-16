@@ -24,6 +24,24 @@ class Plan:
     def get_properties(self) -> List[src.PlanProperty]:
         return []
 
+    @staticmethod
+    def display_commission(commission, increased_commission):
+        if commission:
+            return f"{commission} / {increased_commission}"
+        return "-"
+
+    @staticmethod
+    def display_period(period, decreased_period):
+        if period:
+            return f"{period} / {decreased_period}"
+        return "-"
+
+    @staticmethod
+    def display_limit(lower_limit, decreased_lower_limit):
+        if lower_limit:
+            return f"{lower_limit} / {decreased_lower_limit}"
+        return "-"
+
 class DebitPlan(Plan):
     """ Debit rate. """
 

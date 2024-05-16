@@ -38,6 +38,37 @@ class PersonModel(models.Model):
         instance.personmodel.save()
 
 
+class ConversationModel(models.Model):
+    senders = models.ManyToManyField(PersonModel)
+    status = models.BooleanField()
+
+    class Meta:
+        ordering = ['-id']
+        verbose_name = 'Диалог'
+        verbose_name_plural = 'Диалоги'
+
+    def __str__(self):
+        if self.id and len(self.senders.all()) >= 2:
+            return 'Диалог между ' + self.senders.all()[0].name + ' и ' + self.senders.all()[1].name
+        else:
+            return 'Некий диалог'
+
+
+class MessageModel(models.Model):
+    conversation = models.ForeignKey(ConversationModel, on_delete=models.CASCADE)
+    sender = models.ForeignKey(PersonModel, on_delete=models.CASCADE)
+    text = models.CharField(max_length=500)
+    status = models.BooleanField()
+
+    class Meta:
+        ordering = ['-id']
+        verbose_name = 'Сообщение'
+        verbose_name_plural = 'Сообщения'
+
+    def __str__(self):
+        return 'Сообщение от ' + str(self.sender)
+
+
 class ClientModel(models.Model):
     bank = models.ForeignKey(BankModel, on_delete=models.CASCADE)
     person = models.ForeignKey(PersonModel, on_delete=models.CASCADE)

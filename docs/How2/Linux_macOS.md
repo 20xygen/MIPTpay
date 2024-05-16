@@ -26,3 +26,8 @@ python3 src/miptpaydj/manage.py migrate
 poetry run setup
 python3 src/miptpaydj/manage.py runserver
 ```
+
+5) создание аккаунта администратора (опционально)
+```commandline
+python3 src/miptpaydj/manage.py createsuperuser
+```
